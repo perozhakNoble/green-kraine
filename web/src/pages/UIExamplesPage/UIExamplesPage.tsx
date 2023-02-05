@@ -78,47 +78,6 @@ const UiExamplesPage = () => {
           </h3>
         </div>
 
-        {/*Font size*/}
-        <div className="p-2">
-          <h2 className="text-xl my-2">Font size</h2>
-          <h3 className="text-xs">
-            Україна, Екологія, Здоровʼя | GreenKraine - xs
-          </h3>
-
-          <h3 className="text-sm">
-            Україна, Екологія, Здоровʼя | GreenKraine - sm
-          </h3>
-          <h3 className="text-md">
-            Україна, Екологія, Здоровʼя | GreenKraine - md
-          </h3>
-          <h3 className="text-lg">
-            Україна, Екологія, Здоровʼя | GreenKraine - lg
-          </h3>
-
-          <h3 className="text-xl">
-            Україна, Екологія, Здоровʼя | GreenKraine - xl
-          </h3>
-          <h3 className="text-2xl">
-            Україна, Екологія, Здоровʼя | GreenKraine - 2xl
-          </h3>
-
-          <h3 className="text-3xl">
-            Україна, Екологія, Здоровʼя | GreenKraine - 3xl
-          </h3>
-
-          <h3 className="text-4xl">
-            Україна, Екологія, Здоровʼя | GreenKraine - 4xl
-          </h3>
-
-          <h3 className="text-5xl">
-            Україна, Екологія, Здоровʼя | GreenKraine - 5xl
-          </h3>
-
-          <h3 className="text-6xl">
-            Україна, Екологія, Здоровʼя | GreenKraine - 6xl
-          </h3>
-        </div>
-
         {/*Custom Headers*/}
         <div className="p-2">
           <h2 className="text-xl my-2">Custom Headers</h2>
