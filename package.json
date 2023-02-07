@@ -12,7 +12,13 @@
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
-    "root": true
+    "root": true,
+    "rules": {
+      "jsx-a11y/no-onchange": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-unused-vars": "warn"
+    }
   },
   "engines": {
     "node": ">=14.19 <=18.x",
