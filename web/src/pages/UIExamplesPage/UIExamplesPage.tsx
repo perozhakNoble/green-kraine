@@ -1,12 +1,54 @@
+import { useState } from 'react'
+
 import { faRadio, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import { useForm } from '@redwoodjs/forms'
 import { MetaTags } from '@redwoodjs/web'
+import { toast } from '@redwoodjs/web/toast'
 
-import Button from 'src/components/UI/Button'
+import Button from 'src/components/UI/Button/Button'
+import Field, { FieldType } from 'src/components/UI/Form/Field/Field'
+import FormWrapper, {
+  FormType,
+} from 'src/components/UI/Form/FormWrapper/FormWrapper'
+import ToastContent from 'src/components/UI/ToastContent'
 import { H1, H2, H3, H4, H5, H6, H7 } from 'src/components/UI/Typography'
 
+type IForm = {
+  text: string
+}
+
 const UiExamplesPage = () => {
+  const formMethods = useForm<IForm>({
+    defaultValues: {
+      text: '',
+    },
+  })
+
+  const [isLoadingFormSubmit, setIsLoadingFormSubmit] = useState(false)
+
+  const submitForm = async (values: IForm) => {
+    setIsLoadingFormSubmit(true)
+
+    await toast.promise(
+      // emulate fetch
+      new Promise((resolve, _reject) => {
+        setTimeout(() => {
+          resolve(null)
+        }, 1000)
+      }),
+      {
+        error: <ToastContent text={'Error'} type="error" />,
+        loading: <ToastContent text={'Loading..'} type="loading" />,
+        success: <ToastContent text={'Success'} type="success" />,
+      }
+    )
+
+    console.log(values)
+    setIsLoadingFormSubmit(false)
+  }
+
   return (
     <>
       <MetaTags title="UI Examples" description="UI Examples page" />
@@ -16,7 +58,7 @@ const UiExamplesPage = () => {
 
         {/*Font weight*/}
         <div className="p-2">
-          <h2 className="text-xl my-2">Font weight</h2>
+          <h2 className="my-2 text-xl">Font weight</h2>
           <h3 className="font-thin">
             Україна, Екологія, Здоровʼя | GreenKraine - Thin
           </h3>
@@ -45,7 +87,7 @@ const UiExamplesPage = () => {
 
         {/*Font color*/}
         <div className="p-2">
-          <h2 className="text-xl my-2">Font color</h2>
+          <h2 className="my-2 text-xl">Font color</h2>
           <h3 className="text-error">
             Україна, Екологія, Здоровʼя | GreenKraine - Error
           </h3>
@@ -80,7 +122,7 @@ const UiExamplesPage = () => {
 
         {/*Custom Headers*/}
         <div className="p-2">
-          <h2 className="text-xl my-2">Custom Headers</h2>
+          <h2 className="my-2 text-xl">Custom Headers</h2>
           <H1>Україна, Екологія, Здоровʼя | GreenKraine - H1</H1>
           <H2>Україна, Екологія, Здоровʼя | GreenKraine - H2</H2>
           <H3>Україна, Екологія, Здоровʼя | GreenKraine - H3</H3>
@@ -92,12 +134,12 @@ const UiExamplesPage = () => {
 
         {/*Buttons*/}
         <div className="p-2">
-          <h2 className="text-xl my-2">Buttons</h2>
+          <h2 className="my-2 text-xl">Buttons</h2>
 
           <div className="flex gap-8">
             {/*primary*/}
             <div className="ml-2">
-              <h2 className="text-lg my-2">Primary</h2>
+              <h2 className="my-2 text-lg">Primary</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -107,7 +149,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Loading</h2>
+              <h2 className="my-2 text-lg">Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -117,7 +159,7 @@ const UiExamplesPage = () => {
                 isLoading={true}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Disabled</h2>
+              <h2 className="my-2 text-lg">Disabled</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -127,7 +169,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={true}
               />
-              <h2 className="text-lg my-2">Disabled + Loading</h2>
+              <h2 className="my-2 text-lg">Disabled + Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Primary"
@@ -140,7 +182,7 @@ const UiExamplesPage = () => {
             </div>
             {/*secondary*/}
             <div className="ml-2">
-              <h2 className="text-lg my-2">Secondary</h2>
+              <h2 className="my-2 text-lg">Secondary</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -150,7 +192,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Loading</h2>
+              <h2 className="my-2 text-lg">Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -160,7 +202,7 @@ const UiExamplesPage = () => {
                 isLoading={true}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Disabled</h2>
+              <h2 className="my-2 text-lg">Disabled</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -170,7 +212,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={true}
               />
-              <h2 className="text-lg my-2">Disabled + Loading</h2>
+              <h2 className="my-2 text-lg">Disabled + Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -183,7 +225,7 @@ const UiExamplesPage = () => {
             </div>
             {/*dark*/}
             <div className="ml-2">
-              <h2 className="text-lg my-2">Dark</h2>
+              <h2 className="my-2 text-lg">Dark</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -193,7 +235,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Loading</h2>
+              <h2 className="my-2 text-lg">Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -203,7 +245,7 @@ const UiExamplesPage = () => {
                 isLoading={true}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Disabled</h2>
+              <h2 className="my-2 text-lg">Disabled</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -213,7 +255,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={true}
               />
-              <h2 className="text-lg my-2">Disabled + Loading</h2>
+              <h2 className="my-2 text-lg">Disabled + Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -226,7 +268,7 @@ const UiExamplesPage = () => {
             </div>
             {/*error*/}
             <div className="ml-2">
-              <h2 className="text-lg my-2">Error</h2>
+              <h2 className="my-2 text-lg">Error</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -236,7 +278,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Loading</h2>
+              <h2 className="my-2 text-lg">Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -246,7 +288,7 @@ const UiExamplesPage = () => {
                 isLoading={true}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Disabled</h2>
+              <h2 className="my-2 text-lg">Disabled</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -256,7 +298,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={true}
               />
-              <h2 className="text-lg my-2">Disabled + Loading</h2>
+              <h2 className="my-2 text-lg">Disabled + Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -270,7 +312,7 @@ const UiExamplesPage = () => {
 
             {/*warning*/}
             <div className="ml-2">
-              <h2 className="text-lg my-2">Warning</h2>
+              <h2 className="my-2 text-lg">Warning</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -280,7 +322,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Loading</h2>
+              <h2 className="my-2 text-lg">Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -290,7 +332,7 @@ const UiExamplesPage = () => {
                 isLoading={true}
                 disabled={false}
               />
-              <h2 className="text-lg my-2">Disabled</h2>
+              <h2 className="my-2 text-lg">Disabled</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -300,7 +342,7 @@ const UiExamplesPage = () => {
                 isLoading={false}
                 disabled={true}
               />
-              <h2 className="text-lg my-2">Disabled + Loading</h2>
+              <h2 className="my-2 text-lg">Disabled + Loading</h2>
               <Button
                 onClick={(_e) => console.log('here')}
                 text="Button"
@@ -313,10 +355,10 @@ const UiExamplesPage = () => {
             </div>
           </div>
 
-          <div className="flex gap-x-8 flex-wrap p-2">
+          <div className="flex flex-wrap gap-x-8 p-2">
             {/*default*/}
             <div>
-              <h2 className="text-lg my-2">Default</h2>
+              <h2 className="my-2 text-lg">Default</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -327,7 +369,7 @@ const UiExamplesPage = () => {
             </div>
             {/*depth sm*/}
             <div>
-              <h2 className="text-lg my-2">Depth SM</h2>
+              <h2 className="my-2 text-lg">Depth SM</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -339,7 +381,7 @@ const UiExamplesPage = () => {
             </div>
             {/*depth lg*/}
             <div>
-              <h2 className="text-lg my-2">Depth LG</h2>
+              <h2 className="my-2 text-lg">Depth LG</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -351,7 +393,7 @@ const UiExamplesPage = () => {
             </div>
             {/*rounded sm*/}
             <div>
-              <h2 className="text-lg my-2">Rounded SM</h2>
+              <h2 className="my-2 text-lg">Rounded SM</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -363,7 +405,7 @@ const UiExamplesPage = () => {
             </div>
             {/*rounded md*/}
             <div>
-              <h2 className="text-lg my-2">Rounded MD</h2>
+              <h2 className="my-2 text-lg">Rounded MD</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -375,7 +417,7 @@ const UiExamplesPage = () => {
             </div>
             {/*rounded lg*/}
             <div>
-              <h2 className="text-lg my-2">Rounded lg</h2>
+              <h2 className="my-2 text-lg">Rounded lg</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -387,7 +429,7 @@ const UiExamplesPage = () => {
             </div>
             {/*size xs*/}
             <div>
-              <h2 className="text-lg my-2">Size XS</h2>
+              <h2 className="my-2 text-lg">Size XS</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -399,7 +441,7 @@ const UiExamplesPage = () => {
             </div>
             {/*size sm*/}
             <div>
-              <h2 className="text-lg my-2">Size SM</h2>
+              <h2 className="my-2 text-lg">Size SM</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -411,7 +453,7 @@ const UiExamplesPage = () => {
             </div>
             {/*size md*/}
             <div>
-              <h2 className="text-lg my-2">Size MD</h2>
+              <h2 className="my-2 text-lg">Size MD</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -423,7 +465,7 @@ const UiExamplesPage = () => {
             </div>
             {/*size lg*/}
             <div>
-              <h2 className="text-lg my-2">Size LG</h2>
+              <h2 className="my-2 text-lg">Size LG</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -435,7 +477,7 @@ const UiExamplesPage = () => {
             </div>
             {/*icon left*/}
             <div>
-              <h2 className="text-lg my-2">Icon left</h2>
+              <h2 className="my-2 text-lg">Icon left</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -448,7 +490,7 @@ const UiExamplesPage = () => {
             </div>
             {/*icon right*/}
             <div>
-              <h2 className="text-lg my-2">Icon Right</h2>
+              <h2 className="my-2 text-lg">Icon Right</h2>
               <Button
                 onClick={() => null}
                 text="Button"
@@ -460,6 +502,90 @@ const UiExamplesPage = () => {
               />
             </div>
           </div>
+        </div>
+
+        {/*Toasts*/}
+        <div className="p-2">
+          <h2 className="my-2 text-xl">Toasts</h2>
+          <div className="flex flex-wrap gap-4">
+            <Button
+              text="Success toast"
+              onClick={() =>
+                toast.success(<ToastContent text={'Messsage'} type="success" />)
+              }
+            />
+            <Button
+              text="Error toast"
+              onClick={() =>
+                toast.error(<ToastContent text={'Messsage'} type="error" />)
+              }
+            />
+            <Button
+              text="Loading toast"
+              onClick={() =>
+                toast.loading(
+                  <ToastContent text={'Messsage'} type="loading" />,
+                  {
+                    duration: 1000,
+                  }
+                )
+              }
+            />
+            <Button
+              text="Promise success"
+              onClick={() =>
+                toast.promise(
+                  new Promise((resolve) => {
+                    setTimeout(() => resolve(null), 1000)
+                  }),
+                  {
+                    error: <ToastContent text={'Message error'} type="error" />,
+                    loading: <ToastContent text={'Message..'} type="loading" />,
+                    success: (
+                      <ToastContent text={'Message success'} type="success" />
+                    ),
+                  }
+                )
+              }
+            />
+            <Button
+              text="Promise error"
+              onClick={() =>
+                toast.promise(
+                  new Promise((_resolve, reject) => {
+                    setTimeout(() => reject(null), 1000)
+                  }),
+                  {
+                    error: <ToastContent text={'Message error'} type="error" />,
+                    loading: <ToastContent text={'Message..'} type="loading" />,
+                    success: (
+                      <ToastContent text={'Message success'} type="success" />
+                    ),
+                  }
+                )
+              }
+            />
+          </div>
+        </div>
+
+        {/*Inputs*/}
+        <div className="p-2">
+          <h2 className="my-2 text-xl">Inputs</h2>
+          <FormWrapper<IForm>
+            className="flex w-96 flex-col gap-2"
+            formMethods={formMethods}
+            mode={FormType.both}
+            onSubmit={submitForm}
+            loading={isLoadingFormSubmit}
+          >
+            <Field<IForm>
+              name="text"
+              type={FieldType.text}
+              validation={{
+                required: true,
+              }}
+            />
+          </FormWrapper>
         </div>
       </div>
     </>
