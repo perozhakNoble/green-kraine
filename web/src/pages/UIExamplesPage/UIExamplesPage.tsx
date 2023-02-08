@@ -61,7 +61,7 @@ const UiExamplesPage = () => {
     <>
       <MetaTags title="UI Examples" description="UI Examples page" />
 
-      <div className="w-full p-6">
+      <div className="w-full max-w-screen-sm p-4 sm:max-w-none">
         <h1 className="text-2xl">UI Examples Page</h1>
 
         {/*Font weight*/}
@@ -144,7 +144,7 @@ const UiExamplesPage = () => {
         <div className="p-2">
           <h2 className="my-2 text-xl">Buttons</h2>
 
-          <div className="flex gap-8">
+          <div className="flex flex-wrap gap-8">
             {/*primary*/}
             <div className="ml-2">
               <h2 className="my-2 text-lg">Primary</h2>
@@ -614,7 +614,6 @@ const UiExamplesPage = () => {
               validation={{
                 required: true,
               }}
-              disabled={true}
             />
             <Field<IForm>
               name="number"
