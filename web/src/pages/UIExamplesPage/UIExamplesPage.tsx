@@ -55,8 +55,6 @@ const UiExamplesPage = () => {
     setIsLoadingFormSubmit(false)
   }
 
-  console.log(formMethods.watch('date'))
-
   return (
     <>
       <MetaTags title="UI Examples" description="UI Examples page" />
