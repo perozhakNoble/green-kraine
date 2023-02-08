@@ -5946,6 +5946,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tailwindcss/forms@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "@tailwindcss/forms@npm:0.5.3"
+  dependencies:
+    mini-svg-data-uri: ^1.2.3
+  peerDependencies:
+    tailwindcss: ">=3.0.0 || >= 3.0.0-alpha.1"
+  checksum: 4881c1d5a9aeaa2eea453dd60a5b7c6671a11f0d74f6075d052a3b4f2d8c7e1f1a42f74fe52421da4c13b19018ab883199f528cd41e6fdb249ed638d3f04cd94
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^8.0.0, @testing-library/dom@npm:^8.11.1":
   version: 8.20.0
   resolution: "@testing-library/dom@npm:8.20.0"
@@ -10961,6 +10972,13 @@ __metadata:
   version: 2.29.3
   resolution: "date-fns@npm:2.29.3"
   checksum: aa9128c876ef69a05988029d6aa3d7e5c47a1e978f18b77b48126683d1a2e6605a16c3f5293ca9f4ca790d0755b5061fcea5b469f097871cd53f6590a5c1adc4
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.7":
+  version: 1.11.7
+  resolution: "dayjs@npm:1.11.7"
+  checksum: 41a54853c8b8bf0fa94a5559eec98b3e4d11b31af81a9558a159d40adeaafb1f3414e8c41a4e3277281d97687d8252f400015e1f715b47f8c24d88a9ebd43626
   languageName: node
   linkType: hard
 
@@ -17426,6 +17444,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mini-svg-data-uri@npm:^1.2.3":
+  version: 1.4.4
+  resolution: "mini-svg-data-uri@npm:1.4.4"
+  bin:
+    mini-svg-data-uri: cli.js
+  checksum: 24545fa30b5a45449241bf19c25b8bc37594b63ec06401b3d563bd1c2e8a6abb7c18741f8b354e0064baa63c291be214154bf3a66f201ae71dfab3cc1a5e3191
+  languageName: node
+  linkType: hard
+
 "minimalistic-assert@npm:^1.0.0, minimalistic-assert@npm:^1.0.1":
   version: 1.0.1
   resolution: "minimalistic-assert@npm:1.0.1"
@@ -20311,6 +20338,16 @@ __metadata:
     shallowequal: ^1.1.0
     throttle-debounce: ^3.0.1
   checksum: e6b336bbc1e9de78de5c7177afd398f6ea14c4284af698475f08d34389e9307cbc36c0125a61b158e026f182ae4dd17b13c28683bbc1a371792bccd1e51cccff
+  languageName: node
+  linkType: hard
+
+"react-tailwindcss-datepicker@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "react-tailwindcss-datepicker@npm:1.4.2"
+  peerDependencies:
+    dayjs: ^1.11.6
+    react: ^17.0.2 || ^18.2.0
+  checksum: 51d6d2e1486ed8a353b87480790279d3a5e5037787de432d66510022d80132b2d7101918b93a6540a8230d5b4cd35164e75ac85872cfaac08fe805fe2d944861
   languageName: node
   linkType: hard
 
@@ -24006,14 +24043,17 @@ __metadata:
     "@redwoodjs/forms": 4.0.1
     "@redwoodjs/router": 4.0.1
     "@redwoodjs/web": 4.0.1
+    "@tailwindcss/forms": ^0.5.3
     autoprefixer: ^10.4.13
     classnames: ^2.3.2
+    dayjs: ^1.11.7
     postcss: ^8.4.21
     postcss-loader: ^7.0.2
     prettier-plugin-tailwindcss: ^0.2.2
     prop-types: 15.8.1
     react: 17.0.2
     react-dom: 17.0.2
+    react-tailwindcss-datepicker: ^1.4.2
     tailwindcss: ^3.2.4
   languageName: unknown
   linkType: soft

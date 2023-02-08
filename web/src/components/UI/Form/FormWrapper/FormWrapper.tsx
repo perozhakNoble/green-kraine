@@ -63,21 +63,11 @@ const FormWrapper = <T,>({
   formMethods,
   className,
   onSubmit,
-  dontCloseEditAfterSubmit = false,
+  dontCloseEditAfterSubmit = mode === FormType.editOnly,
 }: IFormWrapperProps<T>) => {
   const [isEdit, setIsEdit] = useState<boolean>(
     mode === FormType.editOnly ? true : false
   )
-
-  // // force close edit mode if form saved
-  // const prevLoadingState = usePrevious(loading)
-  // useEffect(() => {
-  //   if (mode === FormType.editOnly || mode === FormType.previewOnly) return
-
-  //   if (prevLoadingState && !loading) {
-  //     setIsEdit(false)
-  //   }
-  // }, [loading, prevLoadingState, mode])
 
   const handleSubmit = async (values: any) => {
     await onSubmit(values)

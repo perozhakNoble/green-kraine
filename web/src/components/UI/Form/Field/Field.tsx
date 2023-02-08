@@ -3,8 +3,17 @@ import { useContext } from 'react'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
+import Datepicker from 'react-tailwindcss-datepicker'
 
-import { FieldError, Label, Path, TextField } from '@redwoodjs/forms'
+import {
+  Controller,
+  EmailField,
+  FieldError,
+  Label,
+  NumberField,
+  Path,
+  TextField,
+} from '@redwoodjs/forms'
 
 import { capitalize } from 'src/components/utils/string'
 
@@ -32,10 +41,21 @@ export type OptionType = {
 }
 
 export type IFieldValidationRequired = {
-  required?: boolean
+  required?: boolean | string
 }
 
-export type IFieldValidation = IFieldValidationRequired
+export type IFieldValidationMinMax = {
+  min?: {
+    value: number
+    message: string
+  }
+  max?: {
+    value: number
+    message: string
+  }
+}
+
+// export type IFieldValidation = IFieldValidationRequired & IFieldValidationMinMax
 
 export type IFieldProps<T> = {
   disabled?: boolean
@@ -59,18 +79,14 @@ export type IFieldProps<T> = {
     }
   | {
       type: FieldType.number
-      value: number
+      value?: number
       allowDecimal?: boolean
+      validation?: IFieldValidationRequired & IFieldValidationMinMax
     }
   | {
       type: FieldType.date
-      isMulti: true
-      value: Array<OptionType>
-    }
-  | {
-      type: FieldType.date
-      isMulti: false
-      value: OptionType
+      value?: any
+      validation?: IFieldValidationRequired
     }
 )
 
@@ -78,14 +94,21 @@ const Field = <T,>(props: IFieldProps<T>) => {
   const { formMethods, mode, isEdit: isEditTurnedOn } = useContext(FormContext)
 
   const inputClass = classNames({
-    'rounded-xl px-2 py-2 w-full border-secondary_light block min-h-[2.5rem] text-xs border-[1px] text-secondary font-light [&:not(:focus)]:hover:border-secondary transition-all':
+    'border-secondary_light relative block min-h-[2.5rem] w-full rounded-xl':
+      true,
+    'border-[1px] border-gray-300 bg-white px-4 py-2 text-xs font-light tracking-wide':
+      true,
+    'text-secondary placeholder-gray-400 transition-all duration-300': true,
+    'focus:border-teal-500 focus:ring focus:ring-teal-500/20 disabled:cursor-not-allowed':
+      true,
+    'disabled:opacity-70 disabled:bg-gray-100  [&:not(:focus)]:hover:border-secondary':
       true,
     'pl-10': props.icon,
-    'w-24': props.type === FieldType.number,
+    'w-36': props.type === FieldType.number,
   })
 
   const inputGroupClass = classNames({
-    'relative mt-1 rounded-xl ': props.type !== FieldType.date,
+    'mt-1 relative rounded-xl': true,
     'w-24': props.type === FieldType.number,
     // 'w-3 h-5 mb-2': type === 'checkbox',
   })
@@ -108,7 +131,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
 
   const input = () => {
     switch (props.type) {
-      case 'text':
+      case FieldType.text:
         return (
           <TextField
             name={props.name}
@@ -116,12 +139,100 @@ const Field = <T,>(props: IFieldProps<T>) => {
               formMethods.setValue(props.name, e.target.value as any, {
                 shouldValidate: true,
               })
-              props.onChange ?? props.onChange(e.target.value)
+              props.onChange && props.onChange(e.target.value)
             }}
             className={inputClass}
             value={props.value || formMethods.watch(props.name) || ''}
             placeholder={props.placeholder}
             validation={{ required: props.validation?.required }}
+            disabled={props.disabled}
+          />
+        )
+      case FieldType.email:
+        return (
+          <EmailField
+            name={props.name}
+            onChange={(e) => {
+              formMethods.setValue(props.name, e.target.value as any, {
+                shouldValidate: true,
+              })
+              props.onChange && props.onChange(e.target.value)
+            }}
+            className={inputClass}
+            value={props.value || formMethods.watch(props.name) || ''}
+            placeholder={props.placeholder}
+            validation={{ required: props.validation?.required }}
+            disabled={props.disabled}
+          />
+        )
+      case FieldType.date:
+        return (
+          <Controller
+            name={props.name}
+            rules={{
+              required: props.validation?.required,
+            }}
+            render={() => {
+              const value = {
+                startDate: props?.value || formMethods.watch(props.name) || '',
+                endDate: props?.value || formMethods.watch(props.name) || '',
+              }
+              return (
+                <Datepicker
+                  startWeekOn="mon"
+                  inputClassName={inputClass}
+                  toggleClassName="absolute top-0 bg-gray-400 bg-opacity-20 rounded-r-xl"
+                  value={value}
+                  placeholder={props.placeholder}
+                  onChange={(date) => {
+                    formMethods.setValue(props.name, date.startDate as any, {
+                      shouldValidate: true,
+                    })
+                    props.onChange && props.onChange(date.startDate)
+                  }}
+                  asSingle={true}
+                  useRange={false}
+                  disabled={props.disabled}
+                  i18n={'uk'}
+                  primaryColor={'teal'}
+                  displayFormat="DD/MM/YYYY"
+                />
+              )
+            }}
+          />
+        )
+      case FieldType.number:
+        return (
+          <NumberField
+            name={props.name}
+            disabled={props.disabled}
+            onChange={(e) => {
+              formMethods.setValue(props.name, e.target.value as any, {
+                shouldValidate: true,
+              })
+              props.onChange && props.onChange(e.target.value)
+            }}
+            className={inputClass}
+            value={props.value || formMethods.watch(props.name) || ''}
+            placeholder={props.placeholder}
+            min={props.validation?.min?.value}
+            max={props.validation?.max?.value}
+            onKeyPress={(event) => {
+              if (/[,.]/.test(event.key) && !props.allowDecimal) {
+                event.preventDefault()
+              }
+            }}
+            validation={{
+              required: props.validation?.required,
+              min: {
+                message: props.validation?.min?.message,
+                value: props.validation?.min?.value,
+              },
+              max: {
+                message: (props.validation?.max as any)?.message,
+                value: (props.validation?.max as any)?.value,
+              },
+            }}
           />
         )
     }
@@ -129,7 +240,25 @@ const Field = <T,>(props: IFieldProps<T>) => {
 
   const preview = () => {
     switch (props.type) {
-      case 'text':
+      case FieldType.number:
+        return (
+          <div className={previewClass}>
+            {props.value || formMethods.watch(props.name) || 'N/A'}
+          </div>
+        )
+      case FieldType.date:
+        return (
+          <div className={previewClass}>
+            {props.value || formMethods.watch(props.name) || 'N/A'}
+          </div>
+        )
+      case FieldType.text:
+        return (
+          <div className={previewClass}>
+            {props.value || formMethods.watch(props.name) || 'N/A'}
+          </div>
+        )
+      case FieldType.email:
         return (
           <div className={previewClass}>
             {props.value || formMethods.watch(props.name) || 'N/A'}

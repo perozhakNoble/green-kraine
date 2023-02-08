@@ -17,12 +17,18 @@ import { H1, H2, H3, H4, H5, H6, H7 } from 'src/components/UI/Typography'
 
 type IForm = {
   text: string
+  date: any
+  number: number
+  email: string
 }
 
 const UiExamplesPage = () => {
   const formMethods = useForm<IForm>({
     defaultValues: {
       text: '',
+      date: undefined,
+      number: undefined,
+      email: '',
     },
   })
 
@@ -48,6 +54,8 @@ const UiExamplesPage = () => {
     console.log(values)
     setIsLoadingFormSubmit(false)
   }
+
+  console.log(formMethods.watch('date'))
 
   return (
     <>
@@ -574,7 +582,7 @@ const UiExamplesPage = () => {
           <FormWrapper<IForm>
             className="flex w-96 flex-col gap-2"
             formMethods={formMethods}
-            mode={FormType.both}
+            mode={FormType.editOnly}
             onSubmit={submitForm}
             loading={isLoadingFormSubmit}
           >
@@ -582,8 +590,36 @@ const UiExamplesPage = () => {
               name="text"
               type={FieldType.text}
               validation={{
+                required: 'Text is required',
+              }}
+            />
+            <Field<IForm>
+              name="date"
+              type={FieldType.date}
+              validation={{
                 required: true,
               }}
+              placeholder={'date'}
+            />
+            <Field<IForm>
+              name="email"
+              type={FieldType.email}
+              validation={{
+                required: true,
+              }}
+              disabled={true}
+            />
+            <Field<IForm>
+              name="number"
+              type={FieldType.number}
+              validation={{
+                required: true,
+                min: {
+                  value: 0,
+                  message: 'Min value 1',
+                },
+              }}
+              placeholder="number"
             />
           </FormWrapper>
         </div>

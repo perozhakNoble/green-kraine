@@ -3,8 +3,11 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   mode: 'jit',
-  content: ['src/**/*.{js,jsx,ts,tsx}'],
-  darkMode: false,
+  content: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '../node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+  ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -21,4 +24,5 @@ module.exports = {
       },
     },
   },
+  plugins: [require('@tailwindcss/forms')],
 }
