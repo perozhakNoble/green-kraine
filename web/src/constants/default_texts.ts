@@ -5,8 +5,8 @@ export const DEFAULT_TOAST_HEADERS = {
 }
 
 export const DEFAULT_FORM_BUTTON_TEXTS = {
-  SUBMIT: 'Save',
-  CANCEL: 'Cancel',
+  SUBMIT: 'Зберегти',
+  CANCEL: 'Відмінити',
 }
 
 export const DEFAULT_INPUTS_TEXTS = {
