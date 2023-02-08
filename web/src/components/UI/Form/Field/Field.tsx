@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
+import ReactSelect, { components as ReactSelectComponents } from 'react-select'
 import Datepicker from 'react-tailwindcss-datepicker'
 
 import {
@@ -17,6 +18,7 @@ import {
 } from '@redwoodjs/forms'
 
 import { capitalize } from 'src/components/utils/string'
+import { DEFAULT_INPUTS_TEXTS } from 'src/constants'
 
 import { FormContext, FormType } from '../FormWrapper/FormWrapper'
 
@@ -26,6 +28,7 @@ export enum FieldType {
   number = 'number',
   date = 'date',
   email = 'email',
+  select = 'select',
 }
 // | 'input
 // | 'select'
@@ -85,6 +88,20 @@ export type IFieldProps<T> = {
       value?: any
       validation?: IFieldValidationRequired
     }
+  | ({
+      type: FieldType.select
+      validation?: IFieldValidationRequired
+      options: OptionType[]
+    } & (
+      | {
+          value?: OptionType[]
+          isMulti?: true
+        }
+      | {
+          value?: OptionType
+          isMulti?: false
+        }
+    ))
 )
 
 const Field = <T,>(props: IFieldProps<T>) => {
@@ -93,7 +110,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
   const required = props.validation?.required
     ? typeof props.validation?.required === 'string'
       ? props.validation?.required
-      : capitalize(props.name + ' є обовʼязковим')
+      : capitalize(props.name + ' ' + DEFAULT_INPUTS_TEXTS.IS_REQUIRED)
     : false
 
   const inputClass = classNames({
@@ -126,6 +143,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
 
   const previewClass = classNames({
     'block text-secondary font-light text-xs ml-1': true,
+    'flex flex-col': props.type === FieldType.select && props.isMulti,
   })
 
   const labelErrorClass = classNames({
@@ -255,6 +273,70 @@ const Field = <T,>(props: IFieldProps<T>) => {
             }}
           />
         )
+      case FieldType.select:
+        return (
+          <Controller
+            name={props.name}
+            rules={{
+              required,
+            }}
+            render={({ field }) => {
+              const NoOptionsMessage = (props) => {
+                return (
+                  <ReactSelectComponents.NoOptionsMessage {...props}>
+                    <span>{DEFAULT_INPUTS_TEXTS.NO_OPTIONS}</span>
+                  </ReactSelectComponents.NoOptionsMessage>
+                )
+              }
+
+              return (
+                <ReactSelect
+                  {...field}
+                  isMulti={props.isMulti}
+                  value={props.value || formMethods.watch(props.name) || ''}
+                  onChange={(option) => {
+                    formMethods.setValue(props.name, option as any, {
+                      shouldValidate: true,
+                    })
+                    props.onChange && props.onChange(option)
+                  }}
+                  styles={{
+                    input: (base) => ({
+                      ...base,
+                      input: {
+                        boxShadow: 'none !important',
+                      },
+                    }),
+                  }}
+                  components={{ NoOptionsMessage }}
+                  className="text-xs font-light"
+                  classNames={{
+                    valueContainer: () => '!px-4',
+                    indicatorSeparator: () => 'hidden',
+                    option: ({ isSelected, isFocused }) =>
+                      (isSelected
+                        ? '!bg-primary !text-white !font-medium '
+                        : isFocused
+                        ? '!bg-primary-light !bg-opacity-30 '
+                        : 'hover:!bg-primary-light hover:!bg-opacity-30 ') + '',
+
+                    control: ({ isFocused, isDisabled }) =>
+                      (isFocused
+                        ? '!border-teal-500 !ring !ring-teal-500/20 '
+                        : 'hover:!border-secondary ') +
+                      (isDisabled
+                        ? '!cursor-not-allowed !bg-gray-100 !opacity-70 '
+                        : 'hover:!cursor-pointer ') +
+                      '!text-secondary !placeholder-gray-400 !transition-all !duration-300 !border-secondary_light !min-h-[2.5rem] !w-full !rounded-xl !tracking-wide !border-[1px] !border-gray-300 !bg-white !text-xs !font-light',
+                  }}
+                  isDisabled={props.disabled}
+                  options={props.options}
+                  placeholder={props.placeholder}
+                />
+              )
+            }}
+          />
+        )
     }
   }
 
@@ -288,6 +370,26 @@ const Field = <T,>(props: IFieldProps<T>) => {
         return (
           <div className={previewClass}>
             {props.value || formMethods.watch(props.name) || 'N/A'}
+          </div>
+        )
+      case FieldType.select:
+        return (
+          <div className={previewClass}>
+            {props.isMulti === true
+              ? props.value ||
+                (formMethods.watch(props.name) as OptionType[]).length
+                ? (
+                    props.value ||
+                    (formMethods.watch(props.name) as OptionType[])
+                  ).map((value, idx) => (
+                    <div key={'' + idx + value?.value}>
+                      {value?.label || 'N/A'}
+                    </div>
+                  ))
+                : 'N/A'
+              : props.value?.value ||
+                (formMethods.watch(props.name) as OptionType)?.value ||
+                'N/A'}
           </div>
         )
     }

@@ -8,7 +8,10 @@ import { MetaTags } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import Button from 'src/components/UI/Button/Button'
-import Field, { FieldType } from 'src/components/UI/Form/Field/Field'
+import Field, {
+  FieldType,
+  OptionType,
+} from 'src/components/UI/Form/Field/Field'
 import FormWrapper, {
   FormType,
 } from 'src/components/UI/Form/FormWrapper/FormWrapper'
@@ -21,7 +24,28 @@ type IForm = {
   number: number
   email: string
   textarea: string
+  select: OptionType
+  selmulti: OptionType[]
 }
+
+const options = [
+  {
+    value: '1',
+    label: 'Label 1',
+  },
+  {
+    value: '2',
+    label: 'Label 2',
+  },
+  {
+    value: '3',
+    label: 'Label 3',
+  },
+  {
+    value: '4',
+    label: 'Label 4',
+  },
+]
 
 const UiExamplesPage = () => {
   const formMethods = useForm<IForm>({
@@ -31,6 +55,8 @@ const UiExamplesPage = () => {
       number: undefined,
       email: '',
       textarea: '',
+      select: undefined,
+      selmulti: [],
     },
   })
 
@@ -582,7 +608,7 @@ const UiExamplesPage = () => {
           <FormWrapper<IForm>
             className="flex w-96 flex-col gap-2"
             formMethods={formMethods}
-            mode={FormType.editOnly}
+            mode={FormType.both}
             onSubmit={submitForm}
             loading={isLoadingFormSubmit}
           >
@@ -626,6 +652,25 @@ const UiExamplesPage = () => {
                 },
               }}
               placeholder="number"
+            />
+            <Field<IForm>
+              name="select"
+              type={FieldType.select}
+              validation={{
+                required: true,
+              }}
+              placeholder="select"
+              options={options}
+            />
+            <Field<IForm>
+              name="selmulti"
+              type={FieldType.select}
+              isMulti
+              validation={{
+                required: true,
+              }}
+              placeholder="select"
+              options={options}
             />
           </FormWrapper>
         </div>
