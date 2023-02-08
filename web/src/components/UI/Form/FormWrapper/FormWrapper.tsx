@@ -72,7 +72,7 @@ const FormWrapper = <T,>({
   const handleSubmit = async (values: any) => {
     await onSubmit(values)
     if (!dontCloseEditAfterSubmit) {
-      setIsEdit(false)
+      setIsEdit(mode === FormType.editOnly)
     }
   }
 
@@ -122,9 +122,9 @@ const FormWrapper = <T,>({
               )
             }
             onClick={() => {
-              setIsEdit(false)
+              setIsEdit(mode === FormType.editOnly)
               formMethods.reset()
-              reset ?? reset()
+              reset && reset()
             }}
             color="dark"
           />

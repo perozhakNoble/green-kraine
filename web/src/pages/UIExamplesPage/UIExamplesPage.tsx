@@ -20,6 +20,7 @@ type IForm = {
   date: any
   number: number
   email: string
+  textarea: string
 }
 
 const UiExamplesPage = () => {
@@ -29,6 +30,7 @@ const UiExamplesPage = () => {
       date: undefined,
       number: undefined,
       email: '',
+      textarea: '',
     },
   })
 
@@ -589,6 +591,13 @@ const UiExamplesPage = () => {
               type={FieldType.text}
               validation={{
                 required: 'Text is required',
+              }}
+            />
+            <Field<IForm>
+              name="textarea"
+              type={FieldType.textarea}
+              validation={{
+                required: 'Textarea is required',
               }}
             />
             <Field<IForm>

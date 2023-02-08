@@ -12,6 +12,7 @@ import {
   Label,
   NumberField,
   Path,
+  TextAreaField,
   TextField,
 } from '@redwoodjs/forms'
 
@@ -21,6 +22,7 @@ import { FormContext, FormType } from '../FormWrapper/FormWrapper'
 
 export enum FieldType {
   text = 'text',
+  textarea = 'textarea',
   number = 'number',
   date = 'date',
   email = 'email',
@@ -68,12 +70,7 @@ export type IFieldProps<T> = {
   withoutLabel?: boolean
 } & (
   | {
-      type: FieldType.text
-      value?: string
-      validation?: IFieldValidationRequired
-    }
-  | {
-      type: FieldType.email
+      type: FieldType.text | FieldType.email | FieldType.textarea
       value?: string
       validation?: IFieldValidationRequired
     }
@@ -134,6 +131,23 @@ const Field = <T,>(props: IFieldProps<T>) => {
       case FieldType.text:
         return (
           <TextField
+            name={props.name}
+            onChange={(e) => {
+              formMethods.setValue(props.name, e.target.value as any, {
+                shouldValidate: true,
+              })
+              props.onChange && props.onChange(e.target.value)
+            }}
+            className={inputClass}
+            value={props.value || formMethods.watch(props.name) || ''}
+            placeholder={props.placeholder}
+            validation={{ required: props.validation?.required }}
+            disabled={props.disabled}
+          />
+        )
+      case FieldType.textarea:
+        return (
+          <TextAreaField
             name={props.name}
             onChange={(e) => {
               formMethods.setValue(props.name, e.target.value as any, {
@@ -253,6 +267,12 @@ const Field = <T,>(props: IFieldProps<T>) => {
           </div>
         )
       case FieldType.text:
+        return (
+          <div className={previewClass}>
+            {props.value || formMethods.watch(props.name) || 'N/A'}
+          </div>
+        )
+      case FieldType.textarea:
         return (
           <div className={previewClass}>
             {props.value || formMethods.watch(props.name) || 'N/A'}
