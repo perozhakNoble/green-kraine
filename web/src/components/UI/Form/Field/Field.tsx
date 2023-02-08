@@ -90,6 +90,12 @@ export type IFieldProps<T> = {
 const Field = <T,>(props: IFieldProps<T>) => {
   const { formMethods, mode, isEdit: isEditTurnedOn } = useContext(FormContext)
 
+  const required = props.validation?.required
+    ? typeof props.validation?.required === 'string'
+      ? props.validation?.required
+      : capitalize(props.name + ' є обовʼязковим')
+    : false
+
   const inputClass = classNames({
     'border-secondary_light relative block min-h-[2.5rem] w-full rounded-xl':
       true,
@@ -141,7 +147,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
             className={inputClass}
             value={props.value || formMethods.watch(props.name) || ''}
             placeholder={props.placeholder}
-            validation={{ required: props.validation?.required }}
+            validation={{ required }}
             disabled={props.disabled}
           />
         )
@@ -158,7 +164,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
             className={inputClass}
             value={props.value || formMethods.watch(props.name) || ''}
             placeholder={props.placeholder}
-            validation={{ required: props.validation?.required }}
+            validation={{ required }}
             disabled={props.disabled}
           />
         )
@@ -175,7 +181,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
             className={inputClass}
             value={props.value || formMethods.watch(props.name) || ''}
             placeholder={props.placeholder}
-            validation={{ required: props.validation?.required }}
+            validation={{ required }}
             disabled={props.disabled}
           />
         )
@@ -184,7 +190,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
           <Controller
             name={props.name}
             rules={{
-              required: props.validation?.required,
+              required,
             }}
             render={() => {
               const value = {
@@ -237,7 +243,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
               }
             }}
             validation={{
-              required: props.validation?.required,
+              required,
               min: {
                 message: props.validation?.min?.message,
                 value: props.validation?.min?.value,
