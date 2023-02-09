@@ -10,7 +10,7 @@ import { toast } from '@redwoodjs/web/toast'
 import Button from 'src/components/UI/Button/Button'
 import Field, {
   FieldType,
-  OptionType,
+  OptionTypeValue,
 } from 'src/components/UI/Form/Field/Field'
 import FormWrapper, {
   FormType,
@@ -24,8 +24,8 @@ type IForm = {
   number: number
   email: string
   textarea: string
-  select: OptionType
-  selmulti: OptionType[]
+  select: OptionTypeValue
+  selmulti: OptionTypeValue[]
 }
 
 const options = [

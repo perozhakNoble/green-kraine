@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames'
+import dayjs from 'dayjs'
 import ReactSelect, { components as ReactSelectComponents } from 'react-select'
 import Datepicker from 'react-tailwindcss-datepicker'
 
@@ -18,7 +19,7 @@ import {
 } from '@redwoodjs/forms'
 
 import { capitalize } from 'src/components/utils/string'
-import { DEFAULT_INPUTS_TEXTS } from 'src/constants'
+import { DATE_FORMAT, DEFAULT_INPUTS_TEXTS } from 'src/constants'
 
 import { FormContext, FormType } from '../FormWrapper/FormWrapper'
 
@@ -30,18 +31,16 @@ export enum FieldType {
   email = 'email',
   select = 'select',
 }
-// | 'input
-// | 'select'
-// | 'email'
-// | 'textarea'
-// | 'number'
+
+// | 'time'
 // | 'checkbox'
-// | 'date'
 // | 'radio'
 // | 'file'
 
+export type OptionTypeValue = number | string
+
 export type OptionType = {
-  value: number | string
+  value: OptionTypeValue
   label: number | string
 }
 
@@ -94,11 +93,11 @@ export type IFieldProps<T> = {
       options: OptionType[]
     } & (
       | {
-          value?: OptionType[]
+          value?: OptionTypeValue[]
           isMulti?: true
         }
       | {
-          value?: OptionType
+          value?: OptionTypeValue
           isMulti?: false
         }
     ))
@@ -149,6 +148,28 @@ const Field = <T,>(props: IFieldProps<T>) => {
   const labelErrorClass = classNames({
     'block text-error font-light text-sm': true,
   })
+
+  const getValueForSelect = (
+    valueToParse: OptionTypeValue | OptionTypeValue[]
+  ): OptionType | OptionType[] => {
+    if (props.type !== FieldType.select) return undefined
+
+    if (!Array.isArray(valueToParse)) {
+      return props.options.find((opt) => opt.value === valueToParse)
+    } else {
+      return valueToParse.map((value) =>
+        props.options.find((opt) => opt.value === value)
+      )
+    }
+  }
+
+  const getLabelFromValue = (
+    valueToParse: OptionTypeValue
+  ): OptionTypeValue => {
+    if (props.type !== FieldType.select) return undefined
+
+    return props.options.find((opt) => opt.value === valueToParse)?.label || ''
+  }
 
   const input = () => {
     switch (props.type) {
@@ -233,7 +254,7 @@ const Field = <T,>(props: IFieldProps<T>) => {
                   disabled={props.disabled}
                   i18n={'uk'}
                   primaryColor={'teal'}
-                  displayFormat="DD/MM/YYYY"
+                  displayFormat={DATE_FORMAT}
                 />
               )
             }}
@@ -293,12 +314,19 @@ const Field = <T,>(props: IFieldProps<T>) => {
                 <ReactSelect
                   {...field}
                   isMulti={props.isMulti}
-                  value={props.value || formMethods.watch(props.name) || ''}
+                  value={
+                    getValueForSelect(
+                      props.value || formMethods.watch(props.name)
+                    ) || ''
+                  }
                   onChange={(option) => {
-                    formMethods.setValue(props.name, option as any, {
+                    const val = Array.isArray(option)
+                      ? option.map((opt) => opt.value)
+                      : (option as OptionType).value
+                    formMethods.setValue(props.name, val as any, {
                       shouldValidate: true,
                     })
-                    props.onChange && props.onChange(option)
+                    props.onChange && props.onChange(val)
                   }}
                   styles={{
                     input: (base) => ({
@@ -342,34 +370,15 @@ const Field = <T,>(props: IFieldProps<T>) => {
 
   const preview = () => {
     switch (props.type) {
-      case FieldType.number:
-        return (
-          <div className={previewClass}>
-            {props.value || formMethods.watch(props.name) || 'N/A'}
-          </div>
-        )
       case FieldType.date:
         return (
           <div className={previewClass}>
-            {props.value || formMethods.watch(props.name) || 'N/A'}
-          </div>
-        )
-      case FieldType.text:
-        return (
-          <div className={previewClass}>
-            {props.value || formMethods.watch(props.name) || 'N/A'}
-          </div>
-        )
-      case FieldType.textarea:
-        return (
-          <div className={previewClass}>
-            {props.value || formMethods.watch(props.name) || 'N/A'}
-          </div>
-        )
-      case FieldType.email:
-        return (
-          <div className={previewClass}>
-            {props.value || formMethods.watch(props.name) || 'N/A'}
+            {props.value || formMethods.watch(props.name)
+              ? dayjs(
+                  props.value || formMethods.watch(props.name),
+                  'YYYY-M-D'
+                ).format(DATE_FORMAT)
+              : 'N/A'}
           </div>
         )
       case FieldType.select:
@@ -377,19 +386,25 @@ const Field = <T,>(props: IFieldProps<T>) => {
           <div className={previewClass}>
             {props.isMulti === true
               ? props.value ||
-                (formMethods.watch(props.name) as OptionType[]).length
+                (formMethods.watch(props.name) as OptionTypeValue[])?.length
                 ? (
                     props.value ||
-                    (formMethods.watch(props.name) as OptionType[])
+                    (formMethods.watch(props.name) as OptionTypeValue[])
                   ).map((value, idx) => (
-                    <div key={'' + idx + value?.value}>
-                      {value?.label || 'N/A'}
+                    <div key={'' + idx + value}>
+                      {getLabelFromValue(value) || 'N/A'}
                     </div>
                   ))
                 : 'N/A'
-              : props.value?.value ||
-                (formMethods.watch(props.name) as OptionType)?.value ||
-                'N/A'}
+              : getLabelFromValue(
+                  props.value || formMethods.watch(props.name)
+                ) || 'N/A'}
+          </div>
+        )
+      default:
+        return (
+          <div className={previewClass}>
+            {props.value || formMethods.watch(props.name) || 'N/A'}
           </div>
         )
     }
