@@ -15,6 +15,7 @@ import Field, {
 import FormWrapper, {
   FormType,
 } from 'src/components/UI/Form/FormWrapper/FormWrapper'
+import { ConfirmationDialog, Dialog } from 'src/components/UI/Modals'
 import ToastContent from 'src/components/UI/ToastContent'
 import { H1, H2, H3, H4, H5, H6, H7 } from 'src/components/UI/Typography'
 
@@ -62,6 +63,10 @@ const UiExamplesPage = () => {
 
   const [isLoadingFormSubmit, setIsLoadingFormSubmit] = useState(false)
   const [loadingOptions, setLoadingOptions] = useState(null)
+  const [isPrimaryConfirmModal, setIsPrimaryConfirmModal] = useState(false)
+  const [isErrorConfirmModal, setIsErrorConfirmModal] = useState(false)
+  const [isWarningConfirmModal, setIsWarningConfirmModal] = useState(false)
+  const [isDialog, setIsDialog] = useState(false)
 
   useEffect(() => {
     setLoadingOptions(true)
@@ -607,6 +612,60 @@ const UiExamplesPage = () => {
                 )
               }
             />
+          </div>
+        </div>
+        {/*Dialog*/}
+        <div className="p-2">
+          <h2 className="my-2 text-xl">Dialogs</h2>
+          <div className="flex flex-wrap gap-4">
+            <Button
+              text="Primary confirm"
+              onClick={() => setIsPrimaryConfirmModal(true)}
+            />
+            <ConfirmationDialog
+              header="Header primary"
+              text="Primary confirm"
+              type="primary"
+              confirm={() => setIsPrimaryConfirmModal(false)}
+              close={() => setIsPrimaryConfirmModal(false)}
+              isOpen={isPrimaryConfirmModal}
+            />
+            <Button
+              text="Warning confirm"
+              onClick={() => setIsWarningConfirmModal(true)}
+              color="warning"
+            />
+            <ConfirmationDialog
+              header="Header primary"
+              text="Warning confirm"
+              type="warning"
+              confirm={() => setIsWarningConfirmModal(false)}
+              close={() => setIsWarningConfirmModal(false)}
+              isOpen={isWarningConfirmModal}
+            />
+            <Button
+              text="Error confirm"
+              color="error"
+              onClick={() => setIsErrorConfirmModal(true)}
+            />
+            <ConfirmationDialog
+              header="Header error"
+              text="Error confirm"
+              type="error"
+              confirm={() => setIsErrorConfirmModal(false)}
+              close={() => setIsErrorConfirmModal(false)}
+              isOpen={isErrorConfirmModal}
+            />
+            <Button text="Dialog" onClick={() => setIsDialog(true)} />
+            <Dialog
+              open={isDialog}
+              onClose={() => {
+                setIsDialog(false)
+                console.log('here close dialog')
+              }}
+            >
+              Hello anything
+            </Dialog>
           </div>
         </div>
 

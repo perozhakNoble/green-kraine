@@ -17,6 +17,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "latest",
+    "@headlessui/react": "^1.7.10",
     "@redwoodjs/forms": "4.0.1",
     "@redwoodjs/router": "4.0.1",
     "@redwoodjs/web": "4.0.1",

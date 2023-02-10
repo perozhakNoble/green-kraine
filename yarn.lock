@@ -3359,6 +3359,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@headlessui/react@npm:^1.7.10":
+  version: 1.7.10
+  resolution: "@headlessui/react@npm:1.7.10"
+  dependencies:
+    client-only: ^0.0.1
+  peerDependencies:
+    react: ^16 || ^17 || ^18
+    react-dom: ^16 || ^17 || ^18
+  checksum: 565dd6cf1c8076f7b9b05fb7eb63d1aeb79650148fd80273cbb589d0ad1dc37a9d476b2fc340ce1107d0babcdfd2947702d84da93b95368baa78a41dc26f617b
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.8":
   version: 0.11.8
   resolution: "@humanwhocodes/config-array@npm:0.11.8"
@@ -10085,6 +10097,13 @@ __metadata:
   version: 3.0.0
   resolution: "cli-width@npm:3.0.0"
   checksum: 125a62810e59a2564268c80fdff56c23159a7690c003e34aeb2e68497dccff26911998ff49c33916fcfdf71e824322cc3953e3f7b48b27267c7a062c81348a9a
+  languageName: node
+  linkType: hard
+
+"client-only@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "client-only@npm:0.0.1"
+  checksum: 9d6cfd0c19e1c96a434605added99dff48482152af791ec4172fb912a71cff9027ff174efd8cdb2160cc7f377543e0537ffc462d4f279bc4701de3f2a3c4b358
   languageName: node
   linkType: hard
 
@@ -24277,6 +24296,7 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": ^6.2.1
     "@fortawesome/free-solid-svg-icons": ^6.2.1
     "@fortawesome/react-fontawesome": latest
+    "@headlessui/react": ^1.7.10
     "@redwoodjs/forms": 4.0.1
     "@redwoodjs/router": 4.0.1
     "@redwoodjs/web": 4.0.1
