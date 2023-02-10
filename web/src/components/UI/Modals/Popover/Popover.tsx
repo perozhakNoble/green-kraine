@@ -1,7 +1,7 @@
 import { Fragment, ReactNode } from 'react'
 
 import { Popover, Transition } from '@headlessui/react'
-type PopoverProps = {
+export type PopoverProps = {
   title: string | ReactNode
   className?: string
   children: (close: { close: () => void }) => ReactNode

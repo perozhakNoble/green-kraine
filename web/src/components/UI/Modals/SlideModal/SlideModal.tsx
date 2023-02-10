@@ -6,7 +6,7 @@ import { Fragment, ReactNode } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import classnames from 'classnames'
 
-export interface SlideOverModalProps {
+export interface SlideModalProps {
   justified?: 'left' | 'right'
   title?: string
   children: ReactNode
@@ -37,7 +37,7 @@ const SlideOverModal = ({
   withoutAnimation = false,
   children,
   afterModalClose,
-}: SlideOverModalProps) => {
+}: SlideModalProps) => {
   const panelClass = classnames({
     'fixed inset-y-0 max-w-full flex': true,
     'right-0 pl-10': justified === 'right',

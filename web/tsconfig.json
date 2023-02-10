@@ -8,12 +8,15 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "rootDirs": [
+      "./src/components/UI",
       "./src",
       "../.redwood/types/mirror/web/src",
       "../api/src",
       "../.redwood/types/mirror/api/src"
     ],
     "paths": {
+      "@ui/*": ["./src/components/UI/*"],
+      "@ui": ["./src/components/UI/index"],
       "src/*": [
         "./src/*",
         "../.redwood/types/mirror/web/src/*",
@@ -29,6 +32,7 @@
     "jsx": "preserve",
   },
   "include": [
+    "src/components/UI",
     "src",
     "../.redwood/types/includes/all-*",
     "../.redwood/types/includes/web-*",

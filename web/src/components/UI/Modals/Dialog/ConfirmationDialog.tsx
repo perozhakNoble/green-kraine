@@ -6,7 +6,7 @@ import Button from '../../Button/Button'
 
 import Dialog from './Dialog'
 
-type ConfirmationDialogProps = {
+export type ConfirmationDialogProps = {
   close: () => void
   isOpen: boolean
   afterModalClose?: () => void

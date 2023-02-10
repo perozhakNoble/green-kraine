@@ -2,28 +2,23 @@ import { useEffect, useState } from 'react'
 
 import { faRadio, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-import { useForm } from '@redwoodjs/forms'
-import { MetaTags } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
-
-import Button from 'src/components/UI/Button/Button'
-import Disclosure from 'src/components/UI/Disclosure/Disclosure'
-import Field, {
-  FieldType,
-  OptionTypeValue,
-} from 'src/components/UI/Form/Field/Field'
-import FormWrapper, {
-  FormType,
-} from 'src/components/UI/Form/FormWrapper/FormWrapper'
 import {
+  Form,
+  Disclosure,
+  Button,
+  ToastContent,
   ConfirmationDialog,
   Dialog,
   Popover,
   SlideModal,
-} from 'src/components/UI/Modals'
-import ToastContent from 'src/components/UI/ToastContent'
-import { H1, H2, H3, H4, H5, H6, H7 } from 'src/components/UI/Typography'
+} from '@ui'
+import { FieldType, FormType } from '@ui/enums'
+import { OptionTypeValue } from '@ui/types'
+import { H1, H2, H3, H4, H5, H6, H7 } from '@ui/Typography'
+
+import { useForm } from '@redwoodjs/forms'
+import { MetaTags } from '@redwoodjs/web'
+import { toast } from '@redwoodjs/web/toast'
 
 type IForm = {
   text: string
@@ -730,28 +725,28 @@ const UiExamplesPage = () => {
         {/*Inputs*/}
         <div className="p-2">
           <h2 className="my-2 text-xl">Inputs</h2>
-          <FormWrapper<IForm>
+          <Form.Wrapper<IForm>
             className="flex w-96 flex-col gap-2"
             formMethods={formMethods}
             mode={FormType.editOnly}
             onSubmit={submitForm}
             loading={isLoadingFormSubmit}
           >
-            <Field<IForm>
+            <Form.Field<IForm>
               name="text"
               type={FieldType.text}
               validation={{
                 required: 'Text is required',
               }}
             />
-            <Field<IForm>
+            <Form.Field<IForm>
               name="textarea"
               type={FieldType.textarea}
               validation={{
                 required: 'Textarea is required',
               }}
             />
-            <Field<IForm>
+            <Form.Field<IForm>
               name="date"
               type={FieldType.date}
               validation={{
@@ -759,14 +754,14 @@ const UiExamplesPage = () => {
               }}
               placeholder={'date'}
             />
-            <Field<IForm>
+            <Form.Field<IForm>
               name="email"
               type={FieldType.email}
               validation={{
                 required: true,
               }}
             />
-            <Field<IForm>
+            <Form.Field<IForm>
               name="number"
               type={FieldType.number}
               validation={{
@@ -778,7 +773,7 @@ const UiExamplesPage = () => {
               }}
               placeholder="number"
             />
-            <Field<IForm>
+            <Form.Field<IForm>
               name="select"
               type={FieldType.select}
               validation={{
@@ -788,7 +783,7 @@ const UiExamplesPage = () => {
               options={options}
               loading={loadingOptions}
             />
-            <Field<IForm>
+            <Form.Field<IForm>
               name="selmulti"
               type={FieldType.select}
               isMulti
@@ -798,7 +793,7 @@ const UiExamplesPage = () => {
               placeholder="select"
               options={options}
             />
-          </FormWrapper>
+          </Form.Wrapper>
         </div>
       </div>
     </>

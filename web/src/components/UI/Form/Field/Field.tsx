@@ -65,7 +65,7 @@ export type IFieldValidationMinMax = {
 
 // export type IFieldValidation = IFieldValidationRequired & IFieldValidationMinMax
 
-export type IFieldProps<T> = {
+export type FormFieldProps<T> = {
   disabled?: boolean
   icon?: IconProp
   name: Path<T>
@@ -108,7 +108,7 @@ export type IFieldProps<T> = {
     ))
 )
 
-const Field = <T,>(props: IFieldProps<T>) => {
+const Field = <T,>(props: FormFieldProps<T>) => {
   const { formMethods, mode, isEdit: isEditTurnedOn } = useContext(FormContext)
 
   const required = props.validation?.required

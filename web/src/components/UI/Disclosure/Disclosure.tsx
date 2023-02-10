@@ -1,7 +1,7 @@
 import { Disclosure as ReactDisclosure, Transition } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 
-interface CustomDisclosureProps {
+export interface DisclosureProps {
   title: string | JSX.Element
   children: React.ReactNode
   editButton?: React.ReactNode
@@ -25,7 +25,7 @@ const Disclosure = ({
   buttonFontWeight = 'font-light',
   onClickToClose,
   onClickToOpen,
-}: CustomDisclosureProps) => {
+}: DisclosureProps) => {
   return (
     <ReactDisclosure as="div" className="mt-2">
       {({ open }) => (

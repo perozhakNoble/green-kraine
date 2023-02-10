@@ -2,7 +2,7 @@ import classNames from 'classnames'
 
 import { DEFAULT_TOAST_HEADERS } from 'src/constants'
 
-export type IToastContentProps = {
+export type ToastContentProps = {
   header?: string
   text: string
   type: 'loading' | 'error' | 'success'
@@ -12,7 +12,7 @@ const ToastContent = ({
   header: headerFromProps = '',
   text,
   type,
-}: IToastContentProps) => {
+}: ToastContentProps) => {
   const header =
     headerFromProps ||
     (type === 'loading'
