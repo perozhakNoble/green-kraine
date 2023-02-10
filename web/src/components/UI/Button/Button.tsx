@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import classnames from 'classnames'
 
+import { DEFAULT_FORM_BUTTON_TEXTS } from 'src/constants'
+
 import Spinner from '../Spinner'
 
 export interface ButtonProps {
@@ -63,7 +65,7 @@ const Button = ({
           <div className="mr-2">
             <Spinner size="sm" />
           </div>
-          Завантаження...
+          {DEFAULT_FORM_BUTTON_TEXTS.LOADING}
         </button>
       ) : text !== '' ? (
         <button

@@ -1,12 +1,13 @@
 export const DEFAULT_TOAST_HEADERS = {
-  ERROR: 'Error!',
-  SUCCESS: 'Success!',
-  LOADING: 'Loading..',
+  ERROR: 'Помилка(',
+  SUCCESS: 'Успіх!',
+  LOADING: 'Завантаження..',
 }
 
 export const DEFAULT_FORM_BUTTON_TEXTS = {
   SUBMIT: 'Зберегти',
   CANCEL: 'Відмінити',
+  LOADING: 'Завантаження..',
 }
 
 export const DEFAULT_INPUTS_TEXTS = {

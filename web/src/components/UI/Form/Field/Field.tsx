@@ -19,7 +19,11 @@ import {
 } from '@redwoodjs/forms'
 
 import { capitalize } from 'src/components/utils/string'
-import { DATE_FORMAT, DEFAULT_INPUTS_TEXTS } from 'src/constants'
+import {
+  DATE_FORMAT,
+  DEFAULT_FORM_BUTTON_TEXTS,
+  DEFAULT_INPUTS_TEXTS,
+} from 'src/constants'
 
 import { FormContext, FormType } from '../FormWrapper/FormWrapper'
 
@@ -91,6 +95,7 @@ export type IFieldProps<T> = {
       type: FieldType.select
       validation?: IFieldValidationRequired
       options: OptionType[]
+      loading?: boolean
     } & (
       | {
           value?: OptionTypeValue[]
@@ -357,9 +362,14 @@ const Field = <T,>(props: IFieldProps<T>) => {
                         : 'hover:!cursor-pointer ') +
                       '!text-secondary !placeholder-gray-400 !transition-all !duration-300 !border-secondary_light !min-h-[2.5rem] !w-full !rounded-xl !tracking-wide !border-[1px] !border-gray-300 !bg-white !text-xs !font-light',
                   }}
-                  isDisabled={props.disabled}
+                  isDisabled={props.disabled || props.loading}
+                  isLoading={props.loading}
                   options={props.options}
-                  placeholder={props.placeholder}
+                  placeholder={
+                    props.loading
+                      ? DEFAULT_FORM_BUTTON_TEXTS.LOADING
+                      : props.placeholder
+                  }
                 />
               )
             }}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { faRadio, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -61,6 +61,14 @@ const UiExamplesPage = () => {
   })
 
   const [isLoadingFormSubmit, setIsLoadingFormSubmit] = useState(false)
+  const [loadingOptions, setLoadingOptions] = useState(null)
+
+  useEffect(() => {
+    setLoadingOptions(true)
+    setTimeout(() => {
+      setLoadingOptions(false)
+    }, 1500)
+  }, [])
 
   const submitForm = async (values: IForm) => {
     setIsLoadingFormSubmit(true)
@@ -608,7 +616,7 @@ const UiExamplesPage = () => {
           <FormWrapper<IForm>
             className="flex w-96 flex-col gap-2"
             formMethods={formMethods}
-            mode={FormType.both}
+            mode={FormType.editOnly}
             onSubmit={submitForm}
             loading={isLoadingFormSubmit}
           >
@@ -661,6 +669,7 @@ const UiExamplesPage = () => {
               }}
               placeholder="select"
               options={options}
+              loading={loadingOptions}
             />
             <Field<IForm>
               name="selmulti"
