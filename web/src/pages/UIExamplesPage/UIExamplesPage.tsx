@@ -16,7 +16,12 @@ import Field, {
 import FormWrapper, {
   FormType,
 } from 'src/components/UI/Form/FormWrapper/FormWrapper'
-import { ConfirmationDialog, Dialog, Popover } from 'src/components/UI/Modals'
+import {
+  ConfirmationDialog,
+  Dialog,
+  Popover,
+  SlideModal,
+} from 'src/components/UI/Modals'
 import ToastContent from 'src/components/UI/ToastContent'
 import { H1, H2, H3, H4, H5, H6, H7 } from 'src/components/UI/Typography'
 
@@ -68,6 +73,7 @@ const UiExamplesPage = () => {
   const [isErrorConfirmModal, setIsErrorConfirmModal] = useState(false)
   const [isWarningConfirmModal, setIsWarningConfirmModal] = useState(false)
   const [isDialog, setIsDialog] = useState(false)
+  const [isSlideModal, setIsSlideModal] = useState(false)
 
   useEffect(() => {
     setLoadingOptions(true)
@@ -671,7 +677,24 @@ const UiExamplesPage = () => {
           </div>
         </div>
 
-        {/* Disclosure*/}
+        {/* Slide Modal*/}
+        <div className="p-2">
+          <h2
+            className="text-xm my-2 w-fit cursor-pointer rounded-lg border-[1px] border-primary p-2"
+            onClick={() => setIsSlideModal(true)}
+          >
+            Slide Modal
+          </h2>
+          <SlideModal
+            open={isSlideModal}
+            setClosed={() => setIsSlideModal(false)}
+            title="Title"
+          >
+            <>Content</>
+          </SlideModal>
+        </div>
+
+        {/* Disclosure */}
         <div className="p-2">
           <h2 className="text-xm my-2">Disclosure</h2>
           <Disclosure
