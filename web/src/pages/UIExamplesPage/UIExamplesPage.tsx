@@ -8,6 +8,7 @@ import { MetaTags } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import Button from 'src/components/UI/Button/Button'
+import Disclosure from 'src/components/UI/Disclosure/Disclosure'
 import Field, {
   FieldType,
   OptionTypeValue,
@@ -15,7 +16,7 @@ import Field, {
 import FormWrapper, {
   FormType,
 } from 'src/components/UI/Form/FormWrapper/FormWrapper'
-import { ConfirmationDialog, Dialog } from 'src/components/UI/Modals'
+import { ConfirmationDialog, Dialog, Popover } from 'src/components/UI/Modals'
 import ToastContent from 'src/components/UI/ToastContent'
 import { H1, H2, H3, H4, H5, H6, H7 } from 'src/components/UI/Typography'
 
@@ -614,6 +615,7 @@ const UiExamplesPage = () => {
             />
           </div>
         </div>
+
         {/*Dialog*/}
         <div className="p-2">
           <h2 className="my-2 text-xl">Dialogs</h2>
@@ -667,6 +669,39 @@ const UiExamplesPage = () => {
               Hello anything
             </Dialog>
           </div>
+        </div>
+
+        {/* Disclosure*/}
+        <div className="p-2">
+          <h2 className="text-xm my-2">Disclosure</h2>
+          <Disclosure
+            onClickToClose={() => {
+              console.log('onClickToClose')
+            }}
+            onClickToOpen={() => {
+              console.log('onClickToOpen')
+            }}
+            title={'Disclosure'}
+            buttonTextColor="text-primary"
+            buttonFontSize="text-md"
+            buttonFontWeight="font-semibold"
+          >
+            <>Some children</>
+          </Disclosure>
+        </div>
+
+        {/* Popover */}
+        <div className="p-2">
+          <h2 className="my-2 text-xl">Popover</h2>
+          <Popover title="Popover" onOpen={() => console.log('Popover opened')}>
+            {({ close }) => (
+              <>
+                <H5>Hello</H5>
+
+                <Button onClick={close} text="Close" color="dark" />
+              </>
+            )}
+          </Popover>
         </div>
 
         {/*Inputs*/}

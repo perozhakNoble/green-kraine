@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import { Dialog as ReactDialog, Transition } from '@headlessui/react'
 import classnames from 'classnames'
 
-export interface ModalProps {
+interface ModalProps {
   open: boolean
   children?: React.ReactNode
   size?: 'sm' | 'md' | 'lg'
