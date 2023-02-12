@@ -30,6 +30,7 @@ type IForm = {
   selmulti: OptionTypeValue[]
   checkbox: boolean
   radio: string
+  toggle: boolean
 }
 
 const options = [
@@ -63,6 +64,7 @@ const UiExamplesPage = () => {
       selmulti: [],
       checkbox: undefined,
       radio: undefined,
+      toggle: undefined,
     },
   })
 
@@ -817,6 +819,12 @@ const UiExamplesPage = () => {
               validation={{
                 required: true,
               }}
+            />
+            <Form.Field<IForm>
+              name="toggle"
+              type={FieldType.toggle}
+              text="Yes"
+              leftText="No"
             />
           </Form.Wrapper>
         </div>

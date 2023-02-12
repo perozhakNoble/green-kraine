@@ -2,6 +2,7 @@ import { useContext } from 'react'
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Switch } from '@headlessui/react'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import ReactSelect, { components as ReactSelectComponents } from 'react-select'
@@ -38,6 +39,7 @@ export enum FieldType {
   select = 'select',
   checkbox = 'checkbox',
   radio = 'radio',
+  toggle = 'toggle',
 }
 
 // | 'time'
@@ -79,6 +81,12 @@ export type FormFieldProps<T> = {
       type: FieldType.checkbox
       value?: boolean
       validation?: IFieldValidationRequired
+    }
+  | {
+      type: FieldType.toggle
+      value?: boolean
+      leftText?: string
+      text?: string
     }
   | {
       type: FieldType.radio
@@ -128,12 +136,15 @@ export type FormFieldProps<T> = {
 
 const Field = <T,>(props: FormFieldProps<T>) => {
   const { formMethods, mode, isEdit: isEditTurnedOn } = useContext(FormContext)
+  const isEdit =
+    (mode === FormType.both || mode === FormType.editOnly) && isEditTurnedOn
 
-  const required = props.validation?.required
-    ? typeof props.validation?.required === 'string'
-      ? props.validation?.required
-      : capitalize(props.name + ' ' + DEFAULT_INPUTS_TEXTS.IS_REQUIRED)
-    : false
+  const required =
+    props.type !== FieldType.toggle && props.validation?.required
+      ? typeof props.validation?.required === 'string'
+        ? props.validation?.required
+        : capitalize(props.name + ' ' + DEFAULT_INPUTS_TEXTS.IS_REQUIRED)
+      : false
 
   const inputClass = classNames({
     'border-secondary_light relative block min-h-[2.5rem] w-full rounded-xl':
@@ -153,26 +164,28 @@ const Field = <T,>(props: FormFieldProps<T>) => {
   const inputGroupWrapperClass = classNames({
     '': true,
     'flex flex-row-reverse gap-x-4 justify-end items-center flex-wrap':
-      props.type === FieldType.checkbox,
+      props.type === FieldType.checkbox && isEdit,
   })
 
   const inputGroupClass = classNames({
     'mt-1 relative rounded-xl': true,
     'w-24': props.type === FieldType.number,
-    'w-3 h-5 mb-2': props.type === FieldType.checkbox,
+    'w-3 h-5 mb-2': props.type === FieldType.checkbox && isEdit,
   })
 
   const errorClass = classNames({
     'text-error text-xs font-light': true,
-    'a basis-full': props.type === FieldType.checkbox,
+    'basis-full': props.type === FieldType.checkbox && isEdit,
   })
 
   const labelClass = classNames({
     block: true,
-    'text-primary font-normal text-sm': props.type !== FieldType.checkbox,
+    'text-primary font-normal text-sm':
+      props.type !== FieldType.checkbox || !isEdit,
     'text-primary-light text-sm font-light mt-0.5':
-      props.type === FieldType.checkbox,
-    'cursor-pointer': props.type === FieldType.checkbox && !props.disabled,
+      props.type === FieldType.checkbox && isEdit,
+    'cursor-pointer':
+      props.type === FieldType.checkbox && !props.disabled && isEdit,
   })
 
   const previewClass = classNames({
@@ -182,8 +195,9 @@ const Field = <T,>(props: FormFieldProps<T>) => {
 
   const labelErrorClass = classNames({
     'block text-error font-light text-sm': true,
-    'cursor-pointer': props.type === FieldType.checkbox && !props.disabled,
-    'mt-0.5': props.type === FieldType.checkbox,
+    'cursor-pointer':
+      props.type === FieldType.checkbox && !props.disabled && !isEdit,
+    'mt-0.5': props.type === FieldType.checkbox && !isEdit,
   })
 
   const radioLabelClass = classNames({
@@ -241,6 +255,69 @@ const Field = <T,>(props: FormFieldProps<T>) => {
               props.value || (formMethods.watch(props.name) as boolean) || false
             }
             validation={{ required }}
+          />
+        )
+      case FieldType.toggle:
+        return (
+          <Controller
+            name={props.name}
+            control={formMethods.control}
+            render={({ field }) => {
+              // eslint-disable-next-line no-case-declarations
+              const label = props.text
+              // eslint-disable-next-line no-case-declarations
+              const leftLabel = props.leftText
+              // eslint-disable-next-line no-case-declarations
+              const enabled =
+                props.value || formMethods.watch(props.name) || false
+              // eslint-disable-next-line no-case-declarations
+              const onChange = (val) => {
+                formMethods.setValue(props.name, val as any, {
+                  shouldValidate: true,
+                })
+                props.onChange && props.onChange(val)
+              }
+              return (
+                <Switch.Group as="div" className="flex items-center">
+                  {leftLabel ? (
+                    <Switch.Label as="span" className="mr-1 sm:mr-3">
+                      <span className="text-[11px] font-normal text-gray-500 sm:text-xs">
+                        <span>{leftLabel}</span>{' '}
+                      </span>
+                    </Switch.Label>
+                  ) : null}
+                  <Switch
+                    checked={enabled}
+                    disabled={props.disabled}
+                    {...field}
+                    onChange={onChange}
+                    className={classNames({
+                      'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:bg-opacity-60 disabled:hover:cursor-default':
+                        true,
+                      'bg-primary': enabled,
+                      'bg-gray-200': !enabled,
+                    })}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={classNames({
+                        'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out':
+                          true,
+                        'translate-x-5': enabled,
+                        'translate-x-0': !enabled,
+                      })}
+                    />
+                  </Switch>
+                  {label ? (
+                    <Switch.Label as="span" className="ml-1 sm:ml-3">
+                      <span className="text-[11px] font-normal text-gray-500 sm:text-xs">
+                        <span>{label}</span>{' '}
+                      </span>
+                    </Switch.Label>
+                  ) : null}
+                </Switch.Group>
+              )
+            }}
           />
         )
       case FieldType.radio:
@@ -482,16 +559,12 @@ const Field = <T,>(props: FormFieldProps<T>) => {
   }
 
   const preview = () => {
+    const value = props.value || formMethods.watch(props.name)
     switch (props.type) {
       case FieldType.date:
         return (
           <div className={previewClass}>
-            {props.value || formMethods.watch(props.name)
-              ? dayjs(
-                  props.value || formMethods.watch(props.name),
-                  'YYYY-M-D'
-                ).format(DATE_FORMAT)
-              : 'N/A'}
+            {value ? dayjs(value, 'YYYY-M-D').format(DATE_FORMAT) : 'N/A'}
           </div>
         )
       case FieldType.select:
@@ -514,17 +587,29 @@ const Field = <T,>(props: FormFieldProps<T>) => {
                 ) || 'N/A'}
           </div>
         )
-      default:
+      case FieldType.checkbox:
         return (
           <div className={previewClass}>
-            {props.value || formMethods.watch(props.name) || 'N/A'}
+            {value ? 'Yes' : typeof value === 'boolean' ? 'No' : 'N/A'}
           </div>
         )
+      case FieldType.toggle:
+        return (
+          <div className={previewClass}>
+            {value ? 'Yes' : typeof value === 'boolean' ? 'No' : 'N/A'}
+          </div>
+        )
+      case FieldType.radio:
+        return (
+          <div className={previewClass}>
+            {props.options.find((el) => el.value === value)?.label || 'N/A'}
+          </div>
+        )
+      default:
+        return <div className={previewClass}>{value || 'N/A'}</div>
     }
   }
 
-  const isEdit =
-    (mode === FormType.both || mode === FormType.editOnly) && isEditTurnedOn
   return (
     <div className={`${inputGroupWrapperClass} ${props.className ?? ''}`}>
       {!props.withoutLabel && (
@@ -539,7 +624,7 @@ const Field = <T,>(props: FormFieldProps<T>) => {
       )}
       <div className={inputGroupClass}>
         {/*@ts-ignore*/}
-        {props.icon && (
+        {props.icon && isEdit && (
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <FontAwesomeIcon
               className="z-[1] my-auto w-4 text-gray-500"
