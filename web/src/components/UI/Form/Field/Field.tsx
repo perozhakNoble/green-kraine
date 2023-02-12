@@ -8,12 +8,14 @@ import ReactSelect, { components as ReactSelectComponents } from 'react-select'
 import Datepicker from 'react-tailwindcss-datepicker'
 
 import {
+  CheckboxField,
   Controller,
   EmailField,
   FieldError,
   Label,
   NumberField,
   Path,
+  RadioField,
   TextAreaField,
   TextField,
 } from '@redwoodjs/forms'
@@ -34,11 +36,11 @@ export enum FieldType {
   date = 'date',
   email = 'email',
   select = 'select',
+  checkbox = 'checkbox',
+  radio = 'radio',
 }
 
 // | 'time'
-// | 'checkbox'
-// | 'radio'
 // | 'file'
 
 export type OptionTypeValue = number | string
@@ -67,35 +69,51 @@ export type IFieldValidationMinMax = {
 
 export type FormFieldProps<T> = {
   disabled?: boolean
-  icon?: IconProp
   name: Path<T>
   label?: string
-  placeholder?: string
   className?: string
   onChange?: (e: any) => any
   withoutLabel?: boolean
 } & (
   | {
+      type: FieldType.checkbox
+      value?: boolean
+      validation?: IFieldValidationRequired
+    }
+  | {
+      type: FieldType.radio
+      value?: string
+      validation?: IFieldValidationRequired
+      options: OptionType[]
+    }
+  | {
       type: FieldType.text | FieldType.email | FieldType.textarea
       value?: string
       validation?: IFieldValidationRequired
+      icon?: IconProp
+      placeholder?: string
     }
   | {
       type: FieldType.number
       value?: number
       allowDecimal?: boolean
       validation?: IFieldValidationRequired & IFieldValidationMinMax
+      icon?: IconProp
+      placeholder?: string
     }
   | {
       type: FieldType.date
       value?: any
       validation?: IFieldValidationRequired
+      icon?: IconProp
+      placeholder?: string
     }
   | ({
       type: FieldType.select
       validation?: IFieldValidationRequired
       options: OptionType[]
       loading?: boolean
+      placeholder?: string
     } & (
       | {
           value?: OptionTypeValue[]
@@ -127,22 +145,34 @@ const Field = <T,>(props: FormFieldProps<T>) => {
       true,
     'disabled:opacity-70 disabled:bg-gray-100  [&:not(:focus)]:hover:border-secondary':
       true,
+    // @ts-ignore
     'pl-10': props.icon,
     'w-36': props.type === FieldType.number,
+  })
+
+  const inputGroupWrapperClass = classNames({
+    '': true,
+    'flex flex-row-reverse gap-x-4 justify-end items-center flex-wrap':
+      props.type === FieldType.checkbox,
   })
 
   const inputGroupClass = classNames({
     'mt-1 relative rounded-xl': true,
     'w-24': props.type === FieldType.number,
-    // 'w-3 h-5 mb-2': type === 'checkbox',
+    'w-3 h-5 mb-2': props.type === FieldType.checkbox,
   })
 
   const errorClass = classNames({
     'text-error text-xs font-light': true,
+    'a basis-full': props.type === FieldType.checkbox,
   })
 
   const labelClass = classNames({
-    'block text-primary font-normal text-sm': true,
+    block: true,
+    'text-primary font-normal text-sm': props.type !== FieldType.checkbox,
+    'text-primary-light text-sm font-light mt-0.5':
+      props.type === FieldType.checkbox,
+    'cursor-pointer': props.type === FieldType.checkbox && !props.disabled,
   })
 
   const previewClass = classNames({
@@ -152,20 +182,35 @@ const Field = <T,>(props: FormFieldProps<T>) => {
 
   const labelErrorClass = classNames({
     'block text-error font-light text-sm': true,
+    'cursor-pointer': props.type === FieldType.checkbox && !props.disabled,
+    'mt-0.5': props.type === FieldType.checkbox,
+  })
+
+  const radioLabelClass = classNames({
+    'text-xs font-light text-primary-light': true,
+    'hover:cursor-pointer': !props.disabled,
   })
 
   const getValueForSelect = (
     valueToParse: OptionTypeValue | OptionTypeValue[]
   ): OptionType | OptionType[] => {
-    if (props.type !== FieldType.select) return undefined
-
-    if (!Array.isArray(valueToParse)) {
-      return props.options.find((opt) => opt.value === valueToParse)
-    } else {
-      return valueToParse.map((value) =>
-        props.options.find((opt) => opt.value === value)
-      )
+    if (props.type === FieldType.select) {
+      if (!Array.isArray(valueToParse)) {
+        return props.options.find((opt) => opt.value === valueToParse)
+      } else {
+        return valueToParse.map((value) =>
+          props.options.find((opt) => opt.value === value)
+        )
+      }
     }
+    return undefined
+  }
+
+  const getValueForRadio = (valueToParse: OptionTypeValue): OptionTypeValue => {
+    if (props.type === FieldType.radio) {
+      return props.options.find((opt) => opt.value === valueToParse)?.value
+    }
+    return undefined
   }
 
   const getLabelFromValue = (
@@ -178,6 +223,64 @@ const Field = <T,>(props: FormFieldProps<T>) => {
 
   const input = () => {
     switch (props.type) {
+      case FieldType.checkbox:
+        return (
+          <CheckboxField
+            className="h-4 w-4 rounded-xl border-[#dbdcde] text-primary focus:ring-primary enabled:hover:cursor-pointer"
+            name={props.name}
+            onChange={(e) => {
+              const v = e.target.checked as any
+              formMethods.setValue(props.name, v, {
+                shouldValidate: true,
+              })
+              props.onChange && props.onChange(v)
+            }}
+            id={props.name}
+            disabled={props.disabled}
+            checked={
+              props.value || (formMethods.watch(props.name) as boolean) || false
+            }
+            validation={{ required }}
+          />
+        )
+      case FieldType.radio:
+        return (
+          <div className="flex flex-wrap gap-x-6">
+            {props.options.map((opt, idx) => (
+              <div key={idx}>
+                <RadioField
+                  className="mr-2 h-4 w-4 rounded-xl border-[#dbdcde] text-primary hover:cursor-pointer focus:ring-primary"
+                  name={props.name}
+                  onChange={(e) => {
+                    const val = e.target.value
+                    formMethods.setValue(props.name, val as any, {
+                      shouldValidate: true,
+                    })
+                    props.onChange && props.onChange(val)
+                  }}
+                  id={props.name + idx}
+                  checked={
+                    (getValueForRadio(
+                      props.value || formMethods.watch(props.name)
+                    ) || '') === opt.value
+                  }
+                  disabled={props.disabled}
+                  value={opt.value}
+                  validation={{
+                    required,
+                  }}
+                />
+                <Label
+                  name={props.name}
+                  className={radioLabelClass}
+                  htmlFor={props.name + idx}
+                >
+                  {opt.label}
+                </Label>
+              </div>
+            ))}
+          </div>
+        )
       case FieldType.text:
         return (
           <TextField
@@ -423,24 +526,28 @@ const Field = <T,>(props: FormFieldProps<T>) => {
   const isEdit =
     (mode === FormType.both || mode === FormType.editOnly) && isEditTurnedOn
   return (
-    <div className={`${props.className ?? ''}`}>
+    <div className={`${inputGroupWrapperClass} ${props.className ?? ''}`}>
       {!props.withoutLabel && (
         <Label
           name={props.name}
           className={labelClass}
           errorClassName={labelErrorClass}
-          htmlFor={props.name}
+          htmlFor={props.type === FieldType.radio ? '' : props.name}
         >
           {capitalize(props.label ?? props.name)}
         </Label>
       )}
       <div className={inputGroupClass}>
+        {/*@ts-ignore*/}
         {props.icon && (
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <FontAwesomeIcon
-              className="my-auto w-4 text-gray-500"
+              className="z-[1] my-auto w-4 text-gray-500"
               aria-hidden="true"
-              icon={props.icon}
+              icon={
+                // @ts-ignore
+                props.icon
+              }
             />
           </div>
         )}

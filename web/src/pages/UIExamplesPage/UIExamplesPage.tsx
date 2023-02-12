@@ -28,6 +28,8 @@ type IForm = {
   textarea: string
   select: OptionTypeValue
   selmulti: OptionTypeValue[]
+  checkbox: boolean
+  radio: string
 }
 
 const options = [
@@ -59,6 +61,8 @@ const UiExamplesPage = () => {
       textarea: '',
       select: undefined,
       selmulti: [],
+      checkbox: undefined,
+      radio: undefined,
     },
   })
 
@@ -738,6 +742,7 @@ const UiExamplesPage = () => {
               validation={{
                 required: 'Text is required',
               }}
+              icon={faRadio}
             />
             <Form.Field<IForm>
               name="textarea"
@@ -745,6 +750,7 @@ const UiExamplesPage = () => {
               validation={{
                 required: 'Textarea is required',
               }}
+              icon={faRadio}
             />
             <Form.Field<IForm>
               name="date"
@@ -753,6 +759,7 @@ const UiExamplesPage = () => {
                 required: true,
               }}
               placeholder={'date'}
+              icon={faRadio}
             />
             <Form.Field<IForm>
               name="email"
@@ -760,6 +767,7 @@ const UiExamplesPage = () => {
               validation={{
                 required: true,
               }}
+              icon={faRadio}
             />
             <Form.Field<IForm>
               name="number"
@@ -772,6 +780,7 @@ const UiExamplesPage = () => {
                 },
               }}
               placeholder="number"
+              icon={faRadio}
             />
             <Form.Field<IForm>
               name="select"
@@ -792,6 +801,22 @@ const UiExamplesPage = () => {
               }}
               placeholder="select"
               options={options}
+            />
+            <Form.Field<IForm>
+              name="checkbox"
+              type={FieldType.checkbox}
+              validation={{
+                required: 'chec is required',
+              }}
+              label="Checkobx"
+            />
+            <Form.Field<IForm>
+              name="radio"
+              type={FieldType.radio}
+              options={options}
+              validation={{
+                required: true,
+              }}
             />
           </Form.Wrapper>
         </div>
