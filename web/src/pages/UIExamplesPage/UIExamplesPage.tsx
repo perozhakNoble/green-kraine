@@ -31,6 +31,8 @@ type IForm = {
   checkbox: boolean
   radio: string
   toggle: boolean
+  file: string
+  filename: string
 }
 
 const options = [
@@ -65,6 +67,8 @@ const UiExamplesPage = () => {
       checkbox: undefined,
       radio: undefined,
       toggle: undefined,
+      file: undefined,
+      filename: '',
     },
   })
 
@@ -825,6 +829,12 @@ const UiExamplesPage = () => {
               type={FieldType.toggle}
               text="Yes"
               leftText="No"
+            />
+            <Form.Field<IForm>
+              name="file"
+              validation={{ required: true }}
+              type={FieldType.file}
+              filenamePath="filename"
             />
           </Form.Wrapper>
         </div>

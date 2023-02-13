@@ -1,8 +1,11 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { faFileAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Switch } from '@headlessui/react'
+import FileUpload, { AcceptedFileTypes } from '@ui/Form/Field/FileUpload'
+import ToastContent from '@ui/ToastContent'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
 import ReactSelect, { components as ReactSelectComponents } from 'react-select'
@@ -20,10 +23,13 @@ import {
   TextAreaField,
   TextField,
 } from '@redwoodjs/forms'
+import { toast } from '@redwoodjs/web/dist/toast'
 
+import { cleanFileName, downloadBase64Data } from 'src/components/utils/file'
 import { capitalize } from 'src/components/utils/string'
 import {
   DATE_FORMAT,
+  DEFAULT_ERROR_TEXTS,
   DEFAULT_FORM_BUTTON_TEXTS,
   DEFAULT_INPUTS_TEXTS,
 } from 'src/constants'
@@ -40,10 +46,10 @@ export enum FieldType {
   checkbox = 'checkbox',
   radio = 'radio',
   toggle = 'toggle',
+  file = 'file',
 }
 
 // | 'time'
-// | 'file'
 
 export type OptionTypeValue = number | string
 
@@ -108,6 +114,24 @@ export type FormFieldProps<T> = {
       validation?: IFieldValidationRequired & IFieldValidationMinMax
       icon?: IconProp
       placeholder?: string
+    }
+  | {
+      type?: FieldType.file
+      filenamePath: Path<T>
+      heading?: string
+      subheading?: string
+      acceptedFileTypes?: AcceptedFileTypes[]
+      validation?: IFieldValidationRequired
+      isUploadLoading?: boolean
+      onFileLoadFailure?: (error: string) => void
+      onFileLoadSuccess?: ({
+        name,
+        file,
+      }: {
+        file: string
+        name: string
+      }) => void
+      value?: string
     }
   | {
       type: FieldType.date
@@ -205,6 +229,9 @@ const Field = <T,>(props: FormFieldProps<T>) => {
     'hover:cursor-pointer': !props.disabled,
   })
 
+  const filePreviewClass =
+    'relative flex cursor-alias items-center rounded-md border-[1px] py-2 px-4 text-xs font-light text-secondary'
+
   const getValueForSelect = (
     valueToParse: OptionTypeValue | OptionTypeValue[]
   ): OptionType | OptionType[] => {
@@ -235,8 +262,123 @@ const Field = <T,>(props: FormFieldProps<T>) => {
     return props.options.find((opt) => opt.value === valueToParse)?.label || ''
   }
 
+  const downloadURL = () => {
+    try {
+      if (props.type !== FieldType.file) return
+      downloadBase64Data(
+        formMethods.watch(props.name),
+        formMethods.watch(props.filenamePath)
+      )
+      toast.success(
+        <ToastContent
+          type="success"
+          text={DEFAULT_INPUTS_TEXTS.FILE_UPLOADED_SUCCESS}
+        />
+      )
+    } catch (_err) {
+      toast.error(
+        <ToastContent
+          type="error"
+          text={DEFAULT_ERROR_TEXTS.SOMETHING_WENT_WRONG}
+        />
+      )
+    }
+  }
+
+  const [loadingFileUpload, setLoadingFileUpload] = useState<boolean>(false)
+
+  const onFileLoadSuccess = async (
+    files
+  ): Promise<{ file: string; name: string }> => {
+    return new Promise((resolve, reject) => {
+      setLoadingFileUpload(true)
+      const reader = new FileReader()
+      reader.readAsDataURL(files[0])
+      reader.onload = () =>
+        resolve({
+          file: reader.result,
+          name: cleanFileName(files[0].name),
+        })
+      reader.onerror = (error) => reject(error)
+    }).then(({ file, name }: any) => {
+      setLoadingFileUpload(false)
+      return { file, name }
+    })
+  }
+
   const input = () => {
     switch (props.type) {
+      case FieldType.file:
+        return (
+          <Controller
+            name={props.name}
+            control={formMethods.control}
+            rules={{
+              required,
+            }}
+            render={({ field }) => (
+              <>
+                {field.value ? (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        downloadURL()
+                      }}
+                      className={filePreviewClass}
+                    >
+                      <FontAwesomeIcon
+                        icon={faFileAlt as IconProp}
+                        className="mr-2 text-sm"
+                      />
+                      <span className="block">
+                        {formMethods.watch(props.filenamePath)}
+                      </span>
+
+                      <span
+                        className="absolute -right-2 -top-2 h-4 w-4  cursor-pointer rounded-full bg-red-500 text-center text-white"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          field.onChange('')
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faTimes as IconProp}
+                          className="m-auto text-xs"
+                        />
+                      </span>
+                    </button>
+                  </div>
+                ) : (
+                  <FileUpload
+                    heading={props.heading}
+                    subheading={props.subheading}
+                    isLoading={loadingFileUpload || props.isUploadLoading}
+                    onDropFailure={(error) => {
+                      toast.error(<ToastContent type="error" text={error} />)
+                      props.onFileLoadFailure && props.onFileLoadFailure(error)
+                    }}
+                    onDropSuccess={async (files) => {
+                      const { file, name } = await onFileLoadSuccess(files)
+                      formMethods.setValue(props.name, file as any, {
+                        shouldValidate: true,
+                      })
+                      formMethods.setValue(props.filenamePath, name as any, {
+                        shouldValidate: true,
+                      })
+                      props.onFileLoadSuccess &&
+                        props.onFileLoadSuccess({ file, name })
+                    }}
+                    multiple={false}
+                    acceptedFileTypes={props.acceptedFileTypes}
+                  />
+                )}
+              </>
+            )}
+          />
+        )
+
       case FieldType.checkbox:
         return (
           <CheckboxField
@@ -561,6 +703,28 @@ const Field = <T,>(props: FormFieldProps<T>) => {
   const preview = () => {
     const value = props.value || formMethods.watch(props.name)
     switch (props.type) {
+      case FieldType.file:
+        if (formMethods.watch(props.filenamePath) && value)
+          return (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  downloadURL()
+                }}
+                className={filePreviewClass}
+              >
+                <FontAwesomeIcon
+                  icon={faFileAlt as IconProp}
+                  className="mr-2 text-sm"
+                />
+                <span className="block">
+                  {formMethods.watch(props.filenamePath)}
+                </span>
+              </button>
+            </div>
+          )
+        return <div className={previewClass}>{'N/A'}</div>
       case FieldType.date:
         return (
           <div className={previewClass}>

@@ -1,8 +1,11 @@
+import { MAX_FILE_SIZE } from 'src/constants/file'
+
 import { DATE_FORMAT } from './date'
 import {
   DEFAULT_FORM_BUTTON_TEXTS,
   DEFAULT_TOAST_HEADERS,
   DEFAULT_INPUTS_TEXTS,
+  DEFAULT_ERROR_TEXTS,
 } from './default_texts'
 
 export {
@@ -10,4 +13,6 @@ export {
   DEFAULT_TOAST_HEADERS,
   DEFAULT_INPUTS_TEXTS,
   DATE_FORMAT,
+  DEFAULT_ERROR_TEXTS,
+  MAX_FILE_SIZE,
 }
