@@ -10,6 +10,7 @@ import classNames from 'classnames'
 import dayjs from 'dayjs'
 import ReactSelect, { components as ReactSelectComponents } from 'react-select'
 import Datepicker from 'react-tailwindcss-datepicker'
+import { DateType } from 'react-tailwindcss-datepicker/dist/types'
 
 import {
   CheckboxField,
@@ -22,6 +23,7 @@ import {
   RadioField,
   TextAreaField,
   TextField,
+  TimeField,
 } from '@redwoodjs/forms'
 import { toast } from '@redwoodjs/web/dist/toast'
 
@@ -47,9 +49,8 @@ export enum FieldType {
   radio = 'radio',
   toggle = 'toggle',
   file = 'file',
+  time = 'time',
 }
-
-// | 'time'
 
 export type OptionTypeValue = number | string
 
@@ -69,6 +70,22 @@ export type IFieldValidationMinMax = {
   }
   max?: {
     value: number
+    message: string
+  }
+}
+
+type zeroToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+type zeroToSix = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+type TimeString = `${0 | 1 | 2}${zeroToNine}:${zeroToSix}${zeroToNine}`
+
+export type IFieldValidationMinMaxTime = {
+  min?: {
+    value: TimeString
+    message: string
+  }
+  max?: {
+    value: TimeString
     message: string
   }
 }
@@ -139,6 +156,15 @@ export type FormFieldProps<T> = {
       validation?: IFieldValidationRequired
       icon?: IconProp
       placeholder?: string
+      minDate?: DateType
+      maxDate?: DateType
+    }
+  | {
+      type: FieldType.time
+      value?: any
+      validation?: IFieldValidationRequired & IFieldValidationMinMaxTime
+      icon?: IconProp
+      placeholder?: string
     }
   | ({
       type: FieldType.select
@@ -183,6 +209,7 @@ const Field = <T,>(props: FormFieldProps<T>) => {
     // @ts-ignore
     'pl-10': props.icon,
     'w-36': props.type === FieldType.number,
+    'w-28': props.type === FieldType.time,
   })
 
   const inputGroupWrapperClass = classNames({
@@ -193,7 +220,8 @@ const Field = <T,>(props: FormFieldProps<T>) => {
 
   const inputGroupClass = classNames({
     'mt-1 relative rounded-xl': true,
-    'w-24': props.type === FieldType.number,
+    'w-36': props.type === FieldType.number,
+    'w-28': props.type === FieldType.time,
     'w-3 h-5 mb-2': props.type === FieldType.checkbox && isEdit,
   })
 
@@ -308,6 +336,35 @@ const Field = <T,>(props: FormFieldProps<T>) => {
 
   const input = () => {
     switch (props.type) {
+      case FieldType.time:
+        return (
+          <TimeField
+            name={props.name}
+            onChange={(e) => {
+              formMethods.setValue(props.name, e.target.value as any, {
+                shouldValidate: true,
+              })
+              props.onChange && props.onChange(e.target.value)
+            }}
+            className={inputClass}
+            value={props.value || formMethods.watch(props.name) || ''}
+            placeholder={props.placeholder}
+            min={props.validation?.min?.value}
+            max={props.validation?.max?.value}
+            validation={{
+              required,
+              min: {
+                message: props.validation?.min?.message,
+                value: props.validation?.min?.value,
+              },
+              max: {
+                message: (props.validation?.max as any)?.message,
+                value: (props.validation?.max as any)?.value,
+              },
+            }}
+            disabled={props.disabled}
+          />
+        )
       case FieldType.file:
         return (
           <Controller
@@ -578,6 +635,8 @@ const Field = <T,>(props: FormFieldProps<T>) => {
                   }}
                   asSingle={true}
                   useRange={false}
+                  maxDate={props.maxDate}
+                  minDate={props.minDate}
                   disabled={props.disabled}
                   i18n={'uk'}
                   primaryColor={'teal'}

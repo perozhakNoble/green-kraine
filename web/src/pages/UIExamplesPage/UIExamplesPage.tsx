@@ -33,6 +33,7 @@ type IForm = {
   toggle: boolean
   file: string
   filename: string
+  time: string
 }
 
 const options = [
@@ -69,6 +70,7 @@ const UiExamplesPage = () => {
       toggle: undefined,
       file: undefined,
       filename: '',
+      time: undefined,
     },
   })
 
@@ -765,6 +767,7 @@ const UiExamplesPage = () => {
                 required: true,
               }}
               placeholder={'date'}
+              maxDate={new Date()}
               icon={faRadio}
             />
             <Form.Field<IForm>
@@ -781,8 +784,12 @@ const UiExamplesPage = () => {
               validation={{
                 required: true,
                 min: {
-                  value: 0,
+                  value: 1,
                   message: 'Min value 1',
+                },
+                max: {
+                  value: 100,
+                  message: 'Max value 100',
                 },
               }}
               placeholder="number"
@@ -835,6 +842,17 @@ const UiExamplesPage = () => {
               validation={{ required: true }}
               type={FieldType.file}
               filenamePath="filename"
+            />
+            <Form.Field<IForm>
+              name="time"
+              validation={{
+                required: true,
+                max: {
+                  value: '22:00',
+                  message: 'Max value 22:00',
+                },
+              }}
+              type={FieldType.time}
             />
           </Form.Wrapper>
         </div>
