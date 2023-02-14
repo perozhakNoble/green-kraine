@@ -2634,6 +2634,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@googlemaps/js-api-loader@npm:^1.13.2, @googlemaps/js-api-loader@npm:^1.15.1":
+  version: 1.15.1
+  resolution: "@googlemaps/js-api-loader@npm:1.15.1"
+  dependencies:
+    fast-deep-equal: ^3.1.3
+  checksum: 3f1ee79c81e6797fab0d6229ef0e4ae840721fe0c1916dffd359709d33346cda9d5e2f1334bc179aff1bbf464c0724dbb0364c8b33a8291e94ecdc04b7cfce0e
+  languageName: node
+  linkType: hard
+
+"@googlemaps/markerclusterer@npm:^2.0.15":
+  version: 2.0.15
+  resolution: "@googlemaps/markerclusterer@npm:2.0.15"
+  dependencies:
+    fast-deep-equal: ^3.1.3
+    supercluster: ^7.1.3
+  checksum: 7e66a3b73d4b6c1d5329caa7857e149171262213741c648a45fc19204036ea66392986e96c0886ec43ac66b9aa52c8a05f80c3e6a58ccba327db45f418b3c965
+  languageName: node
+  linkType: hard
+
+"@googlemaps/react-wrapper@npm:^1.1.35":
+  version: 1.1.35
+  resolution: "@googlemaps/react-wrapper@npm:1.1.35"
+  dependencies:
+    "@googlemaps/js-api-loader": ^1.13.2
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 111a21ae7c1675d4249eb0656c351b52b0745271b2a4a4afb969b428fe0859e00ab3487e56b6a69432ed0072b0495ef63a5de3915b3b1e8d676b6d58e0c602bf
+  languageName: node
+  linkType: hard
+
+"@googlemaps/typescript-guards@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@googlemaps/typescript-guards@npm:2.0.3"
+  checksum: 1fc730bccd48abf1853a3db23f92de1df019121ef2a1b0a37940816b668ee3b9c539aad6faa3345c2232e5eb87b8ac49601dd9cd37dbdfd7e6f8926d670f2a94
+  languageName: node
+  linkType: hard
+
 "@graphql-codegen/add@npm:3.2.3":
   version: 3.2.3
   resolution: "@graphql-codegen/add@npm:3.2.3"
@@ -6498,6 +6535,13 @@ __metadata:
     "@types/minimatch": "*"
     "@types/node": "*"
   checksum: a8eb5d5cb5c48fc58c7ca3ff1e1ddf771ee07ca5043da6e4871e6757b4472e2e73b4cfef2644c38983174a4bc728c73f8da02845c28a1212f98cabd293ecae98
+  languageName: node
+  linkType: hard
+
+"@types/google.maps@npm:^3.51.1":
+  version: 3.51.1
+  resolution: "@types/google.maps@npm:3.51.1"
+  checksum: dfeed3200994e0c94677fd3a88bb0fff6ccffdf0c7bd6001676bb18bc0edba81149ff601caa04e614369f98314b4b52482b2f293873309a4b7d6338f2398cd6f
   languageName: node
   linkType: hard
 
@@ -12924,6 +12968,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-equals@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "fast-equals@npm:4.0.3"
+  checksum: 87fd2609c945ee61e9ed4d041eb2a8f92723fc02884115f67e429dd858d880279e962334894f116b3e9b223f387d246e3db5424ae779287849015ddadbf5ff27
+  languageName: node
+  linkType: hard
+
 "fast-glob@npm:3.2.12, fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.9":
   version: 3.2.12
   resolution: "fast-glob@npm:3.2.12"
@@ -16672,6 +16723,13 @@ __metadata:
     jwa: ^1.4.1
     safe-buffer: ^5.0.1
   checksum: e770704533d92df358adad7d1261fdecad4d7b66fa153ba80d047e03ca0f1f73007ce5ed3fbc04d2eba09ba6e7e6e645f351e08e5ab51614df1b0aa4f384dfff
+  languageName: node
+  linkType: hard
+
+"kdbush@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "kdbush@npm:3.0.0"
+  checksum: 3fc8795870bd04f60627e7345b26fd0644beb91bc4164912c9d9378b39c674ba01c31db68ecaf6266d51c9ad81bf5b770b7effa51eeee37553d38293a094a686
   languageName: node
   linkType: hard
 
@@ -22660,6 +22718,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"supercluster@npm:^7.1.3":
+  version: 7.1.5
+  resolution: "supercluster@npm:7.1.5"
+  dependencies:
+    kdbush: ^3.0.0
+  checksum: bbebf45927d0019831731c94b78d1c9a1f3e2da0be9875d7ea75c6f261487e0f15d3f1822a9a49256e3c1672bdfb9138f9a5e44e2de99edb06cd1e758083e12d
+  languageName: node
+  linkType: hard
+
 "supports-color@npm:^5.3.0, supports-color@npm:^5.5.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
@@ -24341,17 +24408,24 @@ __metadata:
     "@fortawesome/free-regular-svg-icons": ^6.2.1
     "@fortawesome/free-solid-svg-icons": ^6.2.1
     "@fortawesome/react-fontawesome": latest
+    "@googlemaps/js-api-loader": ^1.15.1
+    "@googlemaps/markerclusterer": ^2.0.15
+    "@googlemaps/react-wrapper": ^1.1.35
+    "@googlemaps/typescript-guards": ^2.0.3
     "@headlessui/react": ^1.7.10
     "@heroicons/react": ^2.0.15
     "@redwoodjs/forms": 4.0.1
     "@redwoodjs/router": 4.0.1
     "@redwoodjs/web": 4.0.1
     "@tailwindcss/forms": ^0.5.3
+    "@types/google.maps": ^3.51.1
     autoprefixer: ^10.4.13
     babel-plugin-module-resolver: ^5.0.0
     classnames: ^2.3.2
     dayjs: ^1.11.7
+    fast-equals: ^4.0.3
     file-saver: ^2.0.5
+    lodash: ^4.17.21
     postcss: ^8.4.21
     postcss-loader: ^7.0.2
     prettier-plugin-tailwindcss: ^0.2.2

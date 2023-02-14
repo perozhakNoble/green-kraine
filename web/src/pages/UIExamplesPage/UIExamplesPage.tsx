@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 
 import { faRadio, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import {
   Form,
   Disclosure,
@@ -11,6 +12,7 @@ import {
   Dialog,
   Popover,
   SlideModal,
+  Spinner,
 } from '@ui'
 import { FieldType, FormType } from '@ui/enums'
 import { OptionTypeValue } from '@ui/types'
@@ -19,6 +21,9 @@ import { H1, H2, H3, H4, H5, H6, H7 } from '@ui/Typography'
 import { useForm } from '@redwoodjs/forms'
 import { MetaTags } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
+
+import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
+import Map from 'src/components/map/Map'
 
 type IForm = {
   text: string
@@ -54,6 +59,44 @@ const options = [
     label: 'Label 4',
   },
 ]
+
+//
+// interface MapProps extends google.maps.MapOptions {
+//   style: { [key: string]: string }
+//   onClick?: (e: google.maps.MapMouseEvent) => void
+//   onIdle?: (map: google.maps.Map) => void
+//   marks?: google.maps.LatLng[]
+// }
+
+// const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+const locations = [
+  { lat: -31.56391, lng: 147.154312 },
+  { lat: -33.718234, lng: 150.363181 },
+  { lat: -33.727111, lng: 150.371124 },
+  { lat: -33.848588, lng: 151.209834 },
+  { lat: -33.851702, lng: 151.216968 },
+  { lat: -34.671264, lng: 150.863657 },
+  { lat: -35.304724, lng: 148.662905 },
+  { lat: -36.817685, lng: 175.699196 },
+  { lat: -36.828611, lng: 175.790222 },
+  { lat: -37.75, lng: 145.116667 },
+  { lat: -37.759859, lng: 145.128708 },
+  { lat: -37.765015, lng: 145.133858 },
+  { lat: -37.770104, lng: 145.143299 },
+  { lat: -37.7737, lng: 145.145187 },
+  { lat: -37.774785, lng: 145.137978 },
+  { lat: -37.819616, lng: 144.968119 },
+  { lat: -38.330766, lng: 144.695692 },
+  { lat: -39.927193, lng: 175.053218 },
+  { lat: -41.330162, lng: 174.865694 },
+  { lat: -42.734358, lng: 147.439506 },
+  { lat: -42.734358, lng: 147.501315 },
+  { lat: -42.735258, lng: 147.438 },
+  { lat: -43.999792, lng: 170.463352 },
+]
+
+//
 
 const UiExamplesPage = () => {
   const formMethods = useForm<IForm>({
@@ -110,12 +153,121 @@ const UiExamplesPage = () => {
     setIsLoadingFormSubmit(false)
   }
 
+  // const [clicks, setClicks] = React.useState<google.maps.LatLng[]>(
+  const [clicks, setClicks] = React.useState<{ lat: number; lng: number }[]>(
+    locations
+    // .map(
+    //   (l) =>
+    //     new google.maps.LatLng({
+    //       lat: l.lat,
+    //       lng: l.lng,
+    //     })
+    // )
+  )
+  const [zoom, setZoom] = React.useState(4) // initial zoom
+  const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
+    lat: -39.927193,
+    lng: 175.053218,
+  })
+
+  // const infoWindow = new google.maps.InfoWindow({
+  //   content: '',
+  //   disableAutoPan: true,
+  // })
+
+  // Add a marker clusterer to manage the markers.
+  // renderer: renderer,
+
+  const onClick = (e: google.maps.MapMouseEvent) => {
+    // avoid directly mutating state
+    console.log(e)
+    setClicks([...clicks, { lat: e.latLng.lat(), lng: e.latLng.lng() }])
+  }
+
+  const onIdle = (m: google.maps.Map) => {
+    console.log('onIdle')
+    setZoom(m.getZoom())
+    setCenter(m.getCenter().toJSON())
+  }
+
+  const form = (
+    <div
+      style={{
+        padding: '1rem',
+        flexBasis: '250px',
+        height: '100%',
+        overflow: 'auto',
+      }}
+    >
+      <label htmlFor="zoom">Zoom</label>
+      <input
+        type="number"
+        id="zoom"
+        name="zoom"
+        value={zoom}
+        onChange={(event) => setZoom(Number(event.target.value))}
+      />
+      <br />
+      <label htmlFor="lat">Latitude</label>
+      <input
+        type="number"
+        id="lat"
+        name="lat"
+        value={center.lat}
+        onChange={(event) =>
+          setCenter({ ...center, lat: Number(event.target.value) })
+        }
+      />
+      <br />
+      <label htmlFor="lng">Longitude</label>
+      <input
+        type="number"
+        id="lng"
+        name="lng"
+        value={center.lng}
+        onChange={(event) =>
+          setCenter({ ...center, lng: Number(event.target.value) })
+        }
+      />
+      <h3>{clicks.length === 0 ? 'Click on map to add markers' : 'Clicks'}</h3>
+      {clicks.map((latLng, i) => (
+        <pre key={i}>{JSON.stringify(latLng, null, 2)}</pre>
+      ))}
+      <button onClick={() => setClicks([])}>Clear</button>
+    </div>
+  )
+
+  const renderMap = (status: Status): ReactElement => {
+    if (status === Status.FAILURE) return <>Error</>
+    return <Spinner />
+  }
+
   return (
     <>
       <MetaTags title="UI Examples" description="UI Examples page" />
 
       <div className="w-full max-w-screen-sm p-4 sm:max-w-none">
         <h1 className="text-2xl">UI Examples Page</h1>
+
+        <div className=" p-2">
+          <h2 className="my-2  text-xl">Map</h2>
+          <Wrapper
+            apiKey={'AIzaSyAZXF1oEsjFv1ox3UIbIh6UMdPRLQ4LKTY'}
+            render={renderMap}
+          >
+            <Map
+              center={center}
+              onClick={onClick}
+              onIdle={onIdle}
+              zoom={zoom}
+              style={{ flexGrow: '1', height: '800px', width: '100%' }}
+              fullscreenControl={false}
+              clustererRenderer={clustererRenderer}
+              marks={clicks}
+            />
+          </Wrapper>
+        </div>
+        {form}
 
         {/*Font weight*/}
         <div className="p-2">
