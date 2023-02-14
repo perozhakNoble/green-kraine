@@ -51,8 +51,26 @@ interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string }
   onClick?: (e: google.maps.MapMouseEvent) => void
   onIdle?: (map: google.maps.Map) => void
-  marks: { lat: number; lng: number }[]
+  marks: { lat: number; lng: number; isPending?: boolean; isNew?: boolean }[]
   clustererRenderer?: ClustererRenderer
+}
+
+const getMarkerOptions = ({
+  isPending,
+  isNew,
+  // eslint-disable-next-line
+  ...position
+}: {
+  isPending?: boolean
+  isNew?: boolean
+  lat: number
+  lng: number
+}): google.maps.MarkerOptions => {
+  return {
+    // draggable: isPending,
+    clickable: !isPending && !isNew,
+    animation: isPending && google.maps.Animation.BOUNCE,
+  }
 }
 
 const Map: React.FC<MapProps> = ({
@@ -64,28 +82,19 @@ const Map: React.FC<MapProps> = ({
   ...options
 }) => {
   const ref = React.useRef<HTMLDivElement>(null)
+  const [infoWindow] = React.useState(
+    new google.maps.InfoWindow({
+      content: '',
+      disableAutoPan: true,
+    })
+  )
+
   const [map, setMap] = React.useState<google.maps.Map>()
 
   // Create an array of alphabetical characters used to label the markers.
 
   const [clusterer, setClusterer] = useState<MarkerClusterer>(null)
-  const [markers, setMarkers] = useState(
-    marks.map((position): google.maps.Marker => {
-      //const label = labels;
-      const marker = new google.maps.Marker({
-        position,
-      })
-
-      // markers can only be keyboard focusable when they have click listeners
-      // open info window when marker is clicked
-      // marker.addListener('click', () => {
-      //   //infoWindow.setContent();
-      //   infoWindow.open(map, marker)
-      // })
-
-      return marker
-    })
-  )
+  const [markers, setMarkers] = useState([])
 
   useEffect(() => {
     if (clustererRenderer) {
@@ -122,18 +131,38 @@ const Map: React.FC<MapProps> = ({
   React.useEffect(() => {
     if (marks) {
       setMarkers(
-        marks.map((position): google.maps.Marker => {
+        marks.map(({ isPending, isNew, ...position }): google.maps.Marker => {
           const marker = new google.maps.Marker({
             position,
+            ...getMarkerOptions({ isPending, isNew, ...position }),
           })
+
+          const cont = 'cont'
+          // markers can only be keyboard focusable when they have click listeners
+          // open info window when marker is clicked
+
+          // marker.addListener('dragend', (e: google.maps.) => {
+          //   console.log(e.)
+          // })
+
+          marker.addListener('click', () => {
+            infoWindow.setContent(
+              `<div>
+                <div>Author: ${cont}</div>
+                <div>Info: ${cont}</div>
+              </div>`
+            )
+            infoWindow?.open(map, marker)
+          })
+
           return marker
         })
       )
     }
+    // eslint-disable-next-line
   }, [marks])
 
   // because React does not do deep comparisons, a custom hook is used
-  // see discussion in https://github.com/googlemaps/js-samples/issues/946
   useDeepCompareEffectForMaps(() => {
     if (map) {
       map.setOptions({
@@ -169,8 +198,13 @@ const Map: React.FC<MapProps> = ({
       {clustererRenderer ? (
         <></>
       ) : (
-        marks.map((marker, idx) => (
-          <Marker position={marker} key={idx} map={map} />
+        marks.map(({ isPending, isNew, ...position }, idx) => (
+          <Marker
+            position={position}
+            key={idx}
+            map={map}
+            {...getMarkerOptions({ ...position, isNew, isPending })}
+          />
         ))
       )}
     </>

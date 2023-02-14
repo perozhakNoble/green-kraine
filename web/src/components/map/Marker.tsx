@@ -1,4 +1,6 @@
-const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
+const Marker: React.FC<
+  google.maps.MarkerOptions & { onClick?: () => void }
+> = ({ onClick, ...options }) => {
   const [marker, setMarker] = React.useState<google.maps.Marker>()
 
   React.useEffect(() => {
@@ -13,6 +15,14 @@ const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
       }
     }
   }, [marker])
+
+  React.useEffect(() => {
+    const listener = marker?.addListener('click', onClick)
+
+    return () => {
+      listener.remove()
+    }
+  }, [marker, onClick])
 
   React.useEffect(() => {
     if (marker) {

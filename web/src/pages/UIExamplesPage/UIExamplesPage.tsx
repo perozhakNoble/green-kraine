@@ -125,6 +125,8 @@ const UiExamplesPage = () => {
   const [isDialog, setIsDialog] = useState(false)
   const [isSlideModal, setIsSlideModal] = useState(false)
 
+  const [myMarker, setMyMarker] = useState<{ lat: number; lng: number }>(null)
+
   useEffect(() => {
     setLoadingOptions(true)
     setTimeout(() => {
@@ -153,35 +155,33 @@ const UiExamplesPage = () => {
     setIsLoadingFormSubmit(false)
   }
 
-  // const [clicks, setClicks] = React.useState<google.maps.LatLng[]>(
-  const [clicks, setClicks] = React.useState<{ lat: number; lng: number }[]>(
-    locations
-    // .map(
-    //   (l) =>
-    //     new google.maps.LatLng({
-    //       lat: l.lat,
-    //       lng: l.lng,
-    //     })
-    // )
-  )
+  const [clicks, setClicks] =
+    React.useState<
+      { lat: number; lng: number; isPending?: boolean; isNew?: boolean }[]
+    >(locations)
   const [zoom, setZoom] = React.useState(4) // initial zoom
   const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
     lat: -39.927193,
     lng: 175.053218,
   })
 
-  // const infoWindow = new google.maps.InfoWindow({
-  //   content: '',
-  //   disableAutoPan: true,
-  // })
-
-  // Add a marker clusterer to manage the markers.
-  // renderer: renderer,
-
   const onClick = (e: google.maps.MapMouseEvent) => {
-    // avoid directly mutating state
-    console.log(e)
-    setClicks([...clicks, { lat: e.latLng.lat(), lng: e.latLng.lng() }])
+    if (myMarker) return
+
+    const oldMarkers = [...clicks]
+    const newMarker = {
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng(),
+      isNew: true,
+      isPending: true,
+    }
+
+    if (oldMarkers.at(-1).isPending) {
+      oldMarkers.pop()
+    }
+    oldMarkers.push(newMarker)
+
+    setClicks([...oldMarkers])
   }
 
   const onIdle = (m: google.maps.Map) => {
@@ -242,6 +242,31 @@ const UiExamplesPage = () => {
     return <Spinner />
   }
 
+  const handleSubmitPendingMarker = () => {
+    const allMarkers = [...clicks]
+    const pendingMarker = allMarkers.pop()
+    pendingMarker.isPending = false
+    allMarkers.push(pendingMarker)
+    setClicks(allMarkers)
+
+    setMyMarker({ lat: pendingMarker.lat, lng: pendingMarker.lng })
+  }
+
+  const handleСancelPendingMarker = () => {
+    const allMarkers = [...clicks]
+    allMarkers.pop()
+    setClicks(allMarkers)
+
+    setMyMarker(null)
+  }
+
+  const handleCanceNewMarker = () => {
+    const allMarkers = [...clicks]
+    allMarkers.pop()
+    setClicks(allMarkers)
+    setMyMarker(null)
+  }
+
   return (
     <>
       <MetaTags title="UI Examples" description="UI Examples page" />
@@ -267,6 +292,29 @@ const UiExamplesPage = () => {
             />
           </Wrapper>
         </div>
+        {clicks.some((m) => m.isPending || m.isNew) && (
+          <div className="flex gap-2">
+            {clicks.some((m) => m.isNew && m.isPending) ? (
+              <>
+                <Button
+                  text="Додати мітку"
+                  onClick={handleSubmitPendingMarker}
+                />
+                <Button
+                  text="Відміна"
+                  color="secondary"
+                  onClick={handleСancelPendingMarker}
+                />
+              </>
+            ) : (
+              <Button
+                text="Видалити додану мітку"
+                color="error"
+                onClick={handleCanceNewMarker}
+              />
+            )}
+          </div>
+        )}
         {form}
 
         {/*Font weight*/}
