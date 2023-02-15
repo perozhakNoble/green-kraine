@@ -15,8 +15,8 @@
       "../.redwood/types/mirror/api/src"
     ],
     "paths": {
-      "@ui/*": ["./src/components/UI/*"],
       "@ui": ["./src/components/UI/index"],
+      "@ui/*": ["./src/components/UI/*"],
       "src/*": [
         "./src/*",
         "../.redwood/types/mirror/web/src/*",
