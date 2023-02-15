@@ -4,6 +4,10 @@
   "private": true,
   "dependencies": {
     "@redwoodjs/api": "4.0.1",
+    "@redwoodjs/auth-dbauth-api": "4.0.1",
     "@redwoodjs/graphql-server": "4.0.1"
+  },
+  "devDependencies": {
+    "prisma-dbml-generator": "^0.10.0"
   }
 }

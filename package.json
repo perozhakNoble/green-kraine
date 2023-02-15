@@ -7,7 +7,9 @@
     ]
   },
   "devDependencies": {
+    "@redwoodjs/auth-dbauth-setup": "4.0.1",
     "@redwoodjs/core": "4.0.1",
+    "@types/crypto-js": "^4.1.1",
     "@types/node": "^18.11.19"
   },
   "eslintConfig": {
@@ -30,5 +32,9 @@
   "prisma": {
     "seed": "yarn rw exec seed"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.3.1",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "prisma-dbml-generator": "^0.10.0"
+  }
 }
