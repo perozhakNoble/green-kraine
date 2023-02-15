@@ -1,0 +1,32 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  name String [not null]
+  email String [unique, not null]
+  hashedPassword String [not null]
+  salt String [not null]
+  resetToken String
+  resetTokenExpiresAt DateTime
+  roles UserRole [not null, default: 'USER']
+  markers Marker [not null]
+}
+
+Table Marker {
+  id String [pk]
+  lat Float [not null]
+  lng Float [not null]
+  user User [not null]
+  userId String [not null]
+}
+
+Enum UserRole {
+  USER
+  ANALYST
+  MODERATOR
+  ADMIN
+}
+
+Ref: Marker.userId > User.id
