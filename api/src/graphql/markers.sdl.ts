@@ -8,8 +8,8 @@ export const schema = gql`
   }
 
   type Query {
-    markers: [Marker!]! @requireAuth
-    marker(id: String!): Marker @requireAuth
+    markers: [Marker!]! @skipAuth
+    marker(id: String!): Marker @skipAuth
   }
 
   input CreateMarkerInput {
@@ -25,8 +25,8 @@ export const schema = gql`
   }
 
   type Mutation {
-    createMarker(input: CreateMarkerInput!): Marker! @requireAuth
-    updateMarker(id: String!, input: UpdateMarkerInput!): Marker! @requireAuth
-    deleteMarker(id: String!): Marker! @requireAuth
+    createMarker(input: CreateMarkerInput!): Marker! @skipAuth
+    updateMarker(id: String!, input: UpdateMarkerInput!): Marker! @skipAuth
+    deleteMarker(id: String!): Marker! @skipAuth
   }
 `
