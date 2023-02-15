@@ -51,7 +51,12 @@ interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string }
   onClick?: (e: google.maps.MapMouseEvent) => void
   onIdle?: (map: google.maps.Map) => void
-  marks: { lat: number; lng: number; isPending?: boolean; isNew?: boolean }[]
+  markers: {
+    lat: number
+    lng: number
+    isPending?: boolean
+    isNew?: boolean
+  }[]
   clustererRenderer?: ClustererRenderer
 }
 
@@ -77,7 +82,7 @@ const Map: React.FC<MapProps> = ({
   onClick,
   onIdle,
   style,
-  marks,
+  markers: markersFromProps,
   clustererRenderer,
   ...options
 }) => {
@@ -129,38 +134,40 @@ const Map: React.FC<MapProps> = ({
   }, [clusterer, markers])
 
   React.useEffect(() => {
-    if (marks) {
+    if (markersFromProps) {
       setMarkers(
-        marks.map(({ isPending, isNew, ...position }): google.maps.Marker => {
-          const marker = new google.maps.Marker({
-            position,
-            ...getMarkerOptions({ isPending, isNew, ...position }),
-          })
+        markersFromProps.map(
+          ({ isPending, isNew, ...position }): google.maps.Marker => {
+            const marker = new google.maps.Marker({
+              position,
+              ...getMarkerOptions({ isPending, isNew, ...position }),
+            })
 
-          const cont = 'cont'
-          // markers can only be keyboard focusable when they have click listeners
-          // open info window when marker is clicked
+            const cont = 'cont'
+            // markers can only be keyboard focusable when they have click listeners
+            // open info window when marker is clicked
 
-          // marker.addListener('dragend', (e: google.maps.) => {
-          //   console.log(e.)
-          // })
+            // marker.addListener('dragend', (e: google.maps.) => {
+            //   console.log(e.)
+            // })
 
-          marker.addListener('click', () => {
-            infoWindow.setContent(
-              `<div>
+            marker.addListener('click', () => {
+              infoWindow.setContent(
+                `<div>
                 <div>Author: ${cont}</div>
                 <div>Info: ${cont}</div>
               </div>`
-            )
-            infoWindow?.open(map, marker)
-          })
+              )
+              infoWindow?.open(map, marker)
+            })
 
-          return marker
-        })
+            return marker
+          }
+        )
       )
     }
     // eslint-disable-next-line
-  }, [marks])
+  }, [markersFromProps])
 
   // because React does not do deep comparisons, a custom hook is used
   useDeepCompareEffectForMaps(() => {
@@ -169,6 +176,20 @@ const Map: React.FC<MapProps> = ({
         ...options,
         ...{
           streetViewControl: false,
+          // can be applied
+          // zoom: 7,
+          // minZoom: 1,
+          // minZoom: 5,
+          // restriction: {
+          // Ukraine bounds
+          //   latLngBounds: {
+          //     east: 41.14,
+          //     north: 52.56,
+          //     south: 43.97,
+          //     west: 21.95,
+          //   },
+          //   strictBounds: false,
+          // },
         },
       })
       clusterer?.clearMarkers()
@@ -198,7 +219,7 @@ const Map: React.FC<MapProps> = ({
       {clustererRenderer ? (
         <></>
       ) : (
-        marks.map(({ isPending, isNew, ...position }, idx) => (
+        markersFromProps.map(({ isPending, isNew, ...position }, idx) => (
           <Marker
             position={position}
             key={idx}

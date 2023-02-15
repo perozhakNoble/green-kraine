@@ -60,44 +60,6 @@ const options = [
   },
 ]
 
-//
-// interface MapProps extends google.maps.MapOptions {
-//   style: { [key: string]: string }
-//   onClick?: (e: google.maps.MapMouseEvent) => void
-//   onIdle?: (map: google.maps.Map) => void
-//   marks?: google.maps.LatLng[]
-// }
-
-// const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-const locations = [
-  { lat: -31.56391, lng: 147.154312 },
-  { lat: -33.718234, lng: 150.363181 },
-  { lat: -33.727111, lng: 150.371124 },
-  { lat: -33.848588, lng: 151.209834 },
-  { lat: -33.851702, lng: 151.216968 },
-  { lat: -34.671264, lng: 150.863657 },
-  { lat: -35.304724, lng: 148.662905 },
-  { lat: -36.817685, lng: 175.699196 },
-  { lat: -36.828611, lng: 175.790222 },
-  { lat: -37.75, lng: 145.116667 },
-  { lat: -37.759859, lng: 145.128708 },
-  { lat: -37.765015, lng: 145.133858 },
-  { lat: -37.770104, lng: 145.143299 },
-  { lat: -37.7737, lng: 145.145187 },
-  { lat: -37.774785, lng: 145.137978 },
-  { lat: -37.819616, lng: 144.968119 },
-  { lat: -38.330766, lng: 144.695692 },
-  { lat: -39.927193, lng: 175.053218 },
-  { lat: -41.330162, lng: 174.865694 },
-  { lat: -42.734358, lng: 147.439506 },
-  { lat: -42.734358, lng: 147.501315 },
-  { lat: -42.735258, lng: 147.438 },
-  { lat: -43.999792, lng: 170.463352 },
-]
-
-//
-
 const UiExamplesPage = () => {
   const formMethods = useForm<IForm>({
     defaultValues: {
@@ -155,14 +117,13 @@ const UiExamplesPage = () => {
     setIsLoadingFormSubmit(false)
   }
 
-  const [clicks, setClicks] =
-    React.useState<
-      { lat: number; lng: number; isPending?: boolean; isNew?: boolean }[]
-    >(locations)
-  const [zoom, setZoom] = React.useState(4) // initial zoom
+  const [clicks, setClicks] = React.useState<
+    { lat: number; lng: number; isPending?: boolean; isNew?: boolean }[]
+  >([])
+  const [zoom, setZoom] = React.useState(7) // initial zoom
   const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
-    lat: -39.927193,
-    lng: 175.053218,
+    lat: 49,
+    lng: 32,
   })
 
   const onClick = (e: google.maps.MapMouseEvent) => {
@@ -176,7 +137,7 @@ const UiExamplesPage = () => {
       isPending: true,
     }
 
-    if (oldMarkers.at(-1).isPending) {
+    if (oldMarkers.at(-1)?.isPending) {
       oldMarkers.pop()
     }
     oldMarkers.push(newMarker)
@@ -242,14 +203,52 @@ const UiExamplesPage = () => {
     return <Spinner />
   }
 
-  const handleSubmitPendingMarker = () => {
-    const allMarkers = [...clicks]
-    const pendingMarker = allMarkers.pop()
-    pendingMarker.isPending = false
-    allMarkers.push(pendingMarker)
-    setClicks(allMarkers)
+  const handleSubmitPendingMarker = async () => {
+    try {
+      const allMarkers = [...clicks]
+      const pendingMarker = allMarkers.pop()
 
-    setMyMarker({ lat: pendingMarker.lat, lng: pendingMarker.lng })
+      await toast.promise(
+        // eslint-disable-next-line
+      new Promise(async (resolve, reject) => {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${pendingMarker.lat},${pendingMarker.lng}&key=${process.env.GOOGLE_MAP_KEY}`
+          )
+          const json = await response.json()
+
+          const isUkraine = json?.results?.some?.(
+            (res) =>
+              res.types?.some((t) => t === 'country') &&
+              res.address_components?.some((adr) => adr.short_name === 'UA')
+          )
+
+          isUkraine ? resolve(true) : reject(false)
+        }),
+        {
+          loading: (
+            <ToastContent
+              type="loading"
+              text="Перевіряється коректність мітки"
+            />
+          ),
+          error: (
+            <ToastContent
+              type="error"
+              text="Мітка в даному регіоні тимчасово недоступна"
+            />
+          ),
+          success: <ToastContent type="success" text="Мітку успішно додано" />,
+        }
+      )
+
+      pendingMarker.isPending = false
+      allMarkers.push(pendingMarker)
+      setClicks(allMarkers)
+
+      setMyMarker({ lat: pendingMarker.lat, lng: pendingMarker.lng })
+    } catch (_err) {
+      console.warn(_err)
+    }
   }
 
   const handleСancelPendingMarker = () => {
@@ -276,10 +275,7 @@ const UiExamplesPage = () => {
 
         <div className=" p-2">
           <h2 className="my-2  text-xl">Map</h2>
-          <Wrapper
-            apiKey={'AIzaSyAZXF1oEsjFv1ox3UIbIh6UMdPRLQ4LKTY'}
-            render={renderMap}
-          >
+          <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
             <Map
               center={center}
               onClick={onClick}
@@ -288,7 +284,7 @@ const UiExamplesPage = () => {
               style={{ flexGrow: '1', height: '800px', width: '100%' }}
               fullscreenControl={false}
               clustererRenderer={clustererRenderer}
-              marks={clicks}
+              markers={clicks}
             />
           </Wrapper>
         </div>
