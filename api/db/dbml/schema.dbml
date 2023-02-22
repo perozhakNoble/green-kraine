@@ -8,18 +8,84 @@ Table User {
   email String [unique, not null]
   hashedPassword String [not null]
   salt String [not null]
+  votes Vote [not null]
+  comments Comment [not null]
+  problems Problem [not null]
+  markers Marker [not null]
   resetToken String
   resetTokenExpiresAt DateTime
   roles UserRole [not null, default: 'USER']
-  markers Marker [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
 
 Table Marker {
   id String [pk]
   lat Float [not null]
   lng Float [not null]
-  user User [not null]
-  userId String [not null]
+  problem Problem
+  user User
+  userId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Category {
+  id String [pk]
+  name String [unique, not null]
+  problems Problem [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Problem {
+  id String [pk]
+  title String [not null]
+  description String [not null]
+  votes Vote [not null]
+  comments Comment [not null]
+  images Image [not null]
+  category Category
+  categoryId String
+  marker Marker
+  markerId String [unique]
+  status ProblemStatus [not null, default: 'OPEN']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User
+  userId String
+}
+
+Table Image {
+  id String [pk]
+  filename String [not null]
+  path String [not null]
+  problem Problem
+  problemId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Comment {
+  id String [pk]
+  content String [not null]
+  user User
+  userId String
+  problem Problem
+  problemId String
+}
+
+Table Vote {
+  id String [pk]
+  upvote Boolean [not null, default: true]
+  user User
+  userId String
+  problem Problem
+  problemId String
+
+  indexes {
+    (userId, problemId) [unique]
+  }
 }
 
 Enum UserRole {
@@ -29,4 +95,27 @@ Enum UserRole {
   ADMIN
 }
 
+Enum ProblemStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
 Ref: Marker.userId > User.id
+
+Ref: Problem.categoryId > Category.id
+
+Ref: Problem.markerId - Marker.id
+
+Ref: Problem.userId > User.id
+
+Ref: Image.problemId > Problem.id
+
+Ref: Comment.userId > User.id
+
+Ref: Comment.problemId > Problem.id
+
+Ref: Vote.userId > User.id
+
+Ref: Vote.problemId > Problem.id

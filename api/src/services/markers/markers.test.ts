@@ -28,28 +28,28 @@ describe('markers', () => {
     expect(result).toEqual(scenario.marker.one)
   })
 
-  scenario('creates a marker', async (scenario: StandardScenario) => {
+  scenario('creates a marker', async () => {
     const result = await createMarker({
       input: {
-        lat: 6211441.773102286,
-        lng: 6585369.073345542,
-        userId: scenario.marker.two.userId,
+        lat: 7447118.434893616,
+        lng: 427548.3303651484,
+        updatedAt: '2023-02-21T16:25:38.644Z',
       },
     })
 
-    expect(result.lat).toEqual(6211441.773102286)
-    expect(result.lng).toEqual(6585369.073345542)
-    expect(result.userId).toEqual(scenario.marker.two.userId)
+    expect(result.lat).toEqual(7447118.434893616)
+    expect(result.lng).toEqual(427548.3303651484)
+    expect(result.updatedAt).toEqual(new Date('2023-02-21T16:25:38.644Z'))
   })
 
   scenario('updates a marker', async (scenario: StandardScenario) => {
     const original = (await marker({ id: scenario.marker.one.id })) as Marker
     const result = await updateMarker({
       id: original.id,
-      input: { lat: 2781673.608657214 },
+      input: { lat: 3695380.7621387737 },
     })
 
-    expect(result.lat).toEqual(2781673.608657214)
+    expect(result.lat).toEqual(3695380.7621387737)
   })
 
   scenario('deletes a marker', async (scenario: StandardScenario) => {

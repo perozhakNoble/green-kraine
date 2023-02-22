@@ -1,35 +1,20 @@
 import type { Prisma, Marker } from '@prisma/client'
-
 import type { ScenarioData } from '@redwoodjs/testing/api'
 
 export const standard = defineScenario<Prisma.MarkerCreateArgs>({
   marker: {
     one: {
       data: {
-        lat: 9604736.534055935,
-        lng: 6129152.315010895,
-        user: {
-          create: {
-            name: 'String',
-            email: 'String323233',
-            hashedPassword: 'String',
-            salt: 'String',
-          },
-        },
+        lat: 4996575.3191554295,
+        lng: 5389827.976419737,
+        updatedAt: '2023-02-21T16:25:38.699Z',
       },
     },
     two: {
       data: {
-        lat: 8394371.602472091,
-        lng: 6202001.922252201,
-        user: {
-          create: {
-            name: 'String',
-            email: 'String4133178',
-            hashedPassword: 'String',
-            salt: 'String',
-          },
-        },
+        lat: 9474673.603140183,
+        lng: 3596191.148032839,
+        updatedAt: '2023-02-21T16:25:38.699Z',
       },
     },
   },

@@ -39,6 +39,9 @@ export const deleteMarker: MutationResolvers['deleteMarker'] = ({ id }) => {
 }
 
 export const Marker: MarkerRelationResolvers = {
+  problem: (_obj, { root }) => {
+    return db.marker.findUnique({ where: { id: root?.id } }).problem()
+  },
   user: (_obj, { root }) => {
     return db.marker.findUnique({ where: { id: root?.id } }).user()
   },

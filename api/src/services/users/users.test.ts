@@ -26,18 +26,18 @@ describe('users', () => {
     const result = await createUser({
       input: {
         name: 'String',
-        email: 'String8277527',
+        email: 'String9498832',
         hashedPassword: 'String',
         salt: 'String',
-        roles: 'USER',
+        updatedAt: '2023-02-21T16:25:23.865Z',
       },
     })
 
     expect(result.name).toEqual('String')
-    expect(result.email).toEqual('String8277527')
+    expect(result.email).toEqual('String9498832')
     expect(result.hashedPassword).toEqual('String')
     expect(result.salt).toEqual('String')
-    expect(result.roles).toEqual('USER')
+    expect(result.updatedAt).toEqual(new Date('2023-02-21T16:25:23.865Z'))
   })
 
   scenario('updates a user', async (scenario: StandardScenario) => {

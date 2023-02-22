@@ -3,19 +3,22 @@ export const schema = gql`
     id: String!
     lat: Float!
     lng: Float!
-    user: User!
-    userId: String!
+    problem: Problem
+    user: User
+    userId: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type Query {
     markers: [Marker!]! @skipAuth
-    marker(id: String!): Marker @skipAuth
+    marker(id: String!): Marker @requireAuth
   }
 
   input CreateMarkerInput {
     lat: Float!
     lng: Float!
-    userId: String!
+    userId: String
   }
 
   input UpdateMarkerInput {
@@ -25,8 +28,8 @@ export const schema = gql`
   }
 
   type Mutation {
-    createMarker(input: CreateMarkerInput!): Marker! @skipAuth
-    updateMarker(id: String!, input: UpdateMarkerInput!): Marker! @skipAuth
-    deleteMarker(id: String!): Marker! @skipAuth
+    createMarker(input: CreateMarkerInput!): Marker! @requireAuth
+    updateMarker(id: String!, input: UpdateMarkerInput!): Marker! @requireAuth
+    deleteMarker(id: String!): Marker! @requireAuth
   }
 `

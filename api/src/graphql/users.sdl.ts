@@ -5,10 +5,15 @@ export const schema = gql`
     email: String!
     hashedPassword: String!
     salt: String!
+    votes: [Vote]!
+    comments: [Comment]!
+    problems: [Problem]!
+    markers: [Marker]!
     resetToken: String
     resetTokenExpiresAt: DateTime
     roles: UserRole!
-    markers: [Marker]!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   enum UserRole {
@@ -19,8 +24,8 @@ export const schema = gql`
   }
 
   type Query {
-    users: [User!]! @skipAuth
-    user(id: String!): User @skipAuth
+    users: [User!]! @requireAuth
+    user(id: String!): User @requireAuth
   }
 
   input CreateUserInput {
@@ -44,8 +49,8 @@ export const schema = gql`
   }
 
   type Mutation {
-    createUser(input: CreateUserInput!): User! @skipAuth
-    updateUser(id: String!, input: UpdateUserInput!): User! @skipAuth
-    deleteUser(id: String!): User! @skipAuth
+    createUser(input: CreateUserInput!): User! @requireAuth
+    updateUser(id: String!, input: UpdateUserInput!): User! @requireAuth
+    deleteUser(id: String!): User! @requireAuth
   }
 `
