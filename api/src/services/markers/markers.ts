@@ -7,7 +7,7 @@ import type {
 
 import { db } from 'src/lib/db'
 
-export const markers: QueryResolvers['markers'] = ({ userId }) => {
+export const markers: QueryResolvers['markers'] = ({ userId } = {}) => {
   const whereClause: Prisma.MarkerWhereInput = {}
 
   if (userId) {
