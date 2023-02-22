@@ -45,12 +45,15 @@ interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string }
   onClick?: (e: google.maps.MapMouseEvent) => void
   onIdle?: (map: google.maps.Map) => void
-  markers: {
+  markers: ({
     lat: number
     lng: number
     isPending?: boolean
     isNew?: boolean
-  }[]
+  } & (
+    | { withContent?: true; onClick: () => void }
+    | { withContent?: false | null | undefined }
+  ))[]
   clustererRenderer?: ClustererRenderer
 }
 
@@ -81,12 +84,6 @@ const Map: React.FC<MapProps> = ({
   ...options
 }) => {
   const ref = React.useRef<HTMLDivElement>(null)
-  const [infoWindow] = React.useState(
-    new google.maps.InfoWindow({
-      content: '',
-      disableAutoPan: true,
-    })
-  )
 
   const [map, setMap] = React.useState<google.maps.Map>()
 
@@ -131,29 +128,33 @@ const Map: React.FC<MapProps> = ({
     if (markersFromProps) {
       setMarkers(
         markersFromProps.map(
-          ({ isPending, isNew, ...position }): google.maps.Marker => {
+          ({
+            isPending,
+            isNew,
+            lat,
+            lng,
+            ...restOptions
+          }): google.maps.Marker => {
+            const position = {
+              lat,
+              lng,
+            }
             const marker = new google.maps.Marker({
               position,
               ...getMarkerOptions({ isPending, isNew, ...position }),
             })
 
-            const cont = 'cont'
+            if (restOptions.withContent) {
+              marker.addListener('click', () => {
+                restOptions.onClick()
+              })
+            }
             // markers can only be keyboard focusable when they have click listeners
             // open info window when marker is clicked
 
             // marker.addListener('dragend', (e: google.maps.) => {
             //   console.log(e.)
             // })
-
-            marker.addListener('click', () => {
-              infoWindow.setContent(
-                `<div>
-                <div>Author: ${cont}</div>
-                <div>Info: ${cont}</div>
-              </div>`
-              )
-              infoWindow?.open(map, marker)
-            })
 
             return marker
           }
