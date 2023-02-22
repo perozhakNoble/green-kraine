@@ -11,7 +11,7 @@ export const schema = gql`
   }
 
   type Query {
-    markers: [Marker!]! @skipAuth
+    markers(userId: String): [Marker!]! @skipAuth
     marker(id: String!): Marker @requireAuth
   }
 

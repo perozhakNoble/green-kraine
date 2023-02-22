@@ -77,7 +77,11 @@ const FormWrapper = <T,>({
   }
 
   return (
-    <Form formMethods={formMethods} onSubmit={handleSubmit}>
+    <Form
+      formMethods={formMethods}
+      onSubmit={handleSubmit}
+      className={`${className ?? ''} relative`}
+    >
       <FormContext.Provider
         value={{
           formMethods,
@@ -85,7 +89,7 @@ const FormWrapper = <T,>({
           isEdit,
         }}
       >
-        <div className={`${className ?? ''} relative`}>
+        <div className="flex flex-col gap-2">
           {children}
           {!loading && !isEdit && (
             <FontAwesomeIcon

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -6,8 +7,16 @@ import type {
 
 import { db } from 'src/lib/db'
 
-export const markers: QueryResolvers['markers'] = () => {
-  return db.marker.findMany()
+export const markers: QueryResolvers['markers'] = ({ userId }) => {
+  const whereClause: Prisma.MarkerWhereInput = {}
+
+  if (userId) {
+    whereClause.userId = userId
+  }
+
+  return db.marker.findMany({
+    where: whereClause,
+  })
 }
 
 export const marker: QueryResolvers['marker'] = ({ id }) => {

@@ -80,7 +80,7 @@ const MARKERS: Partial<
     id: '1',
     lat: 47.69273605567288,
     lng: 32.50885009766171,
-    userId: '4',
+    userId: '1',
     category: 'Браконьєрство',
     problemTitle: 'Незаконний вилов риби',
     problemDescription:
@@ -90,7 +90,7 @@ const MARKERS: Partial<
     id: '2',
     lat: 48.67273605567288,
     lng: 24.95088500976562,
-    userId: '4',
+    userId: '2',
     category: 'Забруднення',
     problemTitle: 'Забруднення повітря',
     problemDescription:
@@ -100,7 +100,7 @@ const MARKERS: Partial<
     id: '3',
     lat: 48.79173625267288,
     lng: 32.80885009766171,
-    userId: '4',
+    userId: '3',
     category: 'Знищення лісів і середовища проживання',
     problemTitle: 'Вирубка лісу',
     problemDescription: 'Незаконне вирубування лісів у власних цілях',
@@ -137,7 +137,7 @@ const MARKERS: Partial<
     id: '7',
     lat: 48.69273605567111,
     lng: 24.85088500976111,
-    userId: '4',
+    userId: '1',
     category: 'Забруднення',
     problemTitle: 'Забруднення повітря',
     problemDescription:
@@ -147,7 +147,7 @@ const MARKERS: Partial<
     id: '8',
     lat: 49.68273605567288,
     lng: 23.93885009765617,
-    userId: '4',
+    userId: '3',
     category: 'Поводження з відходами',
     problemTitle: 'Купи сміття',
     problemDescription:
@@ -157,7 +157,7 @@ const MARKERS: Partial<
     id: '9',
     lat: 49.67263605567281,
     lng: 30.52885009766171,
-    userId: '4',
+    userId: '2',
     category: 'Забруднення',
     problemTitle: 'Забруднення повітря',
     problemDescription:

@@ -3,7 +3,7 @@ import { ReactElement, useState } from 'react'
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import { Dialog, Spinner } from '@ui'
 import { H4 } from '@ui/Typography'
-import { AllMarkers, Marker } from 'types/graphql'
+import { GetMarkers, Marker } from 'types/graphql'
 
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
@@ -12,8 +12,8 @@ import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
 
 export const MARKERS_QUERY = gql`
-  query AllMarkers {
-    markers {
+  query GetMarkers($userId: String) {
+    markers(userId: $userId) {
       id
       lat
       lng
@@ -47,7 +47,7 @@ const renderMap = (status: Status): ReactElement => {
 }
 
 const HomePage = () => {
-  const { data: markersData } = useQuery<AllMarkers>(MARKERS_QUERY)
+  const { data: markersData } = useQuery<GetMarkers>(MARKERS_QUERY)
 
   const [zoom, setZoom] = React.useState(7) // initial zoom
   const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
@@ -102,7 +102,7 @@ const HomePage = () => {
           </div>
         </div>
       </Dialog>
-      <div className="h-[90vh] w-screen p-4">
+      <div className="w-5xl h-[90vh] p-4">
         <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
           <Map
             center={center}
