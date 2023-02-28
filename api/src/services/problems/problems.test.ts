@@ -33,13 +33,13 @@ describe('problems', () => {
       input: {
         title: 'String',
         description: 'String',
-        updatedAt: '2023-02-21T16:26:05.978Z',
+        updatedAt: '2023-02-27T17:11:41.317Z',
       },
     })
 
     expect(result.title).toEqual('String')
     expect(result.description).toEqual('String')
-    expect(result.updatedAt).toEqual(new Date('2023-02-21T16:26:05.978Z'))
+    expect(result.updatedAt).toEqual(new Date('2023-02-27T17:11:41.317Z'))
   })
 
   scenario('updates a problem', async (scenario: StandardScenario) => {

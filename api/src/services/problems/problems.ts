@@ -16,6 +16,40 @@ export const problem: QueryResolvers['problem'] = ({ id }) => {
   })
 }
 
+export const createProblemWithMarker: MutationResolvers['createProblemWithMarker'] =
+  ({ input }, { context }) => {
+    const { marker, categoryId, keywords, ...data } = input
+    return db.problem.create({
+      data: {
+        ...data,
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
+        keywords: {
+          connect: keywords.map((keyword) => ({ title: keyword })),
+        },
+        user: {
+          connect: {
+            id: (context.currentUser as any)?.id,
+          },
+        },
+        marker: {
+          create: {
+            lat: marker.lat,
+            lng: marker.lng,
+            user: {
+              connect: {
+                id: (context.currentUser as any)?.id,
+              },
+            },
+          },
+        },
+      },
+    })
+  }
+
 export const createProblem: MutationResolvers['createProblem'] = ({
   input,
 }) => {
@@ -41,6 +75,9 @@ export const deleteProblem: MutationResolvers['deleteProblem'] = ({ id }) => {
 }
 
 export const Problem: ProblemRelationResolvers = {
+  keywords: (_obj, { root }) => {
+    return db.problem.findUnique({ where: { id: root?.id } }).keywords()
+  },
   votes: (_obj, { root }) => {
     return db.problem.findUnique({ where: { id: root?.id } }).votes()
   },

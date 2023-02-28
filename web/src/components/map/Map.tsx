@@ -171,6 +171,11 @@ const Map: React.FC<MapProps> = ({
         ...options,
         ...{
           streetViewControl: false,
+          zoom: options.zoom || 7,
+          center: options.center || {
+            lat: 49,
+            lng: 32,
+          },
           // can be applied
           // zoom: 7,
           // minZoom: 1,

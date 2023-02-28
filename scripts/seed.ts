@@ -20,6 +20,19 @@ const randomSliceOfArray = <T>(array: Array<T>): Array<T> => {
 // -----------------------------------------------------------------------------------------
 // DATA
 // -------------------------------------------------------------------------------------
+// SEED KEYWORDS DATA
+// -------------------------------------------------------------------------------------
+const KEYWORDS = [
+  { id: '1', title: 'Ртуть' },
+  { id: '2', title: 'Повітря' },
+  { id: '3', title: 'Грунт' },
+  { id: '4', title: 'Тварини' },
+  { id: '5', title: 'Сміття' },
+  { id: '6', title: 'Рослини' },
+  { id: '7', title: 'Ліс' },
+] as const
+type KeywordType = (typeof KEYWORDS)[number]['title']
+// -------------------------------------------------------------------------------------
 // SEED USERS DATA
 // -------------------------------------------------------------------------------------
 const USERS: Partial<Prisma.UserCreateInput>[] = [
@@ -74,6 +87,7 @@ const MARKERS: Partial<
     category: CategoryType
     problemDescription: string
     problemTitle: string
+    problemKeywords: KeywordType[]
   }
 >[] = [
   {
@@ -85,6 +99,7 @@ const MARKERS: Partial<
     problemTitle: 'Незаконний вилов риби',
     problemDescription:
       'Браконьєри виловлюють рибу у незаконному місці, у великих обсягах, це загрожує знищенню екосистеми озера',
+    problemKeywords: ['Тварини'],
   },
   {
     id: '2',
@@ -95,6 +110,7 @@ const MARKERS: Partial<
     problemTitle: 'Забруднення повітря',
     problemDescription:
       'Постійні затори, внаслідок чого великі викиди газів у повітря',
+    problemKeywords: ['Повітря'],
   },
   {
     id: '3',
@@ -104,6 +120,7 @@ const MARKERS: Partial<
     category: 'Знищення лісів і середовища проживання',
     problemTitle: 'Вирубка лісу',
     problemDescription: 'Незаконне вирубування лісів у власних цілях',
+    problemKeywords: ['Ліс', 'Рослини'],
   },
   {
     id: '4',
@@ -114,6 +131,7 @@ const MARKERS: Partial<
     problemTitle: 'Купи сміття',
     problemDescription:
       'Комунальники не вивозять сміття, або роблять це дуже рідко, внаслідок чого смітиники завалені, і на вулиці неможливо знаходитись',
+    problemKeywords: ['Сміття', 'Повітря'],
   },
   {
     id: '5',
@@ -123,6 +141,7 @@ const MARKERS: Partial<
     category: 'Знищення лісів і середовища проживання',
     problemTitle: 'Вирубка лісу',
     problemDescription: 'Незаконне вирубування лісів у власних цілях',
+    problemKeywords: ['Ліс'],
   },
   {
     id: '6',
@@ -132,6 +151,7 @@ const MARKERS: Partial<
     category: 'Хімічні розливи та небезпечні відходи',
     problemTitle: 'Викиди хімії',
     problemDescription: 'Завод AТБ викидає купу відходів у повітря та грунт',
+    problemKeywords: ['Грунт', 'Повітря'],
   },
   {
     id: '7',
@@ -142,6 +162,7 @@ const MARKERS: Partial<
     problemTitle: 'Забруднення повітря',
     problemDescription:
       'Люди масово використовують генератори, які забруднюють повітря',
+    problemKeywords: ['Повітря'],
   },
   {
     id: '8',
@@ -152,6 +173,7 @@ const MARKERS: Partial<
     problemTitle: 'Купи сміття',
     problemDescription:
       'Комунальники не вивозять сміття, або роблять це дуже рідко, внаслідок чого смітиники завалені, і на вулиці неможливо знаходитись',
+    problemKeywords: ['Повітря', 'Сміття'],
   },
   {
     id: '9',
@@ -162,6 +184,7 @@ const MARKERS: Partial<
     problemTitle: 'Забруднення повітря',
     problemDescription:
       'Люди масово використовують генератори, які забруднюють повітря',
+    problemKeywords: ['Повітря'],
   },
   {
     id: '10',
@@ -171,10 +194,23 @@ const MARKERS: Partial<
     category: 'Браконьєрство',
     problemTitle: 'Вбивство зайців',
     problemDescription: 'Браконьєри масово вбивають зайців',
+    problemKeywords: ['Тварини'],
   },
 ]
 
 // -----------------------------------------------------------------------------------------
+
+const createKeywords = async () => {
+  for (const keyword of KEYWORDS) {
+    await db.keyword.create({
+      data: {
+        id: keyword.id,
+        title: keyword.title,
+      },
+    })
+  }
+}
+
 const createUsers = async () => {
   for (const user of USERS) {
     const salt = CryptoJS.lib.WordArray.random(128 / 8).toString()
@@ -212,8 +248,19 @@ const createMarkersAndProblems = async () => {
                 name: marker.category,
               },
             },
+            user: {
+              connect: {
+                id: marker.userId,
+              },
+            },
+            severity: randomNumber(1, 10),
             description: marker.problemDescription,
             title: marker.problemTitle,
+            keywords: {
+              connect: marker.problemKeywords.map((keyword) => ({
+                title: keyword,
+              })),
+            },
           },
         },
       },
@@ -258,6 +305,7 @@ const createVotes = async () => {
 }
 
 const clearDatabase = async () => {
+  await db.keyword.deleteMany()
   await db.vote.deleteMany()
   await db.image.deleteMany()
   await db.comment.deleteMany()
@@ -270,6 +318,7 @@ const clearDatabase = async () => {
 export default async () => {
   try {
     await clearDatabase()
+    await createKeywords()
     await createUsers()
     await createCategories()
     await createMarkersAndProblems()

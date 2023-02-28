@@ -7,14 +7,14 @@ export const standard = defineScenario<Prisma.ProblemCreateArgs>({
       data: {
         title: 'String',
         description: 'String',
-        updatedAt: '2023-02-21T16:26:06.016Z',
+        updatedAt: '2023-02-27T17:11:41.340Z',
       },
     },
     two: {
       data: {
         title: 'String',
         description: 'String',
-        updatedAt: '2023-02-21T16:26:06.016Z',
+        updatedAt: '2023-02-27T17:11:41.340Z',
       },
     },
   },

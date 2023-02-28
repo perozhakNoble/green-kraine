@@ -55,6 +55,15 @@ model Category {
   updatedAt DateTime  @updatedAt
 }
 
+model Keyword {
+  id        String   @id @default(uuid())
+  title     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  problem   Problem? @relation(fields: [problemId], references: [id])
+  problemId String?
+}
+
 enum ProblemStatus {
   OPEN
   IN_PROGRESS
@@ -63,25 +72,23 @@ enum ProblemStatus {
 }
 
 model Problem {
-  id          String @id @default(uuid())
+  id          String        @id @default(uuid())
   title       String
   description String
-
-  // важливість    1-10
-  // ключові слова  string chips
-
-  votes      Vote[]
-  comments   Comment[]
-  images     Image[]
-  category   Category?     @relation(fields: [categoryId], references: [id])
-  categoryId String?
-  marker     Marker?       @relation(fields: [markerId], references: [id])
-  markerId   String?       @unique
-  user       User?         @relation(fields: [userId], references: [id])
-  userId     String?
-  status     ProblemStatus @default(OPEN)
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  severity    Int           @default(1)
+  keywords    Keyword[]
+  votes       Vote[]
+  comments    Comment[]
+  images      Image[]
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  marker      Marker?       @relation(fields: [markerId], references: [id])
+  markerId    String?       @unique
+  user        User?         @relation(fields: [userId], references: [id])
+  userId      String?
+  status      ProblemStatus @default(OPEN)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 model Image {

@@ -33,7 +33,7 @@ const Button = ({
   type,
 }: ButtonProps) => {
   const buttonClass = classnames({
-    'inline-flex items-center justify-center my-auto font-normal cursor-pointer border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all':
+    'inline-flex items-center justify-center my-auto font-normal cursor-pointer border focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all':
       true,
     'px-1.5 py-1 text-[10px] rounded-lg': size === 'xs',
     'rounded-sm': rounded === 'sm',
@@ -46,7 +46,7 @@ const Button = ({
     'pointer-events-none': isLoading,
     'bg-primary focus:ring-primary enabled:hover:bg-primary-light text-white':
       color === 'primary',
-    'bg-white border-[1.5px] border-primary-dark focus:ring-primary text-primary enabled:hover:text-primary-light enabled:hover:border-primary-light':
+    'bg-white border-[1px] border-primary-dark focus:ring-primary text-primary enabled:hover:text-primary-light enabled:hover:border-primary-light':
       color === 'secondary',
     'bg-secondary-light focus:ring-secondary enabled:hover:bg-stone-300 text-secondary':
       color === 'dark',

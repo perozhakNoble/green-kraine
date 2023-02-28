@@ -3,6 +3,8 @@ export const schema = gql`
     id: String!
     title: String!
     description: String!
+    severity: Int!
+    keywords: [Keyword]!
     votes: [Vote]!
     comments: [Comment]!
     images: [Image]!
@@ -32,6 +34,7 @@ export const schema = gql`
   input CreateProblemInput {
     title: String!
     description: String!
+    severity: Int!
     categoryId: String
     markerId: String
     userId: String
@@ -41,14 +44,30 @@ export const schema = gql`
   input UpdateProblemInput {
     title: String
     description: String
+    severity: Int
     categoryId: String
     markerId: String
     userId: String
     status: ProblemStatus
   }
 
+  input MarkerInput {
+    lat: Float!
+    lng: Float!
+  }
+  input CreateProblemWithMarkerInput {
+    title: String!
+    description: String!
+    severity: Int!
+    categoryId: String
+    keywords: [String!]!
+    marker: MarkerInput!
+  }
+
   type Mutation {
     createProblem(input: CreateProblemInput!): Problem! @requireAuth
+    createProblemWithMarker(input: CreateProblemWithMarkerInput!): Problem!
+      @requireAuth
     updateProblem(id: String!, input: UpdateProblemInput!): Problem!
       @requireAuth
     deleteProblem(id: String!): Problem! @requireAuth
