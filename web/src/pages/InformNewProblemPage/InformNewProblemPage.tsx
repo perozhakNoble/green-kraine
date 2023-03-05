@@ -1,4 +1,4 @@
-import { ReactElement, SyntheticEvent } from 'react'
+import { ReactElement, SyntheticEvent, useState } from 'react'
 
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import { Button, Form, Spinner, ToastContent } from '@ui'
@@ -46,18 +46,20 @@ export const CREATE_NEW_PROBLEM_WITH_MARKER_MUTATION = gql`
   }
 `
 
+export type NewMarkerType = {
+  lat: number
+  lng: number
+  isNew?: boolean
+  isPending?: boolean
+}
+
 export type InformNewProblemForm = {
   title: string
   description: string
   category: OptionTypeValue
   severity: number
   keywords: string[]
-  marker: {
-    lat: number
-    lng: number
-    isNew?: boolean
-    isPending?: boolean
-  }
+  marker: NewMarkerType
 }
 
 type IForm = InformNewProblemForm
@@ -76,12 +78,14 @@ const InformNewProblemPage = () => {
       CREATE_NEW_PROBLEM_WITH_MARKER_MUTATION
     )
 
+  const [newMarker, setNewMarker] = useState<NewMarkerType>(null)
+
   const formMethods = useForm<IForm>({
     defaultValues: {},
   })
 
   const onSubmitNewProblem = async (values: IForm) => {
-    await createProblem({
+    const newProblem = await createProblem({
       variables: {
         input: {
           description: values.description,
@@ -97,24 +101,28 @@ const InformNewProblemPage = () => {
       } as CreateProblemWithMarkerVariables,
     })
 
-    navigate(routes.userReports())
+    navigate(
+      routes.userReports({
+        id: newProblem?.data?.createProblemWithMarker?.id,
+      })
+    )
   }
 
   const categoryOptions = categoryData?.options || []
   const keywordsOptions = keywordsData?.options || []
 
   const onClick = (e: google.maps.MapMouseEvent) => {
-    if (formMethods.watch('marker') && !formMethods.watch('marker').isPending)
+    if (formMethods.watch('marker') || (newMarker && !newMarker.isPending))
       return
 
-    const newMarker = {
+    const newPendingMarker = {
       lat: e.latLng.lat(),
       lng: e.latLng.lng(),
       isNew: true,
       isPending: true,
     }
 
-    formMethods.setValue('marker', newMarker)
+    setNewMarker(newPendingMarker)
   }
 
   const renderMap = (status: Status): ReactElement => {
@@ -125,7 +133,7 @@ const InformNewProblemPage = () => {
   const handleSubmitPendingMarker = async (e?: SyntheticEvent) => {
     e.preventDefault()
     try {
-      const pendingMarker = formMethods.watch('marker')
+      const pendingMarker = newMarker
 
       await toast.promise(
         // eslint-disable-next-line
@@ -163,6 +171,7 @@ const InformNewProblemPage = () => {
       pendingMarker.isPending = false
 
       formMethods.setValue('marker', pendingMarker, { shouldValidate: true })
+      setNewMarker(pendingMarker)
     } catch (_err) {
       console.warn(_err)
     }
@@ -170,13 +179,13 @@ const InformNewProblemPage = () => {
 
   const handleСancelPendingMarker = (e?: SyntheticEvent) => {
     e?.preventDefault()
-    formMethods.setValue('marker', undefined)
-    formMethods.resetField('marker')
+    setNewMarker(null)
   }
 
   const handleCancelNewMarker = (e?: SyntheticEvent) => {
     e?.preventDefault()
 
+    setNewMarker(null)
     formMethods.setValue('marker', undefined)
     formMethods.resetField('marker')
   }
@@ -249,15 +258,13 @@ const InformNewProblemPage = () => {
               style={{ flexGrow: '1', height: '800px', width: '100%' }}
               fullscreenControl={false}
               clustererRenderer={clustererRenderer}
-              markers={[formMethods.watch('marker')].filter(Boolean)}
+              markers={[newMarker].filter(Boolean)}
             />
           </Wrapper>
-          {(formMethods.watch('marker')?.isPending ||
-            formMethods.watch('marker')?.isNew) && (
+          {(newMarker?.isPending || newMarker?.isNew) && (
             <>
               <div className="flex justify-end gap-2">
-                {formMethods.watch('marker')?.isPending &&
-                formMethods.watch('marker')?.isNew ? (
+                {newMarker?.isPending && newMarker?.isNew ? (
                   <>
                     <Button
                       type="button"

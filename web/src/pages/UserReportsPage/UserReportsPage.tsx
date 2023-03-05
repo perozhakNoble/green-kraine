@@ -1,10 +1,11 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { Dialog, Spinner } from '@ui'
+import { Button, Dialog, Spinner } from '@ui'
 import { H4 } from '@ui/Typography'
 import { GetMarkers, GetMarkersVariables, Marker } from 'types/graphql'
 
+import { navigate, routes, useParams } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
@@ -19,6 +20,7 @@ const renderMap = (status: Status): ReactElement => {
 }
 
 const HomePaUserReportsPagege = () => {
+  const { id: problemId } = useParams()
   const { currentUser } = useAuth()
 
   const { data: markersData } = useQuery<GetMarkers>(MARKERS_QUERY, {
@@ -33,11 +35,6 @@ const HomePaUserReportsPagege = () => {
     lng: 32,
   })
 
-  const onIdle = (m: google.maps.Map) => {
-    setZoom(m.getZoom())
-    setCenter(m.getCenter().toJSON())
-  }
-
   const [dialogOpen, setDialogOpen] = useState(false)
   const [markerToDisplayInfoId, setMarkerToDisplayInfo] = useState<string>(null)
   const markerToDisplayInfo: Marker =
@@ -46,11 +43,50 @@ const HomePaUserReportsPagege = () => {
         (el) => el.id === markerToDisplayInfoId
       ) as Marker)) ||
     null
+
+  const [currentMarker, setCurrentMarker] =
+    useState<GetMarkers['markers'][number]>(null)
+
+  useEffect(() => {
+    if (problemId) {
+      const m = markersData?.markers?.find((m) => m?.problem?.id === problemId)
+      setCurrentMarker(m || null)
+    } else {
+      setCurrentMarker(null)
+    }
+  }, [problemId, markersData])
+
+  const onIdle = (m: google.maps.Map) => {
+    setZoom(m.getZoom())
+    setCenter(m.getCenter().toJSON())
+  }
+
+  const resetProblemIdQueryParameter = () => {
+    navigate(routes.userReports())
+  }
+
   return (
     <>
       <MetaTags title="Мої мітки" description="My map page" />
 
-      <H4 className="mx-6 mt-4">Перегляд моїх міток</H4>
+      <div className="flex items-center">
+        <H4 className="mx-6 mt-4">
+          {currentMarker
+            ? `Перегляд мітки ${currentMarker.problem?.title || ''} `
+            : 'Перегляд моїх міток'}{' '}
+        </H4>
+
+        {currentMarker && (
+          <div className="mt-3">
+            <Button
+              text="Переглянути усі мої мітки"
+              color="secondary"
+              type="button"
+              onClick={resetProblemIdQueryParameter}
+            />
+          </div>
+        )}
+      </div>
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -95,15 +131,17 @@ const HomePaUserReportsPagege = () => {
             fullscreenControl={false}
             clustererRenderer={clustererRenderer}
             markers={
-              markersData?.markers.map((marker) => ({
-                lng: marker.lng,
-                lat: marker.lat,
-                withContent: true,
-                onClick: () => {
-                  setDialogOpen(true)
-                  setMarkerToDisplayInfo(marker.id)
-                },
-              })) || []
+              (currentMarker ? [currentMarker] : markersData?.markers)?.map(
+                (marker) => ({
+                  lng: marker.lng,
+                  lat: marker.lat,
+                  withContent: true,
+                  onClick: () => {
+                    setDialogOpen(true)
+                    setMarkerToDisplayInfo(marker.id)
+                  },
+                })
+              ) || []
             }
           />
         </Wrapper>
