@@ -1,15 +1,15 @@
 import { ReactElement, useState } from 'react'
 
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { Dialog, Spinner } from '@ui'
+import { Spinner } from '@ui'
 import { H4 } from '@ui/Typography'
 import { GetMarkers, Marker } from 'types/graphql'
 
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
-import LikeUnlikeButtons from 'src/components/LikeUnlikeButtons/LikeUnlikeButtons'
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
+import MarkerInfoDialog from 'src/components/map/MarkerInfoDialog/MarkerInfoDialog'
 
 export const MARKERS_QUERY = gql`
   query GetMarkers($userId: String) {
@@ -73,35 +73,12 @@ const HomePage = () => {
       <MetaTags title="Перегляд карти" description="Map page" />
 
       <H4 className="mx-6 mt-4">Перегляд усіх міток</H4>
-      <Dialog
+      <MarkerInfoDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         afterModalClose={() => setMarkerToDisplayInfo(null)}
-      >
-        <div>
-          <H4>{markerToDisplayInfo?.problem.title}</H4>
-          <div className="text-md font-light">
-            <p>
-              <b>Автор: </b>
-              {markerToDisplayInfo?.user.name}
-            </p>
-            <p>
-              <b>Категорія: </b>
-              {markerToDisplayInfo?.problem.category.name}
-            </p>
-            <p>
-              <b>Проблема: </b>
-              {markerToDisplayInfo?.problem.description}
-            </p>
-          </div>
-          <div className="mt-2 ml-auto mr-2 w-20">
-            <LikeUnlikeButtons
-              votes={markerToDisplayInfo?.problem?.votes}
-              problemId={markerToDisplayInfo?.problem?.id}
-            />
-          </div>
-        </div>
-      </Dialog>
+        marker={markerToDisplayInfo}
+      />
       <div className="w-5xl h-[90vh] p-4">
         <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
           <Map

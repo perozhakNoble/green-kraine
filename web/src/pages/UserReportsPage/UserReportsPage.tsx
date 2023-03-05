@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState } from 'react'
 
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { Button, Dialog, Spinner } from '@ui'
+import { Button, Spinner } from '@ui'
 import { H4 } from '@ui/Typography'
 import { GetMarkers, GetMarkersVariables, Marker } from 'types/graphql'
 
@@ -9,9 +9,9 @@ import { navigate, routes, useParams } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import LikeUnlikeButtons from 'src/components/LikeUnlikeButtons/LikeUnlikeButtons'
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
+import MarkerInfoDialog from 'src/components/map/MarkerInfoDialog/MarkerInfoDialog'
 import { MARKERS_QUERY } from 'src/pages/HomePage/HomePage'
 
 const renderMap = (status: Status): ReactElement => {
@@ -87,35 +87,12 @@ const HomePaUserReportsPagege = () => {
           </div>
         )}
       </div>
-      <Dialog
+      <MarkerInfoDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         afterModalClose={() => setMarkerToDisplayInfo(null)}
-      >
-        <div>
-          <H4>{markerToDisplayInfo?.problem.title}</H4>
-          <div className="text-md font-light">
-            <p>
-              <b>Автор: </b>
-              {markerToDisplayInfo?.user.name}
-            </p>
-            <p>
-              <b>Категорія: </b>
-              {markerToDisplayInfo?.problem.category.name}
-            </p>
-            <p>
-              <b>Проблема: </b>
-              {markerToDisplayInfo?.problem.description}
-            </p>
-          </div>
-          <div className="mt-2 ml-auto mr-2 w-20">
-            <LikeUnlikeButtons
-              votes={markerToDisplayInfo?.problem?.votes}
-              problemId={markerToDisplayInfo?.problem?.id}
-            />
-          </div>
-        </div>
-      </Dialog>
+        marker={markerToDisplayInfo}
+      />
       <div className="w-5xl h-[90vh] p-4">
         <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
           <Map
