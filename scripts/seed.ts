@@ -43,12 +43,6 @@ const USERS: Partial<Prisma.UserCreateInput>[] = [
     roles: 'ADMIN',
   },
   {
-    id: '2',
-    name: 'Moderator',
-    email: 'moderator@greenkraine.io',
-    roles: 'MODERATOR',
-  },
-  {
     id: '3',
     name: 'Analyst',
     email: 'analyst@greenkraine.io',
@@ -105,7 +99,7 @@ const MARKERS: Partial<
     id: '2',
     lat: 48.67273605567288,
     lng: 24.95088500976562,
-    userId: '2',
+    userId: '3',
     category: 'Забруднення',
     problemTitle: 'Забруднення повітря',
     problemDescription:
@@ -179,7 +173,7 @@ const MARKERS: Partial<
     id: '9',
     lat: 49.67263605567281,
     lng: 30.52885009766171,
-    userId: '2',
+    userId: '1',
     category: 'Забруднення',
     problemTitle: 'Забруднення повітря',
     problemDescription:

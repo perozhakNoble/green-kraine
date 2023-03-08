@@ -15,7 +15,6 @@ generator dbml {
 enum UserRole {
   USER
   ANALYST
-  MODERATOR
   ADMIN
 }
 

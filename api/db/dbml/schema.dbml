@@ -102,7 +102,6 @@ Table Vote {
 Enum UserRole {
   USER
   ANALYST
-  MODERATOR
   ADMIN
 }
 

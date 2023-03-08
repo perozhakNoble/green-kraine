@@ -19,7 +19,6 @@ export const schema = gql`
   enum UserRole {
     USER
     ANALYST
-    MODERATOR
     ADMIN
   }
 
