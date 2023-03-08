@@ -1,3 +1,5 @@
+import Table from '@ui/Table/Table'
+
 import Button from './Button/Button'
 import Disclosure from './Disclosure/Disclosure'
 import Field from './Form/Field/Field'
@@ -20,4 +22,5 @@ export {
   ConfirmationDialog,
   Spinner,
   ToastContent,
+  Table,
 }

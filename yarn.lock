@@ -24766,6 +24766,7 @@ __metadata:
     dayjs: ^1.11.7
     fast-equals: ^4.0.3
     file-saver: ^2.0.5
+    humanize-string: 2.1.0
     lodash: ^4.17.21
     postcss: ^8.4.21
     postcss-loader: ^7.0.2

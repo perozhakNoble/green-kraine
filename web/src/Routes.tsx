@@ -9,6 +9,7 @@
 
 import { Router, Route, Private, Set } from '@redwoodjs/router'
 
+import { UserRole } from 'src/constants'
 import AppLayout from 'src/layouts/AppLayout/AppLayout'
 
 import { useAuth } from './auth'
@@ -20,9 +21,13 @@ const Routes = () => {
         <Private unauthenticated="home">
           <Route path="/inform-new-problem" page={InformNewProblemPage} name="informNewProblem" />
           <Route path="/my-reports" page={UserReportsPage} name="userReports" />
-        </Private>
-        <Private unauthenticated="home" roles={['ADMIN', 'ANALYST']}>
           <Route path="/profile" page={ProfilePage} name="profile" />
+        </Private>
+        <Private unauthenticated="home" roles={[UserRole.ADMIN, UserRole.ANALYST]}>
+          <Route path="/stats" page={StatsPage} name="stats" />
+        </Private>
+        <Private unauthenticated="home" roles={[UserRole.ADMIN]}>
+          <Route path="/categories" page={CategoriesPage} name="categories" />
         </Private>
         <Route path="/" page={HomePage} name="home" />
       </Set>

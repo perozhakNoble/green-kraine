@@ -41,7 +41,7 @@ export const deleteKeyword: MutationResolvers['deleteKeyword'] = ({ id }) => {
 }
 
 export const Keyword: KeywordRelationResolvers = {
-  Problem: (_obj, { root }) => {
-    return db.keyword.findUnique({ where: { id: root?.id } }).Problem()
+  problem: (_obj, { root }) => {
+    return db.keyword.findUnique({ where: { id: root?.id } }).problem()
   },
 }

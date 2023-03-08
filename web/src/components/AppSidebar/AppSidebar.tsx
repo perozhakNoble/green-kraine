@@ -6,6 +6,7 @@ import { H4 } from '@ui/Typography'
 import { NavLink, routes } from '@redwoodjs/router'
 
 import { useAuth } from 'src/auth'
+import { UserRole } from 'src/constants'
 
 type AppSidebarProps = {
   isOpen: boolean
@@ -14,6 +15,9 @@ type AppSidebarProps = {
 
 const AppSidebar = ({ isOpen, setIsOpen }: AppSidebarProps) => {
   const { currentUser } = useAuth()
+
+  const isAnalyst = currentUser && currentUser.roles === UserRole.ANALYST
+  const isAdmin = currentUser && currentUser.roles === UserRole.ADMIN
 
   const links = [
     {
@@ -30,6 +34,16 @@ const AppSidebar = ({ isOpen, setIsOpen }: AppSidebarProps) => {
       label: 'Нова еко-проблема',
       isAvailable: !!currentUser,
       to: routes.informNewProblem(),
+    },
+    {
+      label: 'Cтатистика',
+      isAvailable: isAdmin || isAnalyst,
+      to: routes.stats(),
+    },
+    {
+      label: 'Категорії',
+      isAvailable: isAdmin,
+      to: routes.categories(),
     },
   ]
 

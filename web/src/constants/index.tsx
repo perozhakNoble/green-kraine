@@ -1,4 +1,5 @@
 import { MAX_FILE_SIZE } from 'src/constants/file'
+import { UserRole } from 'src/constants/user'
 
 import { DATE_FORMAT } from './date'
 import {
@@ -15,4 +16,5 @@ export {
   DATE_FORMAT,
   DEFAULT_ERROR_TEXTS,
   MAX_FILE_SIZE,
+  UserRole,
 }

@@ -9,7 +9,7 @@ import { ButtonProps } from './Button/Button'
 import { DisclosureProps } from './Disclosure/Disclosure'
 import { OptionType, OptionTypeValue, FormFieldProps } from './Form/Field/Field'
 import { SpinnerProps } from './Spinner'
-
+import { TableColumn, TableProps } from './Table/Table'
 export type {
   FormWrapperProps,
   ToastContentProps,
@@ -23,4 +23,6 @@ export type {
   ConfirmationDialogProps,
   SpinnerProps,
   FormFieldProps,
+  TableColumn,
+  TableProps,
 }

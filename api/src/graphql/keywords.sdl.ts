@@ -4,7 +4,7 @@ export const schema = gql`
     title: String!
     createdAt: DateTime!
     updatedAt: DateTime!
-    Problem: Problem
+    problem: Problem
     problemId: String
   }
 
