@@ -5,13 +5,15 @@ export type PopoverProps = {
   title: string | ReactNode
   className?: string
   children: (close: { close: () => void }) => ReactNode
-  onOpen: () => void
+  onOpen?: () => void
+  withoutPadding?: boolean
 }
 export default function CustomPopover({
   title,
   className,
   children,
   onOpen,
+  withoutPadding,
 }: PopoverProps) {
   return (
     <div className={`${className ?? ''}  `}>
@@ -39,7 +41,9 @@ export default function CustomPopover({
             >
               <Popover.Panel className="absolute z-10 mt-3 transform">
                 <div className="overflow-hidden rounded-xl shadow-lg ring-1 ring-black ring-opacity-5">
-                  <div className="relative bg-white p-4">
+                  <div
+                    className={`relative bg-white ${!withoutPadding && 'p-4'}`}
+                  >
                     {children({ close })}
                   </div>
                 </div>

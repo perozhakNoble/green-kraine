@@ -9,6 +9,7 @@ import './scaffold.css'
 import { AuthProvider, useAuth } from './auth'
 
 import './index.css'
+import './i18n'
 
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
