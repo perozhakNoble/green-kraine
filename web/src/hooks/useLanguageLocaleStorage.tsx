@@ -33,8 +33,9 @@ export const useLanguageLocaleStorage = () => {
         <div className="flex items-center justify-center">
           <CustomPopover
             withoutPadding
+            buttonClassName="outline-none ring-1 ring-gray-50 ring-offset-primary focus:ring-blue-300 focus:ring-offset-2 rounded-full"
             title={
-              <div className="flex items-center rounded-full border border-gray-50 p-[1px]">
+              <div className="flex items-center rounded-full p-[1px]">
                 <img
                   className="h-7 w-7 rounded-full object-cover"
                   src={

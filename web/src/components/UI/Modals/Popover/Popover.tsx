@@ -4,6 +4,7 @@ import { Popover, Transition } from '@headlessui/react'
 export type PopoverProps = {
   title: string | ReactNode
   className?: string
+  buttonClassName?: string
   children: (close: { close: () => void }) => ReactNode
   onOpen?: () => void
   withoutPadding?: boolean
@@ -11,6 +12,7 @@ export type PopoverProps = {
 export default function CustomPopover({
   title,
   className,
+  buttonClassName,
   children,
   onOpen,
   withoutPadding,
@@ -23,7 +25,9 @@ export default function CustomPopover({
             <Popover.Button
               onClick={onOpen}
               className={`text-secondary
-                ${open ? 'text-opacity-90' : ''} cursor-pointer`}
+                ${
+                  open ? 'text-opacity-90' : ''
+                } cursor-pointer ${buttonClassName}`}
             >
               <span className="text-primary_dark text-xs font-light">
                 {title}
