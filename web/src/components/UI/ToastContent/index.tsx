@@ -1,10 +1,12 @@
+import { ReactNode } from 'react'
+
 import classNames from 'classnames'
 
 import { DEFAULT_TOAST_HEADERS } from 'src/constants'
 
 export type ToastContentProps = {
   header?: string
-  text: string
+  text: string | ReactNode
   type: 'loading' | 'error' | 'success'
 }
 

@@ -7,7 +7,20 @@ export const schema = gql`
     updatedAt: DateTime!
   }
 
+  type GetPaginatedCategories {
+    items: [Category!]!
+    total: Int!
+  }
+  input CategoriesFilters {
+    name: String
+  }
+
   type Query {
+    categoriesList(
+      filters: CategoriesFilters
+      search: String
+      pagination: PaginationInput!
+    ): GetPaginatedCategories! @requireAuth
     categories: [Category!]! @requireAuth
     category(id: String!): Category @requireAuth
   }

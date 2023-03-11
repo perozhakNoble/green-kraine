@@ -50,7 +50,7 @@ const CategoryModal = ({
 
   const handleReset = () => {
     setIsOpen(false)
-    formMethods.reset(getDefaultValues())
+    formMethods.reset()
     reset()
   }
 

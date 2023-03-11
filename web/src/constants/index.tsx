@@ -1,4 +1,5 @@
 import { MAX_FILE_SIZE } from 'src/constants/file'
+import { PAGINATION_SEARCH_DEBOUNCE_TIME } from 'src/constants/input'
 import { UserRole } from 'src/constants/user'
 
 import { DATE_FORMAT } from './date'
@@ -17,4 +18,5 @@ export {
   DEFAULT_ERROR_TEXTS,
   MAX_FILE_SIZE,
   UserRole,
+  PAGINATION_SEARCH_DEBOUNCE_TIME,
 }

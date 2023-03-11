@@ -1,3 +1,4 @@
+import { Prisma } from '.prisma/client'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -5,6 +6,63 @@ import type {
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+
+enum CategoriesSortBy {
+  name = 'name',
+  usage_count = 'usage_count',
+}
+
+export const categoriesList: QueryResolvers['categoriesList'] = async ({
+  filters,
+  pagination,
+  search,
+}) => {
+  const whereClause: Prisma.CategoryWhereInput = {}
+  const orderClause: Prisma.CategoryOrderByWithRelationInput = {}
+
+  switch (pagination.sortBy) {
+    case CategoriesSortBy.name:
+      orderClause.name = pagination.order
+      break
+    case CategoriesSortBy.usage_count:
+      orderClause.problems = {
+        _count: pagination.order,
+      }
+      break
+
+    default:
+      orderClause.createdAt = 'asc'
+  }
+
+  if (filters) {
+    if (filters.name) {
+      whereClause.name = filters.name
+    }
+  }
+
+  if (search) {
+    whereClause.name = {
+      contains: search,
+      mode: 'insensitive',
+    }
+  }
+
+  const items = await db.category.findMany({
+    where: whereClause,
+    skip: pagination.skip,
+    take: pagination.take,
+    orderBy: orderClause,
+  })
+
+  const total = await db.category.count({
+    where: whereClause,
+  })
+
+  return {
+    items,
+    total,
+  }
+}
 
 export const categories: QueryResolvers['categories'] = () => {
   return db.category.findMany()
