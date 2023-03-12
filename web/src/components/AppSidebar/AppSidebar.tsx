@@ -2,11 +2,13 @@ import { faSun } from '@fortawesome/free-regular-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { H4 } from '@ui/Typography'
+import { useTranslation } from 'react-i18next'
 
 import { NavLink, routes } from '@redwoodjs/router'
 
 import { useAuth } from 'src/auth'
 import { UserRole } from 'src/constants'
+import { TranslationKeys } from 'src/i18n'
 
 type AppSidebarProps = {
   isOpen: boolean
@@ -19,29 +21,31 @@ const AppSidebar = ({ isOpen, setIsOpen }: AppSidebarProps) => {
   const isAnalyst = currentUser && currentUser.roles === UserRole.ANALYST
   const isAdmin = currentUser && currentUser.roles === UserRole.ADMIN
 
+  const { t } = useTranslation()
+
   const links = [
     {
-      label: 'Всі мітки',
+      label: t(TranslationKeys.all_markers),
       isAvailable: true,
       to: routes.home(),
     },
     {
-      label: 'Мої мітки',
+      label: t(TranslationKeys.my_markers),
       isAvailable: !!currentUser,
       to: routes.userReports(),
     },
     {
-      label: 'Нова еко-проблема',
+      label: t(TranslationKeys.new_eco_problem),
       isAvailable: !!currentUser,
       to: routes.informNewProblem(),
     },
     {
-      label: 'Cтатистика',
+      label: t(TranslationKeys.statistics),
       isAvailable: isAdmin || isAnalyst,
       to: routes.stats(),
     },
     {
-      label: 'Категорії',
+      label: t(TranslationKeys.categories),
       isAvailable: isAdmin,
       to: routes.categories(),
     },

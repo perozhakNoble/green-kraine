@@ -1,8 +1,10 @@
 import { Dialog } from '@ui'
 import { H4 } from '@ui/Typography'
+import { useTranslation } from 'react-i18next'
 import { Marker } from 'types/graphql'
 
 import LikeUnlikeButtons from 'src/components/map/LikeUnlikeButtons/LikeUnlikeButtons'
+import { TranslationKeys } from 'src/i18n'
 
 const MarkerInfoDialog = ({
   open,
@@ -15,21 +17,23 @@ const MarkerInfoDialog = ({
   afterModalClose?: () => void
   marker: Partial<Marker>
 }) => {
+  const { t } = useTranslation()
+
   return (
     <Dialog open={open} onClose={onClose} afterModalClose={afterModalClose}>
       <div>
         <H4>{marker?.problem?.title}</H4>
         <div className="text-md font-light">
           <p>
-            <b>Автор: </b>
+            <b>{t(TranslationKeys.author)}: </b>
             {marker?.user?.name}
           </p>
           <p>
-            <b>Категорія: </b>
+            <b>{t(TranslationKeys.category)}: </b>
             {marker?.problem?.category.name}
           </p>
           <p>
-            <b>Проблема: </b>
+            <b>{t(TranslationKeys.problem)}: </b>
             {marker?.problem?.description}
           </p>
         </div>

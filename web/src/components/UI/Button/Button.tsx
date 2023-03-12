@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import classnames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_FORM_BUTTON_TEXTS } from 'src/constants'
+import { TranslationKeys } from 'src/i18n'
 
 import Spinner from '../Spinner'
 
@@ -17,6 +18,7 @@ export interface ButtonProps {
   disabled?: boolean
   rounded?: 'sm' | 'md' | 'lg' | 'xl'
   type?: 'button' | 'submit'
+  nonBreakingWords?: boolean
 }
 
 const Button = ({
@@ -30,11 +32,14 @@ const Button = ({
   disabled = false,
   rounded = 'xl',
   onClick,
+  nonBreakingWords,
   type,
 }: ButtonProps) => {
+  const { t } = useTranslation()
   const buttonClass = classnames({
     'inline-flex items-center justify-center my-auto font-normal cursor-pointer border focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all':
       true,
+    'whitespace-nowrap': nonBreakingWords,
     'px-1.5 py-1 text-[10px] rounded-lg': size === 'xs',
     'rounded-sm': rounded === 'sm',
     'rounded-md': rounded === 'md',
@@ -65,7 +70,7 @@ const Button = ({
           <div className="mr-2">
             <Spinner size="sm" />
           </div>
-          {DEFAULT_FORM_BUTTON_TEXTS.LOADING}
+          {t(TranslationKeys.loading) + '..'}
         </button>
       ) : text !== '' ? (
         <button

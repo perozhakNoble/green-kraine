@@ -3,6 +3,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import { Button, Spinner } from '@ui'
 import { H4 } from '@ui/Typography'
+import { useTranslation } from 'react-i18next'
 import { GetMarkers, GetMarkersVariables, Marker } from 'types/graphql'
 
 import { navigate, routes, useParams } from '@redwoodjs/router'
@@ -13,6 +14,7 @@ import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
 import MarkerInfoDialog from 'src/components/map/MarkerInfoDialog/MarkerInfoDialog'
 import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
+import { TranslationKeys } from 'src/i18n'
 import { MARKERS_QUERY } from 'src/pages/HomePage/HomePage'
 
 const renderMap = (status: Status): ReactElement => {
@@ -66,21 +68,28 @@ const HomePaUserReportsPagege = () => {
     navigate(routes.userReports())
   }
 
+  const { t } = useTranslation()
+
   return (
     <>
-      <MetaTags title="Мої мітки" description="My map page" />
+      <MetaTags
+        title={t(TranslationKeys.my_markers)}
+        description="My map page"
+      />
 
       <div className="flex items-center">
         <H4 className="mx-6 mt-4">
           {currentMarker
-            ? `Перегляд мітки ${currentMarker.problem?.title || ''} `
-            : 'Перегляд моїх міток'}{' '}
+            ? `${t(TranslationKeys.view_marker)} ${
+                currentMarker.problem?.title || ''
+              } `
+            : t(TranslationKeys.view_my_markers)}{' '}
         </H4>
 
         {currentMarker && (
           <div className="mt-3">
             <Button
-              text="Переглянути усі мої мітки"
+              text={t(TranslationKeys.go_view_all_my_markers)}
               color="secondary"
               type="button"
               onClick={resetProblemIdQueryParameter}

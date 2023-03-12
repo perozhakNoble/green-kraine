@@ -1,8 +1,6 @@
 import { saveAs } from 'file-saver'
 
 import { capitalize } from 'src/components/utils/string'
-import { DEFAULT_ERROR_TEXTS } from 'src/constants'
-import { DEFAULT_WORDS } from 'src/constants/default_texts'
 
 export const convertBase64ToFile = (base64String, fileName) => {
   const arr = base64String.split(',')
@@ -27,32 +25,38 @@ export const downloadBase64Data = (
   saveAs(file, fileName)
 }
 
-export const getFileInputSubheading = (extensionsToParse: Array<string>) => {
+export const getFileInputSubheading = (
+  extensionsToParse: Array<string>,
+  words: { or: string; add: string; file: string }
+) => {
   const extensions = [...extensionsToParse]
   let str = ''
   if (extensions.length > 1) {
     const lastExt = extensions.pop()
-    str = extensions.join(',  ') + ` ${DEFAULT_WORDS.OR} ` + lastExt
+    str = extensions.join(',  ') + ` ${words.or} ` + lastExt
   } else {
     str = extensions[0]
   }
 
-  return `${capitalize(DEFAULT_WORDS.ADD)} ${str} ${DEFAULT_WORDS.FILE}`
+  return `${capitalize(words.add)} ${str} ${words.file}`
 }
 
-export const getFileBadTypeError = (extensionsToParse: Array<string>) => {
+export const getFileBadTypeError = (
+  extensionsToParse: Array<string>,
+  words: { or: string }
+) => {
   const extensions = [...extensionsToParse]
   let str = ''
   if (extensions.length > 1) {
     const lastExt = extensions.pop()
-    str = extensions.join(',  ') + ` ${DEFAULT_WORDS.OR} ` + lastExt
+    str = extensions.join(',  ') + ` ${words.or} ` + lastExt
   } else {
     str = extensions[0]
   }
-  return `${DEFAULT_ERROR_TEXTS.FILE_TYPE_SHOULD_BE} ${str}`
+  return `${str}`
 }
 export const getFileTooLargeError = (size: string) => {
-  return `${DEFAULT_ERROR_TEXTS.FILE_SHOULD_BE_LESS_THAN} ${size}`
+  return `${size}`
 }
 
 export const cleanFileName = (fileName: string): string => {

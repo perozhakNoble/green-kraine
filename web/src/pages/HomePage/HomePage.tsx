@@ -3,6 +3,7 @@ import { ReactElement, useState } from 'react'
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import { Spinner } from '@ui'
 import { H4 } from '@ui/Typography'
+import { useTranslation } from 'react-i18next'
 import { GetMarkers, Marker } from 'types/graphql'
 
 import { MetaTags, useQuery } from '@redwoodjs/web'
@@ -11,6 +12,7 @@ import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
 import MarkerInfoDialog from 'src/components/map/MarkerInfoDialog/MarkerInfoDialog'
 import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
+import { TranslationKeys } from 'src/i18n'
 
 export const MARKERS_QUERY = gql`
   query GetMarkers($userId: String) {
@@ -69,11 +71,13 @@ const HomePage = () => {
         (el) => el.id === markerToDisplayInfoId
       ) as Marker)) ||
     null
+
+  const { t } = useTranslation()
   return (
     <>
-      <MetaTags title="Перегляд карти" description="Map page" />
+      <MetaTags title={t(TranslationKeys.view_map)} description="Map page" />
 
-      <H4 className="mx-6 mt-4">Перегляд усіх міток</H4>
+      <H4 className="mx-6 mt-4">{t(TranslationKeys.view_all_markers)}</H4>
       <MarkerInfoDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}

@@ -10,11 +10,13 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Spinner from '@ui/Spinner'
 import ToastContent from '@ui/ToastContent'
+import { useTranslation } from 'react-i18next'
 
 import { FormError, RWGqlError } from '@redwoodjs/forms'
 import { toast } from '@redwoodjs/web/dist/toast'
 
 import usePagination from 'src/hooks/usePagination'
+import { TranslationKeys } from 'src/i18n'
 
 export type TableColumn<T> = {
   title: string
@@ -62,23 +64,26 @@ export const tableButtons = ({
   )
 }
 
-export const TableSearch = ({ search, setSearch }) => (
-  <div>
-    <div className="border-secondary_light w-full max-w-3xl rounded-xl border py-0.5">
-      <span>
-        <input
-          aria-label="input"
-          value={search || ''}
-          onChange={(e) => {
-            setSearch(e.target.value)
-          }}
-          placeholder={`Search records...`}
-          className="border-secondary_light block w-full rounded-xl py-2 pr-12 pl-7 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </span>
+export const TableSearch = ({ search, setSearch }) => {
+  const { t } = useTranslation()
+  return (
+    <div>
+      <div className="border-secondary_light w-full max-w-3xl rounded-xl border py-0.5">
+        <span>
+          <input
+            aria-label="input"
+            value={search || ''}
+            onChange={(e) => {
+              setSearch(e.target.value)
+            }}
+            placeholder={`${t(TranslationKeys.search)}...`}
+            className="border-secondary_light block w-full rounded-xl py-2 pr-12 pl-7 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </span>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const useTable = <T,>({
   buttons,
@@ -119,6 +124,8 @@ const useTable = <T,>({
     }
   }, [error])
 
+  const { t } = useTranslation()
+
   return {
     paginationVariables,
     gotoPrevPageIfCurrentRedundant: () => {
@@ -135,7 +142,7 @@ const useTable = <T,>({
               : 'scale-100 bg-opacity-50  opacity-100'
           } transition-all `}
         >
-          <div className="mb-2">Loading..</div>
+          <div className="mb-2">{t(TranslationKeys.loading)}..</div>
           <Spinner size="lg" />
         </div>
 
@@ -227,7 +234,7 @@ const useTable = <T,>({
               </button>{' '}
             </div>
             <select
-              className="h-10 w-36 cursor-pointer appearance-none rounded-xl border border-stone-200 px-4 pl-6 text-secondary focus:outline-none focus:ring-2 focus:ring-primary sm:h-auto sm:text-sm"
+              className="h-10 w-40 cursor-pointer appearance-none rounded-xl border border-stone-200 px-4 pl-6 text-secondary focus:outline-none focus:ring-2 focus:ring-primary sm:h-auto sm:text-sm"
               value={pageSize}
               onBlur={(e) => {
                 setPageSize(Number(e.target.value))
@@ -242,13 +249,14 @@ const useTable = <T,>({
                   value={pageSize}
                   className="px-4 text-secondary sm:text-sm"
                 >
-                  Show {pageSize}
+                  {t(TranslationKeys.show)} {pageSize}
                 </option>
               ))}
             </select>
           </div>
           <div className="text-md  text-secondary sm:text-sm">
-            page <strong>{currentPage + 1}</strong> of {pageCount || 1}
+            {t(TranslationKeys.page)} <strong>{currentPage + 1}</strong>{' '}
+            {t(TranslationKeys.of)} {pageCount || 1}
           </div>{' '}
         </div>
       </div>

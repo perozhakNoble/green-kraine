@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { Button, ConfirmationDialog } from '@ui'
 import useTable, { tableButtons, TableSearch } from '@ui/Table/Table'
 import { TableColumn } from '@ui/types'
+import { capitalize } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import {
   CategoriesQuery,
   CategoriesQueryVariables,
@@ -30,8 +32,11 @@ import CategoryModal, {
   CategoryForm,
 } from 'src/components/Categories/CategoryModal/CategoryModal'
 import { useAfterMountEffect } from 'src/hooks/useAfterMountEffect'
+import { TranslationKeys } from 'src/i18n'
 
 const Categories = () => {
+  const { t } = useTranslation()
+
   const {
     data: categoriesData,
     loading,
@@ -74,13 +79,13 @@ const Categories = () => {
 
   const columns: TableColumn<Category>[] = [
     {
-      title: "Ім'я",
+      title: t(TranslationKeys.name),
       accessor: (category) => category.name,
       isMain: true,
       sortable: CategoriesSortBy.name,
     },
     {
-      title: 'Кількість використань',
+      title: t(TranslationKeys.count_of_usage),
       accessor: (category) => String(category.problems.length),
       isMain: false,
       sortable: CategoriesSortBy.usage_count,
@@ -164,9 +169,10 @@ const Categories = () => {
     <div className="flex w-full flex-col items-center p-4">
       <div className="mb-2 flex w-full">
         <TableSearch search={search} setSearch={setSearch} />
-        <div className="ml-auto mr-1 w-20">
+        <div className="ml-auto mr-1 min-w-max">
           <Button
-            text="New +"
+            nonBreakingWords
+            text={capitalize(t(TranslationKeys.add_new)) + ' +'}
             onClick={() => {
               setCategoryForEdit(null)
               setIsCategoryModalOpen(true)
@@ -186,7 +192,7 @@ const Categories = () => {
         reset={reset}
       />
       <ConfirmationDialog
-        header="Confirm Delete"
+        header={t(TranslationKeys.confirm_delete)}
         confirm={async () => {
           await deleteCategory({ variables: { id: categoryForDelete.id } })
           gotoPrevPageIfCurrentRedundant()
@@ -197,8 +203,10 @@ const Categories = () => {
         loading={deleteCategoryOpts?.loading}
         isOpen={isConfirmDeleteOpen}
         type="error"
-        submitBtnText="Yes"
-        text={`Are you sure you want to delete ${categoryForDelete?.name} category?`}
+        submitBtnText={t(TranslationKeys.yes)}
+        text={`${t(TranslationKeys.are_u_sure_to_delete)} ${
+          categoryForDelete?.name
+        }?`}
       />
     </div>
   )

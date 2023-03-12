@@ -6,18 +6,15 @@ import { faCloudUploadAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CloudArrowUpIcon } from '@heroicons/react/24/outline'
 import { FileRejection, useDropzone } from 'react-dropzone'
+import { useTranslation } from 'react-i18next'
 
 import {
   getFileBadTypeError,
   getFileInputSubheading,
   getFileTooLargeError,
 } from 'src/components/utils/file'
-import {
-  DEFAULT_ERROR_TEXTS,
-  DEFAULT_FORM_BUTTON_TEXTS,
-  DEFAULT_INPUTS_TEXTS,
-  MAX_FILE_SIZE,
-} from 'src/constants'
+import { MAX_FILE_SIZE } from 'src/constants'
+import { TranslationKeys } from 'src/i18n'
 
 export enum AcceptedFileTypes {
   PDF = '.pdf',
@@ -73,30 +70,42 @@ const defaultTypes = [
   AcceptedFileTypes.DOCX,
 ]
 const FileUpload = ({
-  heading = DEFAULT_INPUTS_TEXTS.FILE_INPUT_HEADER,
+  heading,
   onDropSuccess,
   onDropFailure,
   multiple,
   acceptedFileTypes = defaultTypes,
-  subheading = getFileInputSubheading(acceptedFileTypes),
+  subheading,
   buttonClasses = 'bg-primary text-white px-3 py-2 rounded-lg hover:bg-primary-dark flex',
-  buttonText = DEFAULT_INPUTS_TEXTS.FILE_INPUT_BUTTON,
+  buttonText,
   buttonIcon = <CloudArrowUpIcon className="my-auto mr-2 w-4" />,
   isLoading = false,
   renderAsButton = false,
   isDisabled = false,
 }: FileUploadProps) => {
+  const { t } = useTranslation()
+
   const getErrorMessageFromCode = (errorss: FileRejection[]) => {
     const error = errorss.length ? errorss[0] : null
     if (error) {
       if (error.errors.some((err) => err.code === FileUploadError.BAD_TYPE)) {
-        return getFileBadTypeError(acceptedFileTypes)
+        return (
+          t(TranslationKeys.file_type_should_be) +
+          ' ' +
+          getFileBadTypeError(acceptedFileTypes, {
+            or: t(TranslationKeys.or),
+          })
+        )
       }
       if (error.errors.some((err) => err.code === FileUploadError.TOO_LARGE)) {
-        return getFileTooLargeError(MAX_FILE_SIZE.message)
+        return (
+          t(TranslationKeys.file_should_be_less_than) +
+          ' ' +
+          getFileTooLargeError(MAX_FILE_SIZE.message)
+        )
       }
     } else {
-      return DEFAULT_ERROR_TEXTS.SOMETHING_WENT_WRONG
+      return t(TranslationKeys.something_went_wrong)
     }
   }
 
@@ -154,7 +163,9 @@ const FileUpload = ({
           ) : (
             buttonIcon
           )}
-          <span className="my-auto text-sm font-bold">{buttonText}</span>
+          <span className="my-auto text-sm font-bold">
+            {buttonText ?? t(TranslationKeys.choose_file)}
+          </span>
         </button>
       ) : (
         <>
@@ -171,10 +182,21 @@ const FileUpload = ({
             />
           )}
           <span className="mt-2 block text-sm font-medium text-gray-900">
-            {isLoading ? DEFAULT_FORM_BUTTON_TEXTS.LOADING : heading}
+            {isLoading
+              ? t(TranslationKeys.loading) + '..'
+              : heading ?? t(TranslationKeys.upload_your_file)}
           </span>
           <span className="mt-2 block text-xs font-medium text-gray-900">
-            {!isLoading ? subheading : <>&nbsp;</>}
+            {!isLoading ? (
+              subheading ??
+              getFileInputSubheading(acceptedFileTypes, {
+                add: t(TranslationKeys.add),
+                file: t(TranslationKeys.file),
+                or: t(TranslationKeys.or),
+              })
+            ) : (
+              <>&nbsp;</>
+            )}
           </span>
         </>
       )}

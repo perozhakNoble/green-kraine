@@ -8,6 +8,7 @@ import FileUpload, { AcceptedFileTypes } from '@ui/Form/Field/FileUpload'
 import ToastContent from '@ui/ToastContent'
 import classNames from 'classnames'
 import dayjs from 'dayjs'
+import { useTranslation } from 'react-i18next'
 import ReactSelect, { components as ReactSelectComponents } from 'react-select'
 import Datepicker from 'react-tailwindcss-datepicker'
 import { DateType } from 'react-tailwindcss-datepicker/dist/types'
@@ -29,12 +30,8 @@ import { toast } from '@redwoodjs/web/dist/toast'
 
 import { cleanFileName, downloadBase64Data } from 'src/components/utils/file'
 import { capitalize } from 'src/components/utils/string'
-import {
-  DATE_FORMAT,
-  DEFAULT_ERROR_TEXTS,
-  DEFAULT_FORM_BUTTON_TEXTS,
-  DEFAULT_INPUTS_TEXTS,
-} from 'src/constants'
+import { DATE_FORMAT } from 'src/constants'
+import { TranslationKeys } from 'src/i18n'
 
 import { FormContext, FormType } from '../FormWrapper/FormWrapper'
 
@@ -185,6 +182,7 @@ export type FormFieldProps<T> = {
 )
 
 const Field = <T,>(props: FormFieldProps<T>) => {
+  const { t } = useTranslation()
   const { formMethods, mode, isEdit: isEditTurnedOn } = useContext(FormContext)
   const isEdit =
     (mode === FormType.both || mode === FormType.editOnly) && isEditTurnedOn
@@ -193,7 +191,7 @@ const Field = <T,>(props: FormFieldProps<T>) => {
     props.type !== FieldType.toggle && props.validation?.required
       ? typeof props.validation?.required === 'string'
         ? props.validation?.required
-        : capitalize(props.name + ' ' + DEFAULT_INPUTS_TEXTS.IS_REQUIRED)
+        : capitalize(props.name + ' ' + t(TranslationKeys.is_required))
       : false
 
   const inputClass = classNames({
@@ -300,14 +298,14 @@ const Field = <T,>(props: FormFieldProps<T>) => {
       toast.success(
         <ToastContent
           type="success"
-          text={DEFAULT_INPUTS_TEXTS.FILE_UPLOADED_SUCCESS}
+          text={t(TranslationKeys.file_uploaded_success)}
         />
       )
     } catch (_err) {
       toast.error(
         <ToastContent
           type="error"
-          text={DEFAULT_ERROR_TEXTS.SOMETHING_WENT_WRONG}
+          text={t(TranslationKeys.something_went_wrong)}
         />
       )
     }
@@ -691,7 +689,7 @@ const Field = <T,>(props: FormFieldProps<T>) => {
               const NoOptionsMessage = (props) => {
                 return (
                   <ReactSelectComponents.NoOptionsMessage {...props}>
-                    <span>{DEFAULT_INPUTS_TEXTS.NO_OPTIONS}</span>
+                    <span>{t(TranslationKeys.no_options)}</span>
                   </ReactSelectComponents.NoOptionsMessage>
                 )
               }
@@ -748,7 +746,7 @@ const Field = <T,>(props: FormFieldProps<T>) => {
                   options={props.options}
                   placeholder={
                     props.loading
-                      ? DEFAULT_FORM_BUTTON_TEXTS.LOADING
+                      ? t(TranslationKeys.loading) + '..'
                       : props.placeholder
                   }
                 />

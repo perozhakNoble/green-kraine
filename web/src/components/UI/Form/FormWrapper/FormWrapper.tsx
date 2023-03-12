@@ -7,10 +7,11 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useTranslation } from 'react-i18next'
 
 import { Form, FormError, RWGqlError, UseFormReturn } from '@redwoodjs/forms'
 
-import { DEFAULT_FORM_BUTTON_TEXTS } from 'src/constants'
+import { TranslationKeys } from 'src/i18n'
 
 import Button from '../../Button/Button'
 
@@ -53,9 +54,9 @@ const FormWrapper = <T,>({
   children,
   error,
   mode = FormType.editOnly,
-  submitBtnText = DEFAULT_FORM_BUTTON_TEXTS.SUBMIT,
+  submitBtnText,
   submitBtnIcon = faCheck,
-  cancelBtnText = DEFAULT_FORM_BUTTON_TEXTS.CANCEL,
+  cancelBtnText,
   cancelBtnIcon = null,
   disabled = false,
   loading = false,
@@ -65,6 +66,8 @@ const FormWrapper = <T,>({
   onSubmit,
   dontCloseEditAfterSubmit = mode === FormType.editOnly,
 }: IFormWrapperProps<T>) => {
+  const { t } = useTranslation()
+
   const [isEdit, setIsEdit] = useState<boolean>(
     mode === FormType.editOnly ? true : false
   )
@@ -108,7 +111,7 @@ const FormWrapper = <T,>({
       {isEdit && (
         <div className="mt-4 mb-1 flex gap-2">
           <Button
-            text={submitBtnText}
+            text={submitBtnText ?? t(TranslationKeys.save)}
             isLoading={loading}
             disabled={disabled}
             icon={<FontAwesomeIcon icon={submitBtnIcon as IconProp} />}
@@ -116,7 +119,7 @@ const FormWrapper = <T,>({
             type="submit"
           />
           <Button
-            text={cancelBtnText}
+            text={cancelBtnText ?? t(TranslationKeys.cancel)}
             isLoading={false}
             disabled={false}
             type="button"

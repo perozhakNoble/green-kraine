@@ -1,8 +1,9 @@
 import { ReactNode } from 'react'
 
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_TOAST_HEADERS } from 'src/constants'
+import { TranslationKeys } from 'src/i18n'
 
 export type ToastContentProps = {
   header?: string
@@ -15,13 +16,15 @@ const ToastContent = ({
   text,
   type,
 }: ToastContentProps) => {
+  const { t } = useTranslation()
+
   const header =
     headerFromProps ||
     (type === 'loading'
-      ? DEFAULT_TOAST_HEADERS.LOADING
+      ? t(TranslationKeys.loading) + '..'
       : type === 'error'
-      ? DEFAULT_TOAST_HEADERS.ERROR
-      : DEFAULT_TOAST_HEADERS.SUCCESS)
+      ? t(TranslationKeys.error) + '('
+      : t(TranslationKeys.success) + '!')
 
   const headerClass = classNames({
     'text-sm font-medium': true,

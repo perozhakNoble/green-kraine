@@ -5,6 +5,7 @@ import { Button, Form, Spinner, ToastContent } from '@ui'
 import { FieldType } from '@ui/enums'
 import { OptionTypeValue } from '@ui/types'
 import { H4, H7 } from '@ui/Typography'
+import { useTranslation } from 'react-i18next'
 import {
   CreateProblemWithMarker,
   CreateProblemWithMarkerVariables,
@@ -20,6 +21,7 @@ import { toast } from '@redwoodjs/web/dist/toast'
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
 import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
+import { TranslationKeys } from 'src/i18n'
 
 export const CATEGORIES_QUERY_AS_OPTIONS = gql`
   query GetCategoriesAsOptions {
@@ -131,6 +133,8 @@ const InformNewProblemPage = () => {
     return <Spinner />
   }
 
+  const { t } = useTranslation()
+
   const handleSubmitPendingMarker = async (e?: SyntheticEvent) => {
     e.preventDefault()
     try {
@@ -156,16 +160,23 @@ const InformNewProblemPage = () => {
           loading: (
             <ToastContent
               type="loading"
-              text="Перевіряється коректність мітки"
+              text={t(TranslationKeys.checking_is_correct_marker)}
             />
           ),
           error: (
             <ToastContent
               type="error"
-              text="Мітка в даному регіоні тимчасово недоступна"
+              text={t(
+                TranslationKeys.marker_in_this_region_is_temporary_unavailable
+              )}
             />
           ),
-          success: <ToastContent type="success" text="Мітку успішно додано" />,
+          success: (
+            <ToastContent
+              type="success"
+              text={t(TranslationKeys.marker_successfully_added)}
+            />
+          ),
         }
       )
 
@@ -194,11 +205,13 @@ const InformNewProblemPage = () => {
   return (
     <>
       <MetaTags
-        title="Нова еко-проблема"
+        title={t(TranslationKeys.new_eco_problem)}
         description="Inform New Problem page"
       />
 
-      <H4 className="mx-6 mt-4">Проінформувати про нову екологічну проблему</H4>
+      <H4 className="mx-6 mt-4">
+        {t(TranslationKeys.inform_about_new_ecology_problem)}
+      </H4>
 
       <div className="flex w-screen items-start justify-center">
         <Form.Wrapper
@@ -212,39 +225,39 @@ const InformNewProblemPage = () => {
             name="title"
             type={FieldType.text}
             validation={{ required: true }}
-            placeholder="Короткий опис"
-            label="Короткий опис"
+            placeholder={t(TranslationKeys.short_description)}
+            label={t(TranslationKeys.short_description)}
           />
           <Form.Field<IForm>
             name="description"
             type={FieldType.textarea}
             validation={{ required: true }}
-            placeholder="Опис"
-            label="Опис"
+            placeholder={t(TranslationKeys.description)}
+            label={t(TranslationKeys.description)}
           />
           <Form.Field<IForm>
             name="category"
             type={FieldType.select}
             options={categoryOptions}
             validation={{ required: true }}
-            placeholder="Виберіть категорію"
-            label="Категорія"
+            placeholder={t(TranslationKeys.category)}
+            label={t(TranslationKeys.category)}
           />
           <Form.Field<IForm>
             name="severity"
-            label="Важливість"
-            placeholder="Важливість"
+            label={t(TranslationKeys.severity)}
+            placeholder={t(TranslationKeys.severity)}
             type={FieldType.number}
             validation={{
               required: true,
-              min: { value: 1, message: 'Мінімальне значення 1' },
-              max: { value: 10, message: 'Максимальне значення 1' },
+              min: { value: 1, message: `${t(TranslationKeys.min_value)} 1` },
+              max: { value: 10, message: `${t(TranslationKeys.max_value)} 1` },
             }}
           />
           <Form.Field<IForm>
             name="keywords"
-            label="Ключові слова"
-            placeholder="Ключові слова"
+            label={t(TranslationKeys.key_words)}
+            placeholder={t(TranslationKeys.key_words)}
             type={FieldType.select}
             options={keywordsOptions}
             isMulti
@@ -252,7 +265,9 @@ const InformNewProblemPage = () => {
               required: true,
             }}
           />
-          <H7 className="text-sm font-normal text-primary">Мітка</H7>
+          <H7 className="text-sm font-normal text-primary">
+            {t(TranslationKeys.marker)}
+          </H7>
           <Wrapper
             apiKey={process.env.GOOGLE_MAP_KEY}
             render={renderMap}
@@ -273,13 +288,13 @@ const InformNewProblemPage = () => {
                   <>
                     <Button
                       type="button"
-                      text="Додати мітку"
+                      text={t(TranslationKeys.add_marker)}
                       size="sm"
                       onClick={handleSubmitPendingMarker}
                     />
                     <Button
                       type="button"
-                      text="Відмінити мітку"
+                      text={t(TranslationKeys.decline_marker)}
                       color="secondary"
                       size="sm"
                       onClick={handleСancelPendingMarker}
@@ -289,7 +304,7 @@ const InformNewProblemPage = () => {
                   <Button
                     type="button"
                     size="sm"
-                    text="Видалити додану мітку"
+                    text={t(TranslationKeys.remove_added_marker)}
                     color="error"
                     onClick={handleCancelNewMarker}
                   />
@@ -302,7 +317,7 @@ const InformNewProblemPage = () => {
             name="marker"
             control={formMethods.control}
             rules={{
-              required: 'Мітка обовʼязкова',
+              required: t(TranslationKeys.marker_is_required),
             }}
             render={({ field }) => (
               <input

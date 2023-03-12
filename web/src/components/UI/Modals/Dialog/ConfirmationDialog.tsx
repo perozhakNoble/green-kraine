@@ -1,6 +1,7 @@
 import { Dialog as ReactDialog } from '@headlessui/react'
+import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_FORM_BUTTON_TEXTS } from 'src/constants'
+import { TranslationKeys } from 'src/i18n'
 
 import Button from '../../Button/Button'
 
@@ -26,11 +27,13 @@ const ConfirmationDialog = ({
   afterModalClose,
   text,
   loading = false,
-  cancelBtnText = DEFAULT_FORM_BUTTON_TEXTS.CANCEL,
-  submitBtnText = DEFAULT_FORM_BUTTON_TEXTS.SUBMIT,
+  cancelBtnText,
+  submitBtnText,
   type = 'primary',
   header,
 }: ConfirmationDialogProps) => {
+  const { t } = useTranslation()
+
   return (
     <Dialog onClose={close} open={isOpen} afterModalClose={afterModalClose}>
       <div>
@@ -51,7 +54,7 @@ const ConfirmationDialog = ({
                 size="md"
                 isLoading={loading}
                 onClick={confirm}
-                text={submitBtnText}
+                text={submitBtnText ?? t(TranslationKeys.save)}
                 color={type}
               />
             </div>
@@ -60,7 +63,7 @@ const ConfirmationDialog = ({
                 size="md"
                 color="dark"
                 onClick={close}
-                text={cancelBtnText}
+                text={cancelBtnText ?? t(TranslationKeys.cancel)}
               />
             </div>
           </div>
