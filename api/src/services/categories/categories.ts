@@ -5,6 +5,8 @@ import type {
   CategoryRelationResolvers,
 } from 'types/graphql'
 
+import { validateUniqueness } from '@redwoodjs/api'
+
 import { db } from 'src/lib/db'
 
 enum CategoriesSortBy {
@@ -77,19 +79,37 @@ export const category: QueryResolvers['category'] = ({ id }) => {
 export const createCategory: MutationResolvers['createCategory'] = ({
   input,
 }) => {
-  return db.category.create({
-    data: input,
-  })
+  return validateUniqueness(
+    'category',
+    { name: input.name },
+    {
+      message: 'Category name must be unique.',
+    },
+    (db) => {
+      return db.category.create({
+        data: input,
+      })
+    }
+  )
 }
 
 export const updateCategory: MutationResolvers['updateCategory'] = ({
   id,
   input,
 }) => {
-  return db.category.update({
-    data: input,
-    where: { id },
-  })
+  return validateUniqueness(
+    'category',
+    { name: input.name, $self: { id } },
+    {
+      message: 'Category name must be unique.',
+    },
+    (db) => {
+      return db.category.update({
+        data: input,
+        where: { id },
+      })
+    }
+  )
 }
 
 export const deleteCategory: MutationResolvers['deleteCategory'] = ({ id }) => {
