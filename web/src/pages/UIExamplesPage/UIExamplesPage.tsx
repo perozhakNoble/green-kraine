@@ -24,6 +24,7 @@ import { toast } from '@redwoodjs/web/toast'
 
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
+import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 
 type IForm = {
   text: string
@@ -275,7 +276,11 @@ const UiExamplesPage = () => {
 
         <div className=" p-2">
           <h2 className="my-2  text-xl">Map</h2>
-          <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
+          <Wrapper
+            apiKey={process.env.GOOGLE_MAP_KEY}
+            render={renderMap}
+            language={getLanguageLocaleFromLocalStorage()}
+          >
             <Map
               center={center}
               onClick={onClick}

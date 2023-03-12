@@ -19,6 +19,7 @@ import { toast } from '@redwoodjs/web/dist/toast'
 
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
+import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 
 export const CATEGORIES_QUERY_AS_OPTIONS = gql`
   query GetCategoriesAsOptions {
@@ -252,7 +253,11 @@ const InformNewProblemPage = () => {
             }}
           />
           <H7 className="text-sm font-normal text-primary">Мітка</H7>
-          <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
+          <Wrapper
+            apiKey={process.env.GOOGLE_MAP_KEY}
+            render={renderMap}
+            language={getLanguageLocaleFromLocalStorage()}
+          >
             <Map
               onClick={onClick}
               style={{ flexGrow: '1', height: '800px', width: '100%' }}

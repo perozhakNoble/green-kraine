@@ -12,6 +12,7 @@ import { useAuth } from 'src/auth'
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
 import MarkerInfoDialog from 'src/components/map/MarkerInfoDialog/MarkerInfoDialog'
+import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 import { MARKERS_QUERY } from 'src/pages/HomePage/HomePage'
 
 const renderMap = (status: Status): ReactElement => {
@@ -94,7 +95,11 @@ const HomePaUserReportsPagege = () => {
         marker={markerToDisplayInfo}
       />
       <div className="w-5xl h-[90vh] p-4">
-        <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
+        <Wrapper
+          apiKey={process.env.GOOGLE_MAP_KEY}
+          render={renderMap}
+          language={getLanguageLocaleFromLocalStorage()}
+        >
           <Map
             center={center}
             onIdle={onIdle}

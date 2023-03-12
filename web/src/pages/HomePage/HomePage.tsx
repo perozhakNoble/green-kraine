@@ -10,6 +10,7 @@ import { MetaTags, useQuery } from '@redwoodjs/web'
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
 import MarkerInfoDialog from 'src/components/map/MarkerInfoDialog/MarkerInfoDialog'
+import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 
 export const MARKERS_QUERY = gql`
   query GetMarkers($userId: String) {
@@ -80,7 +81,11 @@ const HomePage = () => {
         marker={markerToDisplayInfo}
       />
       <div className="w-5xl h-[90vh] p-4">
-        <Wrapper apiKey={process.env.GOOGLE_MAP_KEY} render={renderMap}>
+        <Wrapper
+          apiKey={process.env.GOOGLE_MAP_KEY}
+          render={renderMap}
+          language={getLanguageLocaleFromLocalStorage()}
+        >
           <Map
             center={center}
             onIdle={onIdle}

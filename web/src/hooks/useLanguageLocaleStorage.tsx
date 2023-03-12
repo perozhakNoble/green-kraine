@@ -24,6 +24,7 @@ export const useLanguageLocaleStorage = () => {
     setLanguage(lang)
     i18n.changeLanguage(lang)
     close()
+    location.reload()
   }
 
   return {
