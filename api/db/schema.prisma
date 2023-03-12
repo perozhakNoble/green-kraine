@@ -55,12 +55,11 @@ model Category {
 }
 
 model Keyword {
-  id        String   @id @default(uuid())
-  title     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  problem   Problem? @relation(fields: [problemId], references: [id])
-  problemId String?
+  id        String    @id @default(uuid())
+  title     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  problems  Problem[]
 }
 
 enum ProblemStatus {

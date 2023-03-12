@@ -28,6 +28,7 @@ const Routes = () => {
         </Private>
         <Private unauthenticated="home" roles={[UserRole.ADMIN]}>
           <Route path="/categories" page={CategoriesPage} name="categories" />
+          <Route path="/keywords" page={KeywordsPage} name="keywords" />
         </Private>
         <Route path="/" page={HomePage} name="home" />
       </Set>

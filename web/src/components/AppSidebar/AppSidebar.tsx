@@ -49,6 +49,11 @@ const AppSidebar = ({ isOpen, setIsOpen }: AppSidebarProps) => {
       isAvailable: isAdmin,
       to: routes.categories(),
     },
+    {
+      label: t(TranslationKeys.key_words),
+      isAvailable: isAdmin,
+      to: routes.keywords(),
+    },
   ]
 
   return (

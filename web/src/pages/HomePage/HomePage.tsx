@@ -29,6 +29,10 @@ export const MARKERS_QUERY = gql`
         category {
           name
         }
+        keywords {
+          id
+          title
+        }
         title
         description
         status

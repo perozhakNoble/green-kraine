@@ -36,6 +36,12 @@ const MarkerInfoDialog = ({
             <b>{t(TranslationKeys.problem)}: </b>
             {marker?.problem?.description}
           </p>
+          <p>
+            <b>{t(TranslationKeys.key_words)}: </b>
+            {marker?.problem?.keywords
+              ?.map((keyword) => keyword.title)
+              .join(', ')}
+          </p>
         </div>
         <div className="mt-2 ml-auto mr-2 w-20">
           <LikeUnlikeButtons

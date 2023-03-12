@@ -62,6 +62,9 @@ export enum TranslationKeys {
   confirm_delete = 'confirm_delete',
   edit_category = 'edit_category',
   create_category = 'create_category',
+  title = 'title',
+  edit_keyword = 'edit_keyword',
+  create_keyword = 'create_keyword',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -125,6 +128,9 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.confirm_delete]: 'Підтвердіть видалення',
   [TranslationKeys.create_category]: 'Створення категорії',
   [TranslationKeys.edit_category]: 'Редагування категорії',
+  [TranslationKeys.title]: 'Заголовок',
+  [TranslationKeys.edit_keyword]: 'Редагування ключового слова',
+  [TranslationKeys.create_keyword]: 'Створення ключового слова',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -189,6 +195,9 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.confirm_delete]: 'Confirm delete',
   [TranslationKeys.create_category]: 'Create category',
   [TranslationKeys.edit_category]: 'Edit category',
+  [TranslationKeys.title]: 'Title',
+  [TranslationKeys.edit_keyword]: 'Edit keyword',
+  [TranslationKeys.create_keyword]: 'Create keyword',
 }
 
 i18n.use(initReactI18next).init({

@@ -4,23 +4,31 @@ export const schema = gql`
     title: String!
     createdAt: DateTime!
     updatedAt: DateTime!
-    problem: Problem
-    problemId: String
+    problems: [Problem]!
   }
-
+  type GetPaginatedKeywords {
+    items: [Keyword!]!
+    total: Int!
+  }
+  input KeywordsFilters {
+    title: String
+  }
   type Query {
+    keywordsList(
+      filters: KeywordsFilters
+      search: String
+      pagination: PaginationInput!
+    ): GetPaginatedKeywords! @requireAuth
     keywords: [Keyword!]! @requireAuth
     keyword(id: String!): Keyword @requireAuth
   }
 
   input CreateKeywordInput {
     title: String!
-    problemId: String
   }
 
   input UpdateKeywordInput {
     title: String
-    problemId: String
   }
 
   type Mutation {

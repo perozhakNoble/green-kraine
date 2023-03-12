@@ -1,3 +1,4 @@
+import { Prisma } from '.prisma/client'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -7,6 +8,63 @@ import type {
 import { validateUniqueness } from '@redwoodjs/api'
 
 import { db } from 'src/lib/db'
+
+enum KeywordsSortBy {
+  title = 'title',
+  usage_count = 'usage_count',
+}
+
+export const keywordsList: QueryResolvers['keywordsList'] = async ({
+  filters,
+  pagination,
+  search,
+}) => {
+  const whereClause: Prisma.KeywordWhereInput = {}
+  const orderClause: Prisma.KeywordOrderByWithRelationInput = {}
+
+  switch (pagination.sortBy) {
+    case KeywordsSortBy.title:
+      orderClause.title = pagination.order
+      break
+    case KeywordsSortBy.usage_count:
+      orderClause.problems = {
+        _count: pagination.order,
+      }
+      break
+
+    default:
+      orderClause.createdAt = 'asc'
+  }
+
+  if (filters) {
+    if (filters.title) {
+      whereClause.title = filters.title
+    }
+  }
+
+  if (search) {
+    whereClause.title = {
+      contains: search,
+      mode: 'insensitive',
+    }
+  }
+
+  const items = await db.keyword.findMany({
+    where: whereClause,
+    skip: pagination.skip,
+    take: pagination.take,
+    orderBy: orderClause,
+  })
+
+  const total = await db.keyword.count({
+    where: whereClause,
+  })
+
+  return {
+    items,
+    total,
+  }
+}
 
 export const keywords: QueryResolvers['keywords'] = () => {
   return db.keyword.findMany()
@@ -61,7 +119,7 @@ export const deleteKeyword: MutationResolvers['deleteKeyword'] = ({ id }) => {
 }
 
 export const Keyword: KeywordRelationResolvers = {
-  problem: (_obj, { root }) => {
-    return db.keyword.findUnique({ where: { id: root?.id } }).problem()
+  problems: (_obj, { root }) => {
+    return db.keyword.findUnique({ where: { id: root?.id } }).problems()
   },
 }
