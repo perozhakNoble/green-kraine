@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { Fragment, ReactNode, useEffect } from 'react'
 
 import {
   faPencil,
@@ -44,9 +44,11 @@ export type TableProps<T> = {
 export const tableButtons = ({
   edit,
   remove,
+  customBtns,
 }: {
   edit?: (row) => void
   remove?: (row) => void
+  customBtns?: () => ReactNode
 }) => {
   return (
     <div className="flex gap-x-4">
@@ -65,6 +67,8 @@ export const tableButtons = ({
           onClick={remove}
         />
       )}
+
+      {customBtns?.()}
     </div>
   )
 }
@@ -321,17 +325,16 @@ export const TableFilters = ({
       >
         {filters.map((filter, key) => {
           return (
-            <>
+            <Fragment key={key}>
               {/*@ts-ignore*/}
               <Form.Field<any>
-                key={key}
                 name={filter.name}
                 label={filter.label}
                 placeholder={filter.placeholder}
                 type={filter.type}
                 options={filter.type === FieldType.select && filter.options}
               />
-            </>
+            </Fragment>
           )
         })}
       </Form.Wrapper>

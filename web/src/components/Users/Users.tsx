@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import { faFilter, faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, ConfirmationDialog } from '@ui'
 import { FieldType } from '@ui/enums'
@@ -130,6 +130,15 @@ const Users = () => {
         tableButtons({
           edit: () => handleEdit(c),
           remove: () => handleDelete(c),
+          customBtns: () => (
+            <>
+              <FontAwesomeIcon
+                icon={faLockOpen}
+                className="cursor-pointer text-blue-500"
+                onClick={() => console.log(c)}
+              />
+            </>
+          ),
         }),
     })
 
