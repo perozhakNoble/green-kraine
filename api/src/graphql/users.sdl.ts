@@ -22,7 +22,20 @@ export const schema = gql`
     ADMIN
   }
 
+  type GetPaginatedUsers {
+    items: [User!]!
+    total: Int!
+  }
+  input UsersFilter {
+    role: UserRole
+  }
+
   type Query {
+    usersList(
+      filters: UsersFilter
+      search: String
+      pagination: PaginationInput!
+    ): GetPaginatedUsers! @requireAuth
     users: [User!]! @requireAuth
     user(id: String!): User @requireAuth
   }
@@ -30,20 +43,13 @@ export const schema = gql`
   input CreateUserInput {
     name: String!
     email: String!
-    hashedPassword: String!
-    salt: String!
-    resetToken: String
-    resetTokenExpiresAt: DateTime
+    password: String!
     roles: UserRole!
   }
 
   input UpdateUserInput {
     name: String
     email: String
-    hashedPassword: String
-    salt: String
-    resetToken: String
-    resetTokenExpiresAt: DateTime
     roles: UserRole
   }
 

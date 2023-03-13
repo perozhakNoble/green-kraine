@@ -8,11 +8,16 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Form } from '@ui'
+import { FieldType } from '@ui/enums'
+import { SlideModal } from '@ui/Modals'
 import Spinner from '@ui/Spinner'
 import ToastContent from '@ui/ToastContent'
+import { OptionType } from '@ui/types'
 import { useTranslation } from 'react-i18next'
 
 import { FormError, RWGqlError } from '@redwoodjs/forms'
+import { useForm } from '@redwoodjs/forms'
 import { toast } from '@redwoodjs/web/dist/toast'
 
 import usePagination from 'src/hooks/usePagination'
@@ -265,3 +270,71 @@ const useTable = <T,>({
 }
 
 export default useTable
+
+export type ITableFilters = Array<{
+  name: string
+  label: string
+  placeholder: string
+  type: FieldType
+  options?: OptionType[]
+}>
+
+export const TableFilters = ({
+  filters,
+  isOpen,
+  setIsOpen,
+  refetchWithFilters,
+  refetchWithoutFilters,
+}: {
+  isOpen: boolean
+  setIsOpen: (boolean) => void
+  filters: ITableFilters
+  refetchWithFilters: (filters: any) => void
+  refetchWithoutFilters: () => void
+}) => {
+  const formMethods = useForm()
+
+  const { t } = useTranslation()
+
+  return (
+    <SlideModal
+      open={isOpen}
+      setClosed={() => setIsOpen(false)}
+      title={t(TranslationKeys.filters)}
+      afterModalClose={() => {
+        setIsOpen(false)
+      }}
+    >
+      <Form.Wrapper
+        formMethods={formMethods}
+        submitBtnText={t(TranslationKeys.apply)}
+        onSubmit={async (values) => {
+          refetchWithFilters(values)
+          setIsOpen(false)
+        }}
+        reset={() => {
+          refetchWithoutFilters()
+          setIsOpen(false)
+          formMethods.reset()
+        }}
+        cancelBtnText={t(TranslationKeys.clear)}
+      >
+        {filters.map((filter, key) => {
+          return (
+            <>
+              {/*@ts-ignore*/}
+              <Form.Field<any>
+                key={key}
+                name={filter.name}
+                label={filter.label}
+                placeholder={filter.placeholder}
+                type={filter.type}
+                options={filter.type === FieldType.select && filter.options}
+              />
+            </>
+          )
+        })}
+      </Form.Wrapper>
+    </SlideModal>
+  )
+}

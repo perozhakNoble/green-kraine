@@ -160,7 +160,6 @@ const Keywords = () => {
   }
 
   const reset = () => {
-    setKeywordForEdit(null)
     createKeywordOpts.reset()
     updateKeywordOpts.reset()
   }

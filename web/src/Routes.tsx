@@ -29,6 +29,7 @@ const Routes = () => {
         <Private unauthenticated="home" roles={[UserRole.ADMIN]}>
           <Route path="/categories" page={CategoriesPage} name="categories" />
           <Route path="/keywords" page={KeywordsPage} name="keywords" />
+          <Route path="/users" page={UsersPage} name="users" />
         </Private>
         <Route path="/" page={HomePage} name="home" />
       </Set>
@@ -37,6 +38,7 @@ const Routes = () => {
       <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
       <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
       <Route path="/ui-examples" page={UIExamplesPage} name="uiExamples" />
+
       <Route notfound page={NotFoundPage} />
     </Router>
   )

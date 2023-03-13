@@ -191,7 +191,9 @@ const Field = <T,>(props: FormFieldProps<T>) => {
     props.type !== FieldType.toggle && props.validation?.required
       ? typeof props.validation?.required === 'string'
         ? props.validation?.required
-        : capitalize(props.name + ' ' + t(TranslationKeys.is_required))
+        : capitalize(
+            (props.label || props.name) + ' ' + t(TranslationKeys.is_required)
+          )
       : false
 
   const inputClass = classNames({

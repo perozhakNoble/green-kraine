@@ -84,6 +84,7 @@ const CategoryModal = ({
           label={t(TranslationKeys.name)}
           placeholder={t(TranslationKeys.name)}
           type={FieldType.text}
+          validation={{ required: true }}
         />
       </Form.Wrapper>
     </SlideModal>

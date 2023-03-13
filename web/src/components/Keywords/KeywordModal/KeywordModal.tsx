@@ -84,6 +84,7 @@ const KeywordModal = ({
           label={t(TranslationKeys.title)}
           placeholder={t(TranslationKeys.title)}
           type={FieldType.text}
+          validation={{ required: true }}
         />
       </Form.Wrapper>
     </SlideModal>

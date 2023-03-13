@@ -160,7 +160,6 @@ const Categories = () => {
   }
 
   const reset = () => {
-    setCategoryForEdit(null)
     createCategoryOpts.reset()
     updateCategoryOpts.reset()
   }
