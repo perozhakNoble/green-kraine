@@ -24,6 +24,9 @@ export const usersList: QueryResolvers['usersList'] = async (
     id: {
       not: (context.currentUser as any).id,
     },
+    roles: {
+      not: 'ADMIN',
+    },
   }
   const orderClause: Prisma.UserOrderByWithRelationInput = {}
 
@@ -128,6 +131,18 @@ export const createUser: MutationResolvers['createUser'] = ({
 export const updateUser: MutationResolvers['updateUser'] = ({ id, input }) => {
   return db.user.update({
     data: input,
+    where: { id },
+  })
+}
+
+export const resetUserPassword: MutationResolvers['resetUserPassword'] = ({
+  id,
+  password,
+}) => {
+  const { hashedPassword, salt } = _getHashAndSaltFromPassword(password)
+
+  return db.user.update({
+    data: { hashedPassword, salt },
     where: { id },
   })
 }

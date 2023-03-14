@@ -45,3 +45,11 @@ export const DELETE_USER_MUTATION = gql`
     }
   }
 `
+
+export const RESET_USER_PASSWORD_MUTATION = gql`
+  mutation ResetUserPassword($id: String!, $password: String!) {
+    resetUserPassword(id: $id, password: $password) {
+      id
+    }
+  }
+`

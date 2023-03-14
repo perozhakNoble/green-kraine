@@ -22,11 +22,16 @@ import {
   DeleteUser,
   UpdateUser,
   UpdateUserVariables,
+  ResetUserPassword,
+  ResetUserPasswordVariables,
 } from 'types/graphql'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
 
 import UserModal, { UserForm } from 'src/components/Users/UserModal/UserModal'
+import UserResetPasswordModal, {
+  UserResetPassForm,
+} from 'src/components/Users/UserResetPasswordModal/UserResetPasswordModal'
 import {
   UsersSortBy,
   USERS_PAGINATION_ITEMS,
@@ -36,6 +41,7 @@ import {
   CREATE_USER_MUTATION,
   DELETE_USER_MUTATION,
   UPDATE_USER_MUTATION,
+  RESET_USER_PASSWORD_MUTATION,
 } from 'src/components/Users/Users.graphql'
 import { UserRole } from 'src/constants'
 import { useAfterMountEffect } from 'src/hooks/useAfterMountEffect'
@@ -62,7 +68,10 @@ const Users = () => {
   })
 
   const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false)
+  const [isPasswordResetModalOpen, setIsPasswordModalOpen] =
+    useState<boolean>(false)
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState<boolean>(false)
+  const [userForResetPassword, setUserForResetPassword] = useState<User>(null)
   const [userForEdit, setUserForEdit] = useState<User>(null)
   const [userForDelete, setUserForDelete] = useState<User>(null)
   const [users, setUsers] = useState<Partial<User>[]>([])
@@ -82,6 +91,11 @@ const Users = () => {
   const handleDelete = (user: User) => {
     setUserForDelete(user)
     setIsConfirmDeleteOpen(true)
+  }
+
+  const handleResetPasswordClick = (user: User) => {
+    setUserForResetPassword(user)
+    setIsPasswordModalOpen(true)
   }
 
   const columns: TableColumn<User>[] = [
@@ -135,7 +149,7 @@ const Users = () => {
               <FontAwesomeIcon
                 icon={faLockOpen}
                 className="cursor-pointer text-blue-500"
-                onClick={() => console.log(c)}
+                onClick={() => handleResetPasswordClick(c)}
               />
             </>
           ),
@@ -172,6 +186,11 @@ const Users = () => {
     defaultRefetchOptions
   )
 
+  const [resetPassword, resetPasswordOpts] = useMutation<ResetUserPassword>(
+    RESET_USER_PASSWORD_MUTATION,
+    defaultRefetchOptions
+  )
+
   const onSubmit = async (values: UserForm) => {
     const isEdit = !!userForEdit
 
@@ -193,15 +212,28 @@ const Users = () => {
     setIsUserModalOpen(false)
   }
 
+  const submitResetPassword = async (values: UserResetPassForm) => {
+    await resetPassword({
+      variables: {
+        id: userForResetPassword.id,
+        password: values.password,
+      } as ResetUserPasswordVariables,
+    })
+
+    setIsPasswordModalOpen(false)
+  }
+
   const reset = () => {
     createUserOpts.reset()
     updateUserOpts.reset()
   }
 
-  const roleOptions = Object.values(UserRole).map((r) => ({
-    value: r,
-    label: t(r),
-  }))
+  const roleOptions = Object.values(UserRole)
+    .filter((r) => r !== 'ADMIN')
+    .map((r) => ({
+      value: r,
+      label: t(r),
+    }))
 
   const tableFilters: ITableFilters = [
     {
@@ -270,6 +302,15 @@ const Users = () => {
         setIsOpen={setIsOpenFilters}
       />
       <Table />
+      <UserResetPasswordModal
+        isOpen={isPasswordResetModalOpen}
+        setIsOpen={setIsPasswordModalOpen}
+        afterModalClose={() => setUserForResetPassword(null)}
+        onSubmit={submitResetPassword}
+        isLoading={resetPasswordOpts?.loading}
+        error={resetPasswordOpts?.error}
+        reset={resetPasswordOpts?.reset}
+      />
       <UserModal
         isOpen={isUserModalOpen}
         setIsOpen={setIsUserModalOpen}

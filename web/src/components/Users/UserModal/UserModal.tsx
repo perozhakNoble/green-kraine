@@ -43,10 +43,12 @@ const UserModal = ({
 }: UserModalProps) => {
   const { t } = useTranslation()
 
-  const roleOptions = Object.values(UserRole).map((r) => ({
-    value: r,
-    label: t(r),
-  }))
+  const roleOptions = Object.values(UserRole)
+    .filter((r) => r !== 'ADMIN')
+    .map((r) => ({
+      value: r,
+      label: t(r),
+    }))
 
   const getDefaultValues = (): UserForm => {
     return {

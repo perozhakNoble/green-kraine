@@ -79,6 +79,7 @@ export enum TranslationKeys {
   filters = 'filters',
   apply = 'apply',
   clear = 'clear',
+  reset_password = 'reset_password',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -159,6 +160,7 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.filters]: 'Фільтри',
   [TranslationKeys.apply]: 'Застосувати',
   [TranslationKeys.clear]: 'Очистити',
+  [TranslationKeys.reset_password]: 'Скидання паролю',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -240,6 +242,7 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.filters]: 'Filters',
   [TranslationKeys.apply]: 'Apply',
   [TranslationKeys.clear]: 'Clear',
+  [TranslationKeys.reset_password]: 'Reset Password',
 }
 
 i18n.use(initReactI18next).init({
