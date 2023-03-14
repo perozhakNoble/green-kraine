@@ -30,6 +30,7 @@ const Routes = () => {
           <Route path="/categories" page={CategoriesPage} name="categories" />
           <Route path="/keywords" page={KeywordsPage} name="keywords" />
           <Route path="/users" page={UsersPage} name="users" />
+          <Route path="/problems" page={ProblemsPage} name="problems" />
         </Private>
         <Route path="/" page={HomePage} name="home" />
       </Set>

@@ -80,6 +80,9 @@ export enum TranslationKeys {
   apply = 'apply',
   clear = 'clear',
   reset_password = 'reset_password',
+  eco_problems = 'eco_problems',
+  edit_problem = 'edit_problem',
+  create_problem = 'create_problem',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -161,6 +164,9 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.apply]: 'Застосувати',
   [TranslationKeys.clear]: 'Очистити',
   [TranslationKeys.reset_password]: 'Скидання паролю',
+  [TranslationKeys.eco_problems]: 'Екологічні проблеми',
+  [TranslationKeys.edit_problem]: 'Редагування еко-проблеми',
+  [TranslationKeys.create_problem]: 'Створення еко-проблеми',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -243,6 +249,9 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.apply]: 'Apply',
   [TranslationKeys.clear]: 'Clear',
   [TranslationKeys.reset_password]: 'Reset Password',
+  [TranslationKeys.eco_problems]: 'Ecology Problems',
+  [TranslationKeys.edit_problem]: 'Edit eco-problem',
+  [TranslationKeys.create_problem]: 'Create eco-problem',
 }
 
 i18n.use(initReactI18next).init({

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -5,6 +6,101 @@ import type {
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+
+enum ProblemsSortBy {
+  votes_count = 'votes_count',
+  title = 'title',
+  description = 'description',
+  category = 'category',
+  comments_count = 'comments_count',
+  status = 'status',
+}
+
+export const problemsList: QueryResolvers['problemsList'] = async ({
+  filters,
+  pagination,
+  search,
+}) => {
+  const whereClause: Prisma.ProblemWhereInput = {}
+  const orderClause: Prisma.ProblemOrderByWithRelationInput = {}
+
+  switch (pagination.sortBy) {
+    case ProblemsSortBy.votes_count:
+      orderClause.votes = {
+        _count: pagination.order,
+      }
+      break
+    case ProblemsSortBy.description:
+      orderClause.description = pagination.order
+      break
+    case ProblemsSortBy.title:
+      orderClause.title = pagination.order
+      break
+    case ProblemsSortBy.category:
+      orderClause.category = {
+        name: pagination.order,
+      }
+      break
+    case ProblemsSortBy.comments_count:
+      orderClause.comments = {
+        _count: pagination.order,
+      }
+      break
+    case ProblemsSortBy.status:
+      orderClause.status = pagination.order
+      break
+
+    default:
+      orderClause.createdAt = 'asc'
+  }
+
+  if (filters) {
+    if (filters.status) {
+      whereClause.status = filters.status
+    }
+  }
+
+  if (search) {
+    whereClause.OR = [
+      {
+        title: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      },
+      {
+        description: {
+          contains: search,
+          mode: 'insensitive',
+        },
+      },
+      {
+        category: {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      },
+    ]
+  }
+
+  const items = await db.problem.findMany({
+    where: whereClause,
+    skip: pagination.skip,
+    take: pagination.take,
+    orderBy: orderClause,
+  })
+
+  const total = await db.problem.count({
+    where: whereClause,
+  })
+
+  return {
+    items,
+    total,
+  }
+}
 
 export const problems: QueryResolvers['problems'] = () => {
   return db.problem.findMany()

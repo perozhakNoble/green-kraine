@@ -26,7 +26,20 @@ export const schema = gql`
     REJECTED
   }
 
+  type GetPaginatedProblems {
+    items: [Problem!]!
+    total: Int!
+  }
+  input ProblemsFilters {
+    status: ProblemStatus
+  }
+
   type Query {
+    problemsList(
+      filters: ProblemsFilters
+      search: String
+      pagination: PaginationInput!
+    ): GetPaginatedProblems! @requireAuth
     problems: [Problem!]! @requireAuth
     problem(id: String!): Problem @requireAuth
   }
