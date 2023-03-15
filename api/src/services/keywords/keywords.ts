@@ -22,9 +22,10 @@ export const keywordsList: QueryResolvers['keywordsList'] = async ({
   const whereClause: Prisma.KeywordWhereInput = {}
   const orderClause: Prisma.KeywordOrderByWithRelationInput = {}
 
-  switch (pagination.sortBy) {
+  const order = pagination.order || 'asc'
+  switch (pagination?.sortBy) {
     case KeywordsSortBy.title:
-      orderClause.title = pagination.order
+      orderClause.title = order
       break
     case KeywordsSortBy.usage_count:
       orderClause.problems = {
@@ -33,7 +34,7 @@ export const keywordsList: QueryResolvers['keywordsList'] = async ({
       break
 
     default:
-      orderClause.createdAt = 'asc'
+      orderClause.createdAt = 'desc'
   }
 
   if (filters) {

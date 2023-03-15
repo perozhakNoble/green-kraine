@@ -14,6 +14,9 @@ enum ProblemsSortBy {
   category = 'category',
   comments_count = 'comments_count',
   status = 'status',
+  created_at = 'created_at',
+  updated_at = 'updated_at',
+  severity = 'severity',
 }
 
 export const problemsList: QueryResolvers['problemsList'] = async ({
@@ -24,17 +27,21 @@ export const problemsList: QueryResolvers['problemsList'] = async ({
   const whereClause: Prisma.ProblemWhereInput = {}
   const orderClause: Prisma.ProblemOrderByWithRelationInput = {}
 
-  switch (pagination.sortBy) {
+  const order = pagination.order || 'asc'
+  switch (pagination?.sortBy) {
     case ProblemsSortBy.votes_count:
       orderClause.votes = {
         _count: pagination.order,
       }
       break
     case ProblemsSortBy.description:
-      orderClause.description = pagination.order
+      orderClause.description = order
       break
     case ProblemsSortBy.title:
-      orderClause.title = pagination.order
+      orderClause.title = order
+      break
+    case ProblemsSortBy.severity:
+      orderClause.severity = order
       break
     case ProblemsSortBy.category:
       orderClause.category = {
@@ -47,11 +54,17 @@ export const problemsList: QueryResolvers['problemsList'] = async ({
       }
       break
     case ProblemsSortBy.status:
-      orderClause.status = pagination.order
+      orderClause.status = order
+      break
+    case ProblemsSortBy.created_at:
+      orderClause.createdAt = order
+      break
+    case ProblemsSortBy.updated_at:
+      orderClause.updatedAt = order
       break
 
     default:
-      orderClause.createdAt = 'asc'
+      orderClause.createdAt = 'desc'
   }
 
   if (filters) {

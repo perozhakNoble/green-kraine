@@ -6929,6 +6929,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@types/luxon@npm:3.2.0"
+  checksum: d3574082d70cee8bad6ba683e5b81d4532b5ddcaefb986f0f4bd770fb71072456241d81c780cadf4857163119148d1ca6f8df36389446827eae17a609f4ed5c6
+  languageName: node
+  linkType: hard
+
 "@types/mdast@npm:^3.0.0":
   version: 3.0.10
   resolution: "@types/mdast@npm:3.0.10"
@@ -17593,6 +17600,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"luxon@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "luxon@npm:3.3.0"
+  checksum: 47f8e1e96b25441c799b8aa833b3f007fb1854713bcffc8c3384eda8e61fc9af1f038474d137274d2d386492f341c8a8c992fc78c213adfb3143780feba2776c
+  languageName: node
+  linkType: hard
+
 "lz-string@npm:^1.4.4":
   version: 1.4.4
   resolution: "lz-string@npm:1.4.4"
@@ -24812,6 +24826,7 @@ __metadata:
     "@redwoodjs/web": 4.0.1
     "@tailwindcss/forms": ^0.5.3
     "@types/google.maps": ^3.51.1
+    "@types/luxon": ^3.2.0
     autoprefixer: ^10.4.13
     babel-plugin-module-resolver: ^5.0.0
     classnames: ^2.3.2
@@ -24820,6 +24835,7 @@ __metadata:
     file-saver: ^2.0.5
     i18next: ^22.4.11
     lodash: ^4.17.21
+    luxon: ^3.3.0
     postcss: ^8.4.21
     postcss-loader: ^7.0.2
     prettier-plugin-tailwindcss: ^0.2.2

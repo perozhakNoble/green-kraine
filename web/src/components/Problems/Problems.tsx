@@ -1,9 +1,18 @@
 import { useState } from 'react'
 
+import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, ConfirmationDialog } from '@ui'
-import useTable, { tableButtons, TableSearch } from '@ui/Table/Table'
+import { FieldType } from '@ui/enums'
+import useTable, {
+  ITableFilters,
+  tableButtons,
+  TableFilters,
+  TableSearch,
+} from '@ui/Table/Table'
 import { TableColumn } from '@ui/types'
 import { capitalize } from 'lodash'
+import { DateTime } from 'luxon'
 import { useTranslation } from 'react-i18next'
 import {
   ProblemsQuery,
@@ -31,7 +40,9 @@ import {
   DELETE_PROBLEM_MUTATION,
   UPDATE_PROBLEM_MUTATION,
 } from 'src/components/Problems/Problems.graphql'
+import { ProblemStatus } from 'src/constants/problem'
 import { useAfterMountEffect } from 'src/hooks/useAfterMountEffect'
+import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 import { TranslationKeys } from 'src/i18n'
 
 const Problems = () => {
@@ -54,6 +65,7 @@ const Problems = () => {
     nextFetchPolicy: 'cache-and-network',
   })
 
+  const locale = getLanguageLocaleFromLocalStorage()
   const [isProblemModalOpen, setIsProblemModalOpen] = useState<boolean>(false)
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState<boolean>(false)
   const [problemForEdit, setProblemForEdit] = useState<Problem>(null)
@@ -84,12 +96,65 @@ const Problems = () => {
       isMain: true,
       sortable: ProblemsSortBy.title,
     },
-    // {
-    //   title: t(TranslationKeys.count_of_usage),
-    //   accessor: (problem) => String(problem.problems.length),
-    //   isMain: false,
-    //   sortable: ProblemsSortBy.usage_count,
-    // },
+    {
+      title: t(TranslationKeys.description),
+      accessor: (problem) => problem.description,
+      isMain: false,
+      sortable: ProblemsSortBy.description,
+    },
+    {
+      title: t(TranslationKeys.severity),
+      accessor: (problem) => String(problem.severity),
+      isMain: false,
+      sortable: ProblemsSortBy.severity,
+    },
+    {
+      title: t(TranslationKeys.category),
+      accessor: (problem) => problem.category?.name,
+      isMain: false,
+      sortable: ProblemsSortBy.category,
+    },
+    {
+      title: t(TranslationKeys.key_words),
+      accessor: (problem) => problem.keywords?.map((k) => k.title)?.join(', '),
+      isMain: false,
+    },
+    {
+      title: t(TranslationKeys.status),
+      accessor: (problem) => t(problem.status),
+      isMain: false,
+      sortable: ProblemsSortBy.status,
+    },
+    {
+      title: t(TranslationKeys.votes_count),
+      accessor: (problem) => String(problem.votes.length),
+      isMain: false,
+      sortable: ProblemsSortBy.votes_count,
+    },
+    {
+      title: t(TranslationKeys.comments_count),
+      accessor: (problem) => String(problem.comments.length),
+      isMain: false,
+      sortable: ProblemsSortBy.comments_count,
+    },
+    {
+      title: t(TranslationKeys.created_at),
+      accessor: (problem) =>
+        DateTime.fromISO(problem.createdAt)
+          .setLocale(locale)
+          .toFormat('HH:mm, dd LLL, yyyy'),
+      isMain: false,
+      sortable: ProblemsSortBy.created_at,
+    },
+    {
+      title: t(TranslationKeys.last_update_at),
+      accessor: (problem) =>
+        DateTime.fromISO(problem.updatedAt)
+          .setLocale(locale)
+          .toFormat('HH:mm, dd LLL, yyyy'),
+      isMain: false,
+      sortable: ProblemsSortBy.updated_at,
+    },
   ]
 
   const { Table, paginationVariables, gotoPrevPageIfCurrentRedundant } =
@@ -164,10 +229,59 @@ const Problems = () => {
     updateProblemOpts.reset()
   }
 
+  const statusOptions = Object.values(ProblemStatus).map((ps) => ({
+    value: ps,
+    label: t(TranslationKeys[ps]),
+  }))
+
+  const tableFilters: ITableFilters = [
+    {
+      name: 'status',
+      label: t(TranslationKeys.status),
+      options: statusOptions,
+      type: FieldType.select,
+      placeholder: t(TranslationKeys.status),
+    },
+  ]
+
+  const refetchWithFilters = (filters: any) => {
+    refetch({
+      pagination: {
+        skip: 0,
+        take: PROBLEMS_PAGINATION_ITEMS,
+      },
+      search,
+      filters: {
+        status: filters.status,
+      },
+    } as ProblemsQueryVariables)
+  }
+
+  const refetchWithoutFilters = () => {
+    refetch({
+      pagination: {
+        skip: 0,
+        take: PROBLEMS_PAGINATION_ITEMS,
+      },
+      search,
+      filters: undefined,
+    } as ProblemsQueryVariables)
+  }
+
+  const [isOpenFilters, setIsOpenFilters] = useState(false)
+
   return (
     <div className="flex w-full flex-col items-center p-4">
       <div className="mb-2 flex w-full">
-        <TableSearch search={search} setSearch={setSearch} />
+        <div className="flex items-center gap-5">
+          <TableSearch search={search} setSearch={setSearch} />
+          <FontAwesomeIcon
+            icon={faFilter}
+            className="block cursor-pointer text-gray-500"
+            onClick={() => setIsOpenFilters(true)}
+          />
+        </div>
+
         <div className="ml-auto mr-1 min-w-max">
           <Button
             nonBreakingWords
@@ -179,6 +293,13 @@ const Problems = () => {
           />
         </div>
       </div>
+      <TableFilters
+        filters={tableFilters}
+        refetchWithFilters={refetchWithFilters}
+        refetchWithoutFilters={refetchWithoutFilters}
+        isOpen={isOpenFilters}
+        setIsOpen={setIsOpenFilters}
+      />
       <Table />
       <ProblemModal
         isOpen={isProblemModalOpen}

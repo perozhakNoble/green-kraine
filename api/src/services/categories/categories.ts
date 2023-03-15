@@ -22,9 +22,10 @@ export const categoriesList: QueryResolvers['categoriesList'] = async ({
   const whereClause: Prisma.CategoryWhereInput = {}
   const orderClause: Prisma.CategoryOrderByWithRelationInput = {}
 
-  switch (pagination.sortBy) {
+  const order = pagination.order || 'asc'
+  switch (pagination?.sortBy) {
     case CategoriesSortBy.name:
-      orderClause.name = pagination.order
+      orderClause.name = order
       break
     case CategoriesSortBy.usage_count:
       orderClause.problems = {
@@ -33,7 +34,7 @@ export const categoriesList: QueryResolvers['categoriesList'] = async ({
       break
 
     default:
-      orderClause.createdAt = 'asc'
+      orderClause.createdAt = 'desc'
   }
 
   if (filters) {

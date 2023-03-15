@@ -83,6 +83,15 @@ export enum TranslationKeys {
   eco_problems = 'eco_problems',
   edit_problem = 'edit_problem',
   create_problem = 'create_problem',
+  status = 'status',
+  votes_count = 'votes_count',
+  comments_count = 'comments_count',
+  created_at = 'created_at',
+  last_update_at = 'last_update_at',
+  OPEN = 'OPEN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  RESOLVED = 'RESOLVED',
+  REJECTED = 'REJECTED',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -167,6 +176,15 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.eco_problems]: 'Екологічні проблеми',
   [TranslationKeys.edit_problem]: 'Редагування еко-проблеми',
   [TranslationKeys.create_problem]: 'Створення еко-проблеми',
+  [TranslationKeys.status]: 'Статус',
+  [TranslationKeys.votes_count]: 'Кількість використань',
+  [TranslationKeys.comments_count]: 'Кількість коментарів',
+  [TranslationKeys.created_at]: 'Створено',
+  [TranslationKeys.last_update_at]: 'Остання зміна',
+  [TranslationKeys.OPEN]: 'Відкрито',
+  [TranslationKeys.IN_PROGRESS]: 'В процесі',
+  [TranslationKeys.RESOLVED]: 'Виконано',
+  [TranslationKeys.REJECTED]: 'Відхилено',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -252,6 +270,15 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.eco_problems]: 'Ecology Problems',
   [TranslationKeys.edit_problem]: 'Edit eco-problem',
   [TranslationKeys.create_problem]: 'Create eco-problem',
+  [TranslationKeys.status]: 'Status',
+  [TranslationKeys.votes_count]: 'Votes count',
+  [TranslationKeys.comments_count]: 'Comments count',
+  [TranslationKeys.created_at]: 'Created at',
+  [TranslationKeys.last_update_at]: 'Last update at',
+  [TranslationKeys.OPEN]: 'Open',
+  [TranslationKeys.IN_PROGRESS]: 'In progress',
+  [TranslationKeys.RESOLVED]: 'Resolved',
+  [TranslationKeys.REJECTED]: 'Rejected',
 }
 
 i18n.use(initReactI18next).init({

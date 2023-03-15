@@ -29,13 +29,13 @@ export const usersList: QueryResolvers['usersList'] = async (
     },
   }
   const orderClause: Prisma.UserOrderByWithRelationInput = {}
-
-  switch (pagination.sortBy) {
+  const order = pagination.order || 'asc'
+  switch (pagination?.sortBy) {
     case UsersSortBy.name:
-      orderClause.name = pagination.order
+      orderClause.name = order
       break
     case UsersSortBy.email:
-      orderClause.email = pagination.order
+      orderClause.email = order
       break
     case UsersSortBy.problems_reported:
       orderClause.problems = {
@@ -48,11 +48,11 @@ export const usersList: QueryResolvers['usersList'] = async (
       }
       break
     case UsersSortBy.role:
-      orderClause.roles = pagination.order
+      orderClause.roles = order
       break
 
     default:
-      orderClause.createdAt = 'asc'
+      orderClause.createdAt = 'desc'
   }
 
   if (filters) {

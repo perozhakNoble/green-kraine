@@ -1,9 +1,32 @@
 export const PROBLEMS_QUERY = gql`
-  query ProblemsQuery($pagination: PaginationInput!, $search: String) {
-    problemsList(pagination: $pagination, search: $search) {
+  query ProblemsQuery(
+    $pagination: PaginationInput!
+    $search: String
+    $filters: ProblemsFilters
+  ) {
+    problemsList(pagination: $pagination, search: $search, filters: $filters) {
       items {
         id
         title
+        severity
+        status
+        description
+        keywords {
+          id
+          title
+        }
+        createdAt
+        updatedAt
+        comments {
+          id
+        }
+        category {
+          id
+          name
+        }
+        votes {
+          id
+        }
       }
       total
     }
