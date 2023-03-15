@@ -32,6 +32,9 @@ export const schema = gql`
   }
   input ProblemsFilters {
     status: ProblemStatus
+    category: String
+    severity: Int
+    keywords: [String!]
   }
 
   type Query {

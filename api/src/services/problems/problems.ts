@@ -71,6 +71,23 @@ export const problemsList: QueryResolvers['problemsList'] = async ({
     if (filters.status) {
       whereClause.status = filters.status
     }
+    if (filters.category) {
+      whereClause.category = {
+        id: filters.category,
+      }
+    }
+    if (filters.severity) {
+      whereClause.severity = filters.severity
+    }
+    if (filters.keywords) {
+      whereClause.keywords = {
+        some: {
+          id: {
+            in: filters.keywords,
+          },
+        },
+      }
+    }
   }
 
   if (search) {

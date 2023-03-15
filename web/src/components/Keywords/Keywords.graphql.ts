@@ -36,3 +36,12 @@ export const DELETE_KEYWORD_MUTATION = gql`
     }
   }
 `
+
+export const GET_KEYWORDS_AS_OPTIONS = gql`
+  query GetKeywordsAsOptions {
+    options: keywords {
+      value: id
+      label: title
+    }
+  }
+`

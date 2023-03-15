@@ -36,3 +36,12 @@ export const DELETE_CATEGORY_MUTATION = gql`
     }
   }
 `
+
+export const GET_CATEGORIES_AS_OPTIONS = gql`
+  query GetCategoriesAsOptions {
+    options: categories {
+      value: id
+      label: name
+    }
+  }
+`

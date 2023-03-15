@@ -18,28 +18,12 @@ import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
+import { GET_CATEGORIES_AS_OPTIONS } from 'src/components/Categories/Categories.graphql'
+import { GET_KEYWORDS_AS_OPTIONS } from 'src/components/Keywords/Keywords.graphql'
 import { renderer as clustererRenderer } from 'src/components/map/Clusterer'
 import Map from 'src/components/map/Map'
 import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 import { TranslationKeys } from 'src/i18n'
-
-export const CATEGORIES_QUERY_AS_OPTIONS = gql`
-  query GetCategoriesAsOptions {
-    options: categories {
-      value: id
-      label: name
-    }
-  }
-`
-
-export const KEYWORDS_QUERY_AS_OPTIONS = gql`
-  query GetKeywordsAsOptions {
-    options: keywords {
-      value: title
-      label: title
-    }
-  }
-`
 
 export const CREATE_NEW_PROBLEM_WITH_MARKER_MUTATION = gql`
   mutation CreateProblemWithMarker($input: CreateProblemWithMarkerInput!) {
@@ -69,11 +53,11 @@ type IForm = InformNewProblemForm
 
 const InformNewProblemPage = () => {
   const { data: categoryData } = useQuery<GetCategoriesAsOptions>(
-    CATEGORIES_QUERY_AS_OPTIONS
+    GET_CATEGORIES_AS_OPTIONS
   )
 
   const { data: keywordsData } = useQuery<GetKeywordsAsOptions>(
-    KEYWORDS_QUERY_AS_OPTIONS
+    GET_KEYWORDS_AS_OPTIONS
   )
 
   const [createProblem, { loading, error }] =
@@ -251,7 +235,7 @@ const InformNewProblemPage = () => {
             validation={{
               required: true,
               min: { value: 1, message: `${t(TranslationKeys.min_value)} 1` },
-              max: { value: 10, message: `${t(TranslationKeys.max_value)} 1` },
+              max: { value: 10, message: `${t(TranslationKeys.max_value)} 10` },
             }}
           />
           <Form.Field<IForm>

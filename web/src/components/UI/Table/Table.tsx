@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useEffect } from 'react'
+import { Fragment, ReactNode, useEffect, useState } from 'react'
 
 import {
   faPencil,
@@ -281,6 +281,16 @@ export type ITableFilters = Array<{
   placeholder: string
   type: FieldType
   options?: OptionType[]
+  loading?: boolean
+  min?: {
+    value: number
+    message: string
+  }
+  max?: {
+    value: number
+    message: string
+  }
+  isMulti?: boolean
 }>
 
 export const TableFilters = ({
@@ -299,6 +309,12 @@ export const TableFilters = ({
   const formMethods = useForm()
 
   const { t } = useTranslation()
+
+  const [inputKey, setInputKey] = useState(Date.now())
+
+  const updateInputKey = () => {
+    setInputKey(Date.now())
+  }
 
   return (
     <SlideModal
@@ -320,6 +336,7 @@ export const TableFilters = ({
           refetchWithoutFilters()
           setIsOpen(false)
           formMethods.reset()
+          updateInputKey()
         }}
         cancelBtnText={t(TranslationKeys.clear)}
       >
@@ -328,10 +345,19 @@ export const TableFilters = ({
             <Fragment key={key}>
               {/*@ts-ignore*/}
               <Form.Field<any>
+                key={key + inputKey}
                 name={filter.name}
                 label={filter.label}
                 placeholder={filter.placeholder}
                 type={filter.type}
+                validation={{
+                  // @ts-ignore
+                  min: filter.min,
+                  max: filter.max,
+                }}
+                // @ts-ignore
+                isMulti={filter.type === FieldType.select && filter.isMulti}
+                loading={filter.type === FieldType.select && filter.loading}
                 options={filter.type === FieldType.select && filter.options}
               />
             </Fragment>

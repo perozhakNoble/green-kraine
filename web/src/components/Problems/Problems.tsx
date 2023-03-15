@@ -23,10 +23,14 @@ import {
   DeleteProblem,
   UpdateProblem,
   UpdateProblemVariables,
+  GetCategoriesAsOptions,
+  GetKeywordsAsOptions,
 } from 'types/graphql'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
 
+import { GET_CATEGORIES_AS_OPTIONS } from 'src/components/Categories/Categories.graphql'
+import { GET_KEYWORDS_AS_OPTIONS } from 'src/components/Keywords/Keywords.graphql'
 import ProblemModal, {
   ProblemForm,
 } from 'src/components/Problems/ProblemModal/ProblemModal'
@@ -64,6 +68,14 @@ const Problems = () => {
     fetchPolicy: 'cache-and-network',
     nextFetchPolicy: 'cache-and-network',
   })
+
+  const { data: categoriesOptionsData, loading: loadingCategoriesData } =
+    useQuery<GetCategoriesAsOptions>(GET_CATEGORIES_AS_OPTIONS)
+  const categoriesOptions = categoriesOptionsData?.options || []
+
+  const { data: keywordsOptionsData, loading: loadingKeywordsData } =
+    useQuery<GetKeywordsAsOptions>(GET_KEYWORDS_AS_OPTIONS)
+  const keywordsOptions = keywordsOptionsData?.options || []
 
   const locale = getLanguageLocaleFromLocalStorage()
   const [isProblemModalOpen, setIsProblemModalOpen] = useState<boolean>(false)
@@ -242,6 +254,31 @@ const Problems = () => {
       type: FieldType.select,
       placeholder: t(TranslationKeys.status),
     },
+    {
+      name: 'severity',
+      label: t(TranslationKeys.severity),
+      type: FieldType.number,
+      min: { value: 1, message: `${t(TranslationKeys.min_value)} 1` },
+      max: { value: 10, message: `${t(TranslationKeys.max_value)} 10` },
+      placeholder: t(TranslationKeys.severity),
+    },
+    {
+      name: 'category',
+      label: t(TranslationKeys.category),
+      options: categoriesOptions,
+      loading: loadingCategoriesData,
+      type: FieldType.select,
+      placeholder: t(TranslationKeys.category),
+    },
+    {
+      name: 'keywords',
+      label: t(TranslationKeys.key_words),
+      options: keywordsOptions,
+      loading: loadingKeywordsData,
+      type: FieldType.select,
+      isMulti: true,
+      placeholder: t(TranslationKeys.key_words),
+    },
   ]
 
   const refetchWithFilters = (filters: any) => {
@@ -252,7 +289,7 @@ const Problems = () => {
       },
       search,
       filters: {
-        status: filters.status,
+        ...filters,
       },
     } as ProblemsQueryVariables)
   }
