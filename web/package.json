@@ -13,6 +13,9 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/react": "^1",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
@@ -32,6 +35,7 @@
     "dayjs": "^1.11.7",
     "fast-equals": "^4.0.3",
     "file-saver": "^2.0.5",
+    "framer-motion": "^6",
     "i18next": "^22.4.11",
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",

@@ -2,6 +2,7 @@ import { IFormWrapperProps as FormWrapperProps } from '@ui/Form/FormWrapper/Form
 import { ConfirmationDialogProps } from '@ui/Modals/Dialog/ConfirmationDialog'
 import { DialogProps } from '@ui/Modals/Dialog/Dialog'
 import { PopoverProps } from '@ui/Modals/Popover/Popover'
+import { PopoverWithStateProps } from '@ui/Modals/PopoverWithState/PopoverWithState'
 import { SlideModalProps } from '@ui/Modals/SlideModal/SlideModal'
 import { ToastContentProps } from '@ui/ToastContent'
 
@@ -21,6 +22,7 @@ export type {
   PopoverProps,
   DialogProps,
   ConfirmationDialogProps,
+  PopoverWithStateProps,
   SpinnerProps,
   FormFieldProps,
   TableColumn,

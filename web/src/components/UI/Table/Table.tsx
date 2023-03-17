@@ -51,7 +51,7 @@ export const tableButtons = ({
   customBtns?: () => ReactNode
 }) => {
   return (
-    <div className="flex gap-x-4">
+    <div className="flex items-center justify-center gap-x-4">
       {edit && (
         <FontAwesomeIcon
           icon={faPencil}

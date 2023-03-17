@@ -86,6 +86,8 @@ export const schema = gql`
       @requireAuth
     updateProblem(id: String!, input: UpdateProblemInput!): Problem!
       @requireAuth
+    changeProblemStatus(id: String!, status: ProblemStatus!): Problem!
+      @requireAuth
     deleteProblem(id: String!): Problem! @requireAuth
   }
 `

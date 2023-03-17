@@ -2,7 +2,8 @@ import { useState } from 'react'
 
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, ConfirmationDialog } from '@ui'
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
+import { Button, ConfirmationDialog, PopoverWithState } from '@ui'
 import { FieldType } from '@ui/enums'
 import useTable, {
   ITableFilters,
@@ -25,6 +26,7 @@ import {
   UpdateProblemVariables,
   GetCategoriesAsOptions,
   GetKeywordsAsOptions,
+  ChangeProblemStatus,
 } from 'types/graphql'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
@@ -43,11 +45,33 @@ import {
   CREATE_PROBLEM_MUTATION,
   DELETE_PROBLEM_MUTATION,
   UPDATE_PROBLEM_MUTATION,
+  CHANGE_PROBLEM_STATUS_MUTATION,
 } from 'src/components/Problems/Problems.graphql'
 import { ProblemStatus } from 'src/constants/problem'
 import { useAfterMountEffect } from 'src/hooks/useAfterMountEffect'
 import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 import { TranslationKeys } from 'src/i18n'
+
+const ProblemChangeStatusPopover = ({ element }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <div className="relative">
+      <PopoverWithState
+        trigger={
+          <EllipsisVerticalIcon
+            onClick={() => setIsOpen(!isOpen)}
+            className="h-5 w-5 cursor-pointer text-gray-900"
+          />
+        }
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      >
+        {element}
+      </PopoverWithState>
+    </div>
+  )
+}
 
 const Problems = () => {
   const { t } = useTranslation()
@@ -182,6 +206,56 @@ const Problems = () => {
         tableButtons({
           edit: () => handleEdit(c),
           remove: () => handleDelete(c),
+          customBtns: () => (
+            <ProblemChangeStatusPopover
+              element={
+                <div className="flex gap-2">
+                  {c.status !== 'IN_PROGRESS' && (
+                    <Button
+                      text={t(TranslationKeys.mark_as_in_progress)}
+                      onClick={() => {
+                        changeStatus({
+                          variables: {
+                            id: c.id,
+                            status: ProblemStatus.IN_PROGRESS,
+                          },
+                        })
+                      }}
+                      color="secondary"
+                    />
+                  )}
+                  {c.status !== 'RESOLVED' && (
+                    <Button
+                      text={t(TranslationKeys.mark_as_resolved)}
+                      onClick={() => {
+                        changeStatus({
+                          variables: {
+                            id: c.id,
+                            status: ProblemStatus.RESOLVED,
+                          },
+                        })
+                      }}
+                      color="primary"
+                    />
+                  )}
+                  {c.status !== 'REJECTED' && (
+                    <Button
+                      text={t(TranslationKeys.mark_as_rejected)}
+                      onClick={() => {
+                        changeStatus({
+                          variables: {
+                            id: c.id,
+                            status: ProblemStatus.REJECTED,
+                          },
+                        })
+                      }}
+                      color="error"
+                    />
+                  )}
+                </div>
+              }
+            />
+          ),
         }),
     })
 
@@ -199,6 +273,11 @@ const Problems = () => {
     ],
     awaitRefetchQueries: true,
   }
+
+  const [changeStatus, _changeStatusOpts] = useMutation<ChangeProblemStatus>(
+    CHANGE_PROBLEM_STATUS_MUTATION,
+    defaultRefetchOptions
+  )
 
   const [createProblem, createProblemOpts] = useMutation<CreateProblem>(
     CREATE_PROBLEM_MUTATION,

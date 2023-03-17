@@ -92,6 +92,9 @@ export enum TranslationKeys {
   IN_PROGRESS = 'IN_PROGRESS',
   RESOLVED = 'RESOLVED',
   REJECTED = 'REJECTED',
+  mark_as_in_progress = 'mark_as_in_progress',
+  mark_as_resolved = 'mark_as_resolved',
+  mark_as_rejected = 'mark_as_rejected',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -185,6 +188,9 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.IN_PROGRESS]: 'В процесі',
   [TranslationKeys.RESOLVED]: 'Виконано',
   [TranslationKeys.REJECTED]: 'Відхилено',
+  [TranslationKeys.mark_as_in_progress]: 'Взяти в процес',
+  [TranslationKeys.mark_as_resolved]: 'Виконано',
+  [TranslationKeys.mark_as_rejected]: 'Відхилити',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -279,6 +285,9 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.IN_PROGRESS]: 'In progress',
   [TranslationKeys.RESOLVED]: 'Resolved',
   [TranslationKeys.REJECTED]: 'Rejected',
+  [TranslationKeys.mark_as_in_progress]: 'Take in process',
+  [TranslationKeys.mark_as_resolved]: 'Resolve',
+  [TranslationKeys.mark_as_rejected]: 'Reject',
 }
 
 i18n.use(initReactI18next).init({

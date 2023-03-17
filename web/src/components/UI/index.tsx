@@ -1,3 +1,4 @@
+import PopoverWithState from '@ui/Modals/PopoverWithState/PopoverWithState'
 import Table from '@ui/Table/Table'
 
 import Button from './Button/Button'
@@ -22,5 +23,6 @@ export {
   ConfirmationDialog,
   Spinner,
   ToastContent,
+  PopoverWithState,
   Table,
 }

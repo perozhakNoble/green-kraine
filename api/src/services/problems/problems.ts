@@ -194,6 +194,18 @@ export const updateProblem: MutationResolvers['updateProblem'] = ({
   })
 }
 
+export const changeProblemStatus: MutationResolvers['changeProblemStatus'] = ({
+  id,
+  status,
+}) => {
+  return db.problem.update({
+    data: {
+      status,
+    },
+    where: { id },
+  })
+}
+
 export const deleteProblem: MutationResolvers['deleteProblem'] = ({ id }) => {
   return db.problem.delete({
     where: { id },

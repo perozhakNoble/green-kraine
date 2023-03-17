@@ -49,6 +49,14 @@ export const UPDATE_PROBLEM_MUTATION = gql`
   }
 `
 
+export const CHANGE_PROBLEM_STATUS_MUTATION = gql`
+  mutation ChangeProblemStatus($id: String!, $status: ProblemStatus!) {
+    changeProblemStatus(id: $id, status: $status) {
+      id
+    }
+  }
+`
+
 export const DELETE_PROBLEM_MUTATION = gql`
   mutation DeleteProblem($id: String!) {
     deleteProblem(id: $id) {
