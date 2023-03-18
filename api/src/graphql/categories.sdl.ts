@@ -21,7 +21,7 @@ export const schema = gql`
       search: String
       pagination: PaginationInput!
     ): GetPaginatedCategories! @requireAuth
-    categories: [Category!]! @requireAuth
+    categories: [Category!]! @skipAuth
     category(id: String!): Category @requireAuth
   }
 

@@ -1,23 +1,27 @@
 import { useRef } from 'react'
 import { useEffect } from 'react'
 
+import { capitalize } from 'lodash'
+import { useTranslation } from 'react-i18next'
+
 import {
   Form,
   Label,
-  TextField,
   PasswordField,
   Submit,
   FieldError,
+  EmailField,
 } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
+import { TranslationKeys } from 'src/i18n'
 
 const LoginPage = () => {
   const { isAuthenticated, logIn } = useAuth()
-
+  const { t } = useTranslation()
   useEffect(() => {
     if (isAuthenticated) {
       navigate(routes.userReports())
@@ -40,19 +44,24 @@ const LoginPage = () => {
     } else if (response.error) {
       toast.error(response.error)
     } else {
-      toast.success('Welcome back!')
+      toast.success(t(TranslationKeys.welcome) + '!')
     }
   }
 
+  const getRequired = (label: string) =>
+    capitalize(label + ' ' + t(TranslationKeys.is_required))
+
   return (
     <>
-      <MetaTags title="Login" />
+      <MetaTags title={t(TranslationKeys.log_in)} />
 
       <main className="rw-main">
         <div className="rw-scaffold rw-login-container">
           <div className="rw-segment">
             <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Login</h2>
+              <h2 className="rw-heading rw-heading-secondary">
+                {t(TranslationKeys.log_in)}
+              </h2>
             </header>
 
             <div className="rw-segment-main">
@@ -63,9 +72,9 @@ const LoginPage = () => {
                     className="rw-label"
                     errorClassName="rw-label rw-label-error"
                   >
-                    Email
+                    {t(TranslationKeys.email)}
                   </Label>
-                  <TextField
+                  <EmailField
                     name="email"
                     className="rw-input"
                     errorClassName="rw-input rw-input-error"
@@ -73,11 +82,10 @@ const LoginPage = () => {
                     validation={{
                       required: {
                         value: true,
-                        message: 'Email is required',
+                        message: getRequired(t(TranslationKeys.email)),
                       },
                     }}
                   />
-
                   <FieldError name="email" className="rw-field-error" />
 
                   <Label
@@ -85,7 +93,7 @@ const LoginPage = () => {
                     className="rw-label"
                     errorClassName="rw-label rw-label-error"
                   >
-                    Password
+                    {t(TranslationKeys.password)}
                   </Label>
                   <PasswordField
                     name="password"
@@ -95,7 +103,7 @@ const LoginPage = () => {
                     validation={{
                       required: {
                         value: true,
-                        message: 'Password is required',
+                        message: getRequired(t(TranslationKeys.password)),
                       },
                     }}
                   />
@@ -105,23 +113,25 @@ const LoginPage = () => {
                       to={routes.forgotPassword()}
                       className="rw-forgot-link"
                     >
-                      Forgot Password?
+                      {t(TranslationKeys.forgot_password)}?
                     </Link>
                   </div>
 
                   <FieldError name="password" className="rw-field-error" />
 
                   <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Login</Submit>
+                    <Submit className="rw-button rw-button-blue">
+                      {t(TranslationKeys.log_in)}
+                    </Submit>
                   </div>
                 </Form>
               </div>
             </div>
           </div>
           <div className="rw-login-link">
-            <span>Don&apos;t have an account?</span>{' '}
+            <span>{t(TranslationKeys.dont_have_account)}?</span>{' '}
             <Link to={routes.signup()} className="rw-link">
-              Sign up!
+              {t(TranslationKeys.sign_up)}!
             </Link>
           </div>
         </div>

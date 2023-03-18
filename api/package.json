@@ -5,7 +5,9 @@
   "dependencies": {
     "@redwoodjs/api": "4.0.1",
     "@redwoodjs/auth-dbauth-api": "4.0.1",
-    "@redwoodjs/graphql-server": "4.0.1"
+    "@redwoodjs/graphql-server": "4.0.1",
+    "@types/nodemailer": "^6.4.7",
+    "nodemailer": "^6.9.1"
   },
   "devDependencies": {
     "prisma-dbml-generator": "^0.10.0"

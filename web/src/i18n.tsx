@@ -99,8 +99,16 @@ export enum TranslationKeys {
   leave_your_comment = 'leave_your_comment',
   comments_available_only_for_logged_users = 'comments_available_only_for_logged_users',
   votes_available_only_for_logged_users = 'votes_available_only_for_logged_users',
-
-  //"На жаль голосування доступне лише для авторизованих користувачів"
+  sign_up = 'sign_up',
+  already_have_an_account = 'already_have_an_account',
+  log_in = 'log_in',
+  welcome = 'welcome',
+  forgot_password = 'forgot_password',
+  dont_have_account = 'dont_have_account',
+  link_to_reset_password_sent_to = 'link_to_reset_password_sent_to',
+  send = 'send',
+  password_changed = 'password_changed',
+  new_password = 'new_password',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -203,6 +211,17 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.votes_available_only_for_logged_users]:
     'Голосування доступне лише для авторизованих користувачів',
   [TranslationKeys.leave_your_comment]: 'Залиште свій коментар',
+  [TranslationKeys.sign_up]: 'Реєстрація',
+  [TranslationKeys.already_have_an_account]: 'Вже маєте аккаунт',
+  [TranslationKeys.log_in]: 'Увійти',
+  [TranslationKeys.welcome]: 'Вітаємо',
+  [TranslationKeys.forgot_password]: 'Забули пароль',
+  [TranslationKeys.dont_have_account]: 'Не маєте аккаунту',
+  [TranslationKeys.link_to_reset_password_sent_to]:
+    'Посилання для відновлення паролю було надіслано на ',
+  [TranslationKeys.send]: 'Надіслати',
+  [TranslationKeys.password_changed]: 'Пароль змінено',
+  [TranslationKeys.new_password]: 'Новий пароль',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -306,6 +325,17 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.votes_available_only_for_logged_users]:
     'Vote availabel only for logged users',
   [TranslationKeys.leave_your_comment]: 'Leave your comment',
+  [TranslationKeys.sign_up]: 'Sign Up',
+  [TranslationKeys.already_have_an_account]: 'Already have an account',
+  [TranslationKeys.log_in]: 'Log In',
+  [TranslationKeys.welcome]: 'Welcome',
+  [TranslationKeys.forgot_password]: 'Forgot password',
+  [TranslationKeys.dont_have_account]: "Don't have an account",
+  [TranslationKeys.link_to_reset_password_sent_to]:
+    'A link to reset your password was sent to ',
+  [TranslationKeys.send]: 'Send',
+  [TranslationKeys.password_changed]: 'Password changed',
+  [TranslationKeys.new_password]: 'New password',
 }
 
 i18n.use(initReactI18next).init({

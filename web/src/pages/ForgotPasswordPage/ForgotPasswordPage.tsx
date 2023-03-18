@@ -1,14 +1,20 @@
 import { useEffect, useRef } from 'react'
 
-import { Form, Label, TextField, Submit, FieldError } from '@redwoodjs/forms'
+import { capitalize } from 'lodash'
+import { useTranslation } from 'react-i18next'
+
+import { Form, Label, Submit, FieldError, EmailField } from '@redwoodjs/forms'
 import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
-import { toast, Toaster } from '@redwoodjs/web/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
+import { TranslationKeys } from 'src/i18n'
 
 const ForgotPasswordPage = () => {
   const { isAuthenticated, forgotPassword } = useAuth()
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -31,23 +37,25 @@ const ForgotPasswordPage = () => {
       // been invoked, let the user know how to get the link to reset their
       // password (sent in email, perhaps?)
       toast.success(
-        'A link to reset your password was sent to ' + response.email
+        t(TranslationKeys.link_to_reset_password_sent_to) + response.email
       )
       navigate(routes.login())
     }
   }
 
+  const getRequired = (label: string) =>
+    capitalize(label + ' ' + t(TranslationKeys.is_required))
+
   return (
     <>
-      <MetaTags title="Forgot Password" />
+      <MetaTags title={t(TranslationKeys.forgot_password)} />
 
       <main className="rw-main">
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
         <div className="rw-scaffold rw-login-container">
           <div className="rw-segment">
             <header className="rw-segment-header">
               <h2 className="rw-heading rw-heading-secondary">
-                Forgot Password
+                {t(TranslationKeys.forgot_password)}
               </h2>
             </header>
 
@@ -60,9 +68,9 @@ const ForgotPasswordPage = () => {
                       className="rw-label"
                       errorClassName="rw-label rw-label-error"
                     >
-                      Email
+                      {t(TranslationKeys.email)}
                     </Label>
-                    <TextField
+                    <EmailField
                       name="email"
                       className="rw-input"
                       errorClassName="rw-input rw-input-error"
@@ -70,7 +78,7 @@ const ForgotPasswordPage = () => {
                       validation={{
                         required: {
                           value: true,
-                          message: 'Email is required',
+                          message: getRequired(t(TranslationKeys.email)),
                         },
                       }}
                     />
@@ -79,7 +87,9 @@ const ForgotPasswordPage = () => {
                   </div>
 
                   <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Submit</Submit>
+                    <Submit className="rw-button rw-button-blue">
+                      {t(TranslationKeys.send)}
+                    </Submit>
                   </div>
                 </Form>
               </div>

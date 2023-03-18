@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { capitalize } from 'lodash'
+import { useTranslation } from 'react-i18next'
+
 import {
   Form,
   Label,
@@ -9,14 +12,17 @@ import {
 } from '@redwoodjs/forms'
 import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
-import { toast, Toaster } from '@redwoodjs/web/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
+import { TranslationKeys } from 'src/i18n'
 
 const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
   const { isAuthenticated, reauthenticate, validateResetToken, resetPassword } =
     useAuth()
   const [enabled, setEnabled] = useState(true)
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -35,6 +41,7 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
       }
     }
     validateToken()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const passwordRef = useRef<HTMLInputElement>(null)
@@ -51,23 +58,25 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
     if (response.error) {
       toast.error(response.error)
     } else {
-      toast.success('Password changed!')
+      toast.success(t(TranslationKeys.password_changed) + '!')
       await reauthenticate()
       navigate(routes.login())
     }
   }
 
+  const getRequired = (label: string) =>
+    capitalize(label + ' ' + t(TranslationKeys.is_required))
+
   return (
     <>
-      <MetaTags title="Reset Password" />
+      <MetaTags title={t(TranslationKeys.reset_password)} />
 
       <main className="rw-main">
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
         <div className="rw-scaffold rw-login-container">
           <div className="rw-segment">
             <header className="rw-segment-header">
               <h2 className="rw-heading rw-heading-secondary">
-                Reset Password
+                {t(TranslationKeys.reset_password)}
               </h2>
             </header>
 
@@ -80,7 +89,7 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
                       className="rw-label"
                       errorClassName="rw-label rw-label-error"
                     >
-                      New Password
+                      {t(TranslationKeys.new_password)}
                     </Label>
                     <PasswordField
                       name="password"
@@ -92,7 +101,7 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
                       validation={{
                         required: {
                           value: true,
-                          message: 'New Password is required',
+                          message: getRequired(t(TranslationKeys.new_password)),
                         },
                       }}
                     />
@@ -105,7 +114,7 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
                       className="rw-button rw-button-blue"
                       disabled={!enabled}
                     >
-                      Submit
+                      {t(TranslationKeys.save)}
                     </Submit>
                   </div>
                 </Form>

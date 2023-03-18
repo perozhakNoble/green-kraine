@@ -1,4 +1,5 @@
 import type { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import nodemailer from 'nodemailer'
 
 import { DbAuthHandler, DbAuthHandlerOptions } from '@redwoodjs/auth-dbauth-api'
 
@@ -22,29 +23,31 @@ export const handler = async (
     // address in a toast message so the user will know it worked and where
     // to look for the email.
     handler: async (user) => {
-      // try {
-      //   let transporter = nodemailer.createTransport({
-      //     host: process.env.SMTP_HOST,
-      //     port: process.env.SMTP_PORT,
-      //     secure: true,
-      //     auth: {
-      //       user: process.env.SMTP_USER,
-      //       pass: process.env.SMTP_PASS,
-      //     },
-      //   })
-      //   const resetLink = `${process.env.APP_URL}/reset-password?resetToken=${user.resetToken}`
-      //   const message = {
-      //     from: process.env.AUTH_EMAIL_FROM,
-      //     to: user.email,
-      //     subject: 'Reset Forgotten Password',
-      //     html: `Here is a link reset your password.  It will expire after 4hrs. <a href="${resetLink}">Reset my Password</>`,
-      //   }
-      //   await transporter.sendMail(message)
-      // } catch (err) {
-      //   logger.error(err)
-      // }
+      try {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
 
-      return user
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          },
+        })
+        const resetLink = `${process.env.APP_URL}/reset-password?resetToken=${user.resetToken}`
+        const message = {
+          from: process.env.AUTH_EMAIL_FROM,
+          to: user.email,
+          subject: 'Reset Forgotten Password',
+          html: `Here is a link reset your password.  It will expire after 24hrs. <a href="${resetLink}">Reset my Password</>`,
+        }
+        await transporter.sendMail(message)
+        return user
+      } catch (err) {
+        console.error(err)
+        throw new Error('Something went wrong')
+      }
     },
 
     // How long the resetToken is valid for, in seconds (default is 24 hours)
@@ -151,7 +154,7 @@ export const handler = async (
     errors: {
       // `field` will be either "username" or "password"
       fieldMissing: '${field} is required',
-      usernameTaken: 'Username `${username}` already in use',
+      usernameTaken: 'Email `${username}` already in use',
     },
   }
 

@@ -8057,6 +8057,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/nodemailer@npm:^6.4.7":
+  version: 6.4.7
+  resolution: "@types/nodemailer@npm:6.4.7"
+  dependencies:
+    "@types/node": "*"
+  checksum: 368ddc1faf9c393ae7192dd0f0c049e9aa38cc8214a6ec62a1ad93b8479a17c69b6f552b9ac34a57539a3070f52292d14795f0c2d066637eebd945976898cd7e
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
@@ -9406,6 +9415,8 @@ __metadata:
     "@redwoodjs/api": 4.0.1
     "@redwoodjs/auth-dbauth-api": 4.0.1
     "@redwoodjs/graphql-server": 4.0.1
+    "@types/nodemailer": ^6.4.7
+    nodemailer: ^6.9.1
     prisma-dbml-generator: ^0.10.0
   languageName: unknown
   linkType: soft
@@ -19761,6 +19772,13 @@ __metadata:
   version: 2.0.10
   resolution: "node-releases@npm:2.0.10"
   checksum: 90947653e8e3d85bda4bcbf28d019693ccfb5d5947838ca64e91208b51d7bfc13ba930b8216389a4faffbad8145b2c616bf1f7a09c97a1a9ac57fd6ef6d01c5c
+  languageName: node
+  linkType: hard
+
+"nodemailer@npm:^6.9.1":
+  version: 6.9.1
+  resolution: "nodemailer@npm:6.9.1"
+  checksum: adeaef441e31025776e8b1fa818e4b260850fbb60150f6ff7210e4de443bb32f0881a8a4967c42bb108d620f68f18369a42db29fe7cdec5e4ec09b0ddd51b19c
   languageName: node
   linkType: hard
 

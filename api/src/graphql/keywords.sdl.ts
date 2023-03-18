@@ -19,7 +19,7 @@ export const schema = gql`
       search: String
       pagination: PaginationInput!
     ): GetPaginatedKeywords! @requireAuth
-    keywords: [Keyword!]! @requireAuth
+    keywords: [Keyword!]! @skipAuth
     keyword(id: String!): Keyword @requireAuth
   }
 
