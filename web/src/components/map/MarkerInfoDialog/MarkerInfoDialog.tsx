@@ -43,12 +43,14 @@ const MarkerInfoDialog = ({
   afterModalClose,
   marker,
   userId,
+  filtersForRefetch,
 }: {
   open: boolean
   onClose: () => void
   afterModalClose?: () => void
   marker: Partial<Marker>
   userId?: string
+  filtersForRefetch?: any
 }) => {
   const { t } = useTranslation()
   const { currentUser } = useAuth()
@@ -64,6 +66,7 @@ const MarkerInfoDialog = ({
           query: MARKERS_QUERY,
           variables: {
             userId,
+            filters: filtersForRefetch,
           } as GetMarkersVariables,
         },
       ],
@@ -137,6 +140,7 @@ const MarkerInfoDialog = ({
             votes={marker?.problem?.votes}
             problemId={marker?.problem?.id}
             userId={userId}
+            filtersForRefetch={filtersForRefetch}
           />
         </div>
         <div className="max-h-80 w-full overflow-y-scroll">

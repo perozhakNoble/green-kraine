@@ -30,6 +30,7 @@ type LikeUnlikeButtonsProps = {
   votes: Vote[]
   problemId: string
   userId?: string
+  filtersForRefetch?: any
 }
 
 export const UPSERT_VOTE_MUTATION = gql`
@@ -52,6 +53,7 @@ const LikeUnlikeButtons = ({
   votes,
   problemId,
   userId,
+  filtersForRefetch,
 }: LikeUnlikeButtonsProps) => {
   const { currentUser } = useAuth()
   const { t } = useTranslation()
@@ -65,6 +67,7 @@ const LikeUnlikeButtons = ({
           query: MARKERS_QUERY,
           variables: {
             userId,
+            filters: filtersForRefetch,
           },
         },
       ],
@@ -80,6 +83,7 @@ const LikeUnlikeButtons = ({
           query: MARKERS_QUERY,
           variables: {
             userId,
+            filters: filtersForRefetch,
           },
         },
       ],

@@ -157,7 +157,9 @@ const HomePage = () => {
     },
   ]
 
+  const [filters, setFilters] = useState(undefined)
   const refetchWithFilters = (filters: any) => {
+    setFilters(filters)
     refetch({
       filters: {
         ...filters,
@@ -166,6 +168,7 @@ const HomePage = () => {
   }
 
   const refetchWithoutFilters = () => {
+    setFilters(undefined)
     refetch({
       filters: undefined,
     } as GetMarkersVariables)
@@ -190,6 +193,7 @@ const HomePage = () => {
         onClose={() => setDialogOpen(false)}
         afterModalClose={() => setMarkerToDisplayInfo(null)}
         marker={markerToDisplayInfo}
+        filtersForRefetch={filters}
       />
       <TableFilters
         filters={tableFilters}
