@@ -7,11 +7,38 @@ import type {
 
 import { db } from 'src/lib/db'
 
-export const markers: QueryResolvers['markers'] = ({ userId } = {}) => {
+export const markers: QueryResolvers['markers'] = ({
+  userId,
+  filters,
+} = {}) => {
   const whereClause: Prisma.MarkerWhereInput = {}
 
   if (userId) {
     whereClause.userId = userId
+  }
+
+  if (filters) {
+    whereClause.problem = {}
+    if (filters.status) {
+      whereClause.problem.status = filters.status
+    }
+    if (filters.category) {
+      whereClause.problem.category = {
+        id: filters.category,
+      }
+    }
+    if (filters.severity) {
+      whereClause.problem.severity = filters.severity
+    }
+    if (filters.keywords && filters.keywords.length) {
+      whereClause.problem.keywords = {
+        some: {
+          id: {
+            in: filters.keywords,
+          },
+        },
+      }
+    }
   }
 
   return db.marker.findMany({

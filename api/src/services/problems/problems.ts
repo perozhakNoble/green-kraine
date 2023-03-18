@@ -79,7 +79,7 @@ export const problemsList: QueryResolvers['problemsList'] = async ({
     if (filters.severity) {
       whereClause.severity = filters.severity
     }
-    if (filters.keywords) {
+    if (filters.keywords && filters.keywords.length) {
       whereClause.keywords = {
         some: {
           id: {
