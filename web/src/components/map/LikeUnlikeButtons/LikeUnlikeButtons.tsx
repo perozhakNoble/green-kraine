@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Spinner, ToastContent } from '@ui'
+import { useTranslation } from 'react-i18next'
 import {
   RemoveVote,
   RemoveVoteVariables,
@@ -22,11 +23,13 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
 import { useAuth } from 'src/auth'
+import { TranslationKeys } from 'src/i18n'
 import { MARKERS_QUERY } from 'src/pages/HomePage/HomePage'
 
 type LikeUnlikeButtonsProps = {
   votes: Vote[]
   problemId: string
+  userId?: string
 }
 
 export const UPSERT_VOTE_MUTATION = gql`
@@ -45,8 +48,13 @@ export const REMOVE_VOTE_MUTATION = gql`
   }
 `
 
-const LikeUnlikeButtons = ({ votes, problemId }: LikeUnlikeButtonsProps) => {
+const LikeUnlikeButtons = ({
+  votes,
+  problemId,
+  userId,
+}: LikeUnlikeButtonsProps) => {
   const { currentUser } = useAuth()
+  const { t } = useTranslation()
 
   const [upsertVote, { loading: loadingUpsertVote }] = useMutation<UpsertVote>(
     UPSERT_VOTE_MUTATION,
@@ -55,6 +63,9 @@ const LikeUnlikeButtons = ({ votes, problemId }: LikeUnlikeButtonsProps) => {
       refetchQueries: [
         {
           query: MARKERS_QUERY,
+          variables: {
+            userId,
+          },
         },
       ],
     }
@@ -67,6 +78,9 @@ const LikeUnlikeButtons = ({ votes, problemId }: LikeUnlikeButtonsProps) => {
       refetchQueries: [
         {
           query: MARKERS_QUERY,
+          variables: {
+            userId,
+          },
         },
       ],
     }
@@ -93,7 +107,7 @@ const LikeUnlikeButtons = ({ votes, problemId }: LikeUnlikeButtonsProps) => {
       return toast.error(
         <ToastContent
           type="error"
-          text="На жаль голосування доступне лише для авторизованих користувачів"
+          text={t(TranslationKeys.votes_available_only_for_logged_users)}
         />
       )
 

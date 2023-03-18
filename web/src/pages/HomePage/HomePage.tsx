@@ -14,36 +14,54 @@ import MarkerInfoDialog from 'src/components/map/MarkerInfoDialog/MarkerInfoDial
 import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 import { TranslationKeys } from 'src/i18n'
 
-export const MARKERS_QUERY = gql`
-  query GetMarkers($userId: String) {
-    markers(userId: $userId) {
+export const MARKERS_FRAGMENT = gql`
+  fragment MarkersFragment on Marker {
+    id
+    lat
+    lng
+    user {
       id
-      lat
-      lng
-      user {
-        id
+      name
+    }
+    problem {
+      id
+      category {
         name
       }
-      problem {
+      keywords {
         id
-        category {
-          name
-        }
-        keywords {
-          id
-          title
-        }
         title
-        description
-        status
-        votes {
-          id
-          upvote
-          user {
-            email
-          }
+      }
+      title
+      description
+      status
+      votes {
+        id
+        upvote
+        user {
+          email
         }
       }
+      severity
+      comments {
+        id
+        createdAt
+        content
+        user {
+          id
+          email
+          name
+        }
+      }
+    }
+  }
+`
+
+export const MARKERS_QUERY = gql`
+  ${MARKERS_FRAGMENT}
+  query GetMarkers($userId: String) {
+    markers(userId: $userId) {
+      ...MarkersFragment
     }
   }
 `

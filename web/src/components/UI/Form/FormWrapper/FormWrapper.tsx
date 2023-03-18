@@ -48,6 +48,7 @@ export type IFormWrapperProps<T> = {
   mode?: FormType
   onSubmit: (values: T) => Promise<void>
   dontCloseEditAfterSubmit?: boolean
+  withoutButtons?: boolean
 }
 
 const FormWrapper = <T,>({
@@ -65,6 +66,7 @@ const FormWrapper = <T,>({
   className,
   onSubmit,
   dontCloseEditAfterSubmit = mode === FormType.editOnly,
+  withoutButtons = false,
 }: IFormWrapperProps<T>) => {
   const { t } = useTranslation()
 
@@ -108,7 +110,7 @@ const FormWrapper = <T,>({
       <div className="mt-3 ml-2 text-sm font-light text-red-400">
         <FormError error={error} />
       </div>
-      {isEdit && (
+      {isEdit && !withoutButtons && (
         <div className="mt-4 mb-1 flex gap-2">
           <Button
             text={submitBtnText ?? t(TranslationKeys.save)}

@@ -220,7 +220,11 @@ export const Problem: ProblemRelationResolvers = {
     return db.problem.findUnique({ where: { id: root?.id } }).votes()
   },
   comments: (_obj, { root }) => {
-    return db.problem.findUnique({ where: { id: root?.id } }).comments()
+    return db.problem.findUnique({ where: { id: root?.id } }).comments({
+      orderBy: {
+        createdAt: 'asc',
+      },
+    })
   },
   images: (_obj, { root }) => {
     return db.problem.findUnique({ where: { id: root?.id } }).images()

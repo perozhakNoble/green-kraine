@@ -42,8 +42,8 @@ Table Keyword {
   id String [pk]
   title String [unique, not null]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
   problems Problem [not null]
+  updatedAt DateTime [not null]
 }
 
 Table Problem {
@@ -83,6 +83,8 @@ Table Comment {
   userId String
   problem Problem
   problemId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
 
 Table Vote {
@@ -92,6 +94,8 @@ Table Vote {
   userId String
   problem Problem
   problemId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 
   indexes {
     (userId, problemId) [unique]

@@ -95,6 +95,12 @@ export enum TranslationKeys {
   mark_as_in_progress = 'mark_as_in_progress',
   mark_as_resolved = 'mark_as_resolved',
   mark_as_rejected = 'mark_as_rejected',
+  comments = 'comments',
+  leave_your_comment = 'leave_your_comment',
+  comments_available_only_for_logged_users = 'comments_available_only_for_logged_users',
+  votes_available_only_for_logged_users = 'votes_available_only_for_logged_users',
+
+  //"На жаль голосування доступне лише для авторизованих користувачів"
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -191,6 +197,12 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.mark_as_in_progress]: 'Взяти в процес',
   [TranslationKeys.mark_as_resolved]: 'Виконано',
   [TranslationKeys.mark_as_rejected]: 'Відхилити',
+  [TranslationKeys.comments]: 'Коментарі',
+  [TranslationKeys.comments_available_only_for_logged_users]:
+    'Коментарі доступні лише для авторизованих користувачів',
+  [TranslationKeys.votes_available_only_for_logged_users]:
+    'Голосування доступне лише для авторизованих користувачів',
+  [TranslationKeys.leave_your_comment]: 'Залиште свій коментар',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -288,6 +300,12 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.mark_as_in_progress]: 'Take in process',
   [TranslationKeys.mark_as_resolved]: 'Resolve',
   [TranslationKeys.mark_as_rejected]: 'Reject',
+  [TranslationKeys.comments]: 'Comments',
+  [TranslationKeys.comments_available_only_for_logged_users]:
+    'Comments available only for logged users',
+  [TranslationKeys.votes_available_only_for_logged_users]:
+    'Vote availabel only for logged users',
+  [TranslationKeys.leave_your_comment]: 'Leave your comment',
 }
 
 i18n.use(initReactI18next).init({

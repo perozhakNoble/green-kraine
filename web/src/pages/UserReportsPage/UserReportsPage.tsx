@@ -102,6 +102,7 @@ const HomePaUserReportsPagege = () => {
         onClose={() => setDialogOpen(false)}
         afterModalClose={() => setMarkerToDisplayInfo(null)}
         marker={markerToDisplayInfo}
+        userId={currentUser?.id}
       />
       <div className="w-5xl h-[90vh] p-4">
         <Wrapper

@@ -58,8 +58,8 @@ model Keyword {
   id        String    @id @default(uuid())
   title     String    @unique
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
   problems  Problem[]
+  updatedAt DateTime  @updatedAt
 }
 
 enum ProblemStatus {
@@ -106,6 +106,8 @@ model Comment {
   userId    String?
   problem   Problem? @relation(fields: [problemId], references: [id])
   problemId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Vote {
@@ -115,6 +117,8 @@ model Vote {
   userId    String?
   problem   Problem? @relation(fields: [problemId], references: [id])
   problemId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, problemId])
 }
