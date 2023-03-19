@@ -112,6 +112,8 @@ export enum TranslationKeys {
   password_changed = 'password_changed',
   new_password = 'new_password',
   profile = 'profile',
+  likes = 'likes',
+  dislikes = 'dislikes',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -228,6 +230,8 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.password_changed]: 'Пароль змінено',
   [TranslationKeys.new_password]: 'Новий пароль',
   [TranslationKeys.profile]: 'Профіль',
+  [TranslationKeys.likes]: 'Лайки',
+  [TranslationKeys.dislikes]: 'Дизлайки',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -345,6 +349,8 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.password_changed]: 'Password changed',
   [TranslationKeys.new_password]: 'New password',
   [TranslationKeys.profile]: 'Profile',
+  [TranslationKeys.likes]: 'Likes',
+  [TranslationKeys.dislikes]: 'Dislikes',
 }
 
 i18n.use(initReactI18next).init({

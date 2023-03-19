@@ -15,12 +15,16 @@ import {
   PieChart,
   Pie,
   Cell,
+  TooltipProps,
+  Legend,
+  LegendProps,
 } from 'recharts'
 
 class CustomizedAxisTick extends PureComponent {
   render() {
     // @ts-ignore
     const { x, y, payload } = this.props
+
     return (
       <g transform={`translate(${x},${y})`}>
         <text
@@ -49,6 +53,7 @@ export class GraphBuilder {
   #yAxis = undefined
   #xAxis = undefined
   #tooltip = undefined
+  #legend = undefined
   #lines = []
   #bars = []
   #data = []
@@ -59,7 +64,6 @@ export class GraphBuilder {
   }
 
   #setActiveIndex(idx) {
-    console.log(idx)
     this.#activeIndex = idx
   }
 
@@ -107,8 +111,14 @@ export class GraphBuilder {
     return this
   }
 
-  setTooltip() {
-    this.#tooltip = <Tooltip />
+  setTooltip(data?: TooltipProps<any, any>) {
+    this.#tooltip = <Tooltip {...data} />
+    return this
+  }
+
+  setLegend(data?: LegendProps) {
+    // @ts-ignore
+    this.#legend = <Legend verticalAlign="top" {...data} />
     return this
   }
 
@@ -138,6 +148,7 @@ export class GraphBuilder {
       payload,
       percent,
       value,
+
       index,
     } = props
     const sin = Math.sin(-RADIAN * midAngle)
@@ -146,20 +157,44 @@ export class GraphBuilder {
     const sy = cy + (outerRadius + 10) * sin
     const mx = cx + (outerRadius + 30) * cos
     const my = cy + (outerRadius + 30) * sin
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22
+    const ex = mx + (cos >= 0 ? 1 : -1) * 18
     const ey = my
     const textAnchor = cos >= 0 ? 'start' : 'end'
 
     const onlyRate = false
 
+    const gap = props.isLessThan400 ? 15 : props.isLessThan800 ? 23 : 35
     return (
       <g className="z-50">
         <text
-          x={cx}
-          y={cy + (index ? 20 : -20)}
+          x={
+            cx +
+            (props.isLessThan400
+              ? 0
+              : index === 2
+              ? gap
+              : index === 3
+              ? -gap
+              : 0)
+          }
+          y={
+            cy +
+            (index === 1
+              ? props.length > 2
+                ? gap
+                : gap / 2
+              : index === 0
+              ? -(props.length > 2 ? gap : gap / 2)
+              : index === 2
+              ? Math.floor(gap / 2)
+              : index === 3
+              ? -Math.floor(gap / 2)
+              : 0)
+          }
           dy={8}
           textAnchor="middle"
           fill={fill}
+          className={props.isLessThan400 && 'text-[7px]'}
         >
           {payload.name}
         </text>
@@ -193,6 +228,7 @@ export class GraphBuilder {
             y={ey}
             textAnchor={textAnchor}
             fill="#333"
+            className={props.isLessThan400 && 'text-[7px]'}
           >{`${(percent * 100).toFixed(2)}%`}</text>
         ) : (
           <>
@@ -201,13 +237,15 @@ export class GraphBuilder {
               y={ey}
               textAnchor={textAnchor}
               fill="#333"
+              className={props.isLessThan400 && 'text-[7px]'}
             >{`${value}`}</text>
             <text
               x={ex + (cos >= 0 ? 1 : -1) * 12}
               y={ey}
-              dy={18}
+              dy={props.isLessThan400 ? 7 : 18}
               textAnchor={textAnchor}
               fill="#999"
+              className={props.isLessThan400 && 'text-[7px]'}
             >
               {`(${(percent * 100).toFixed(2)}%)`}
             </text>
@@ -224,39 +262,49 @@ export class GraphBuilder {
       const [isLessThan800] = useMediaQuery('(max-width: 800px)')
       const [isLessThan400] = useMediaQuery('(max-width: 400px)')
 
-      const getAspert = () => {
+      const getAspect = () => {
         return this.#chart !== 'PieChart'
           ? isLessThan400
             ? 1.3
             : isLessThan800
             ? 1.7
-            : 2.5
+            : 2.2
           : isLessThan400
-          ? 0.9
+          ? 1.8
           : isLessThan800
-          ? 1
+          ? 1.5
           : 1.5
       }
 
       return (
-        <ResponsiveContainer width={'99%'} aspect={getAspert()}>
+        <ResponsiveContainer width={'99%'} aspect={getAspect()}>
           {this.#chart === 'LineChart' ? (
             <LineChart data={this.#data} margin={this.#margin}>
-              {this.#castedianGrid} {this.#xAxis} {this.#yAxis} {this.#tooltip}{' '}
+              {this.#castedianGrid} {this.#xAxis} {this.#yAxis} {this.#tooltip}
+              {this.#legend}
               {this.#lines}
             </LineChart>
           ) : this.#chart === 'BarChart' ? (
             <BarChart data={this.#data} margin={this.#margin}>
-              {this.#castedianGrid} {this.#xAxis} {this.#yAxis} {this.#tooltip}{' '}
+              {this.#xAxis} {this.#yAxis} {this.#tooltip}
+              {this.#legend}
+              {this.#castedianGrid}
               {this.#bars}
             </BarChart>
           ) : this.#chart === 'PieChart' ? (
-            <PieChart>
+            <PieChart margin={this.#margin}>
               {/*@ts-ignore*/}
               <Pie
                 {...this.#pie}
                 data={this.#data}
-                label={this.#renderActiveShape}
+                label={(props) =>
+                  this.#renderActiveShape({
+                    ...props,
+                    isLessThan400,
+                    isLessThan800,
+                    length: this.#data.length,
+                  })
+                }
                 innerRadius="50%"
                 paddingAngle={2}
               >
