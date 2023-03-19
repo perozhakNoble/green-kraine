@@ -45,7 +45,8 @@
     "react-dropzone": "^14.2.3",
     "react-i18next": "^12.2.0",
     "react-select": "^5.7.0",
-    "react-tailwindcss-datepicker": "^1.4.2"
+    "react-tailwindcss-datepicker": "^1.4.2",
+    "recharts": "^2.5.0"
   },
   "devDependencies": {
     "@types/google.maps": "^3.51.1",
