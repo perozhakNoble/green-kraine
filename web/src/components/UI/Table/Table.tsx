@@ -8,10 +8,9 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Form } from '@ui'
+import { Form, LoadingState } from '@ui'
 import { FieldType } from '@ui/enums'
 import { SlideModal } from '@ui/Modals'
-import Spinner from '@ui/Spinner'
 import ToastContent from '@ui/ToastContent'
 import { OptionType } from '@ui/types'
 import { useTranslation } from 'react-i18next'
@@ -144,16 +143,7 @@ const useTable = <T,>({
     },
     Table: () => (
       <div className="relative w-full overflow-x-auto pb-20">
-        <div
-          className={`absolute left-0 right-0 top-0 bottom-0 flex h-full flex-col items-center justify-center bg-white ${
-            !loading
-              ? 'scale-0 bg-opacity-0 opacity-0'
-              : 'scale-100 bg-opacity-50  opacity-100'
-          } transition-all `}
-        >
-          <div className="mb-2">{t(TranslationKeys.loading)}..</div>
-          <Spinner size="lg" />
-        </div>
+        <LoadingState loading={loading} />
 
         <table className="w-full text-left text-sm text-gray-500 ">
           <thead className="bg-gray-50 text-xs uppercase text-gray-700 ">

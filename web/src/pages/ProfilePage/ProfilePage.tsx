@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CheckIcon } from '@heroicons/react/24/outline'
-import { Form, Spinner } from '@ui'
+import { Form, LoadingState, Spinner } from '@ui'
 import { FieldType } from '@ui/enums'
 import { H4 } from '@ui/Typography'
 import { useTranslation } from 'react-i18next'
@@ -151,16 +151,7 @@ const ProfilePage = () => {
 
       <H4 className="mx-6 mt-4">{t(TranslationKeys.profile)}</H4>
 
-      <div
-        className={`absolute left-0 right-0 top-0 bottom-0 flex h-full flex-col items-center justify-center bg-white ${
-          !loading
-            ? 'scale-0 bg-opacity-0 opacity-0'
-            : 'scale-100 bg-opacity-50  opacity-100'
-        } transition-all `}
-      >
-        <div className="mb-2">{t(TranslationKeys.loading)}..</div>
-        <Spinner size="lg" />
-      </div>
+      <LoadingState loading={loading} />
 
       <div className="flex flex-col divide-y px-6">
         <InfoItem

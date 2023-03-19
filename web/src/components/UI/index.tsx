@@ -1,3 +1,4 @@
+import LoadingState from '@ui/LoadingState'
 import PopoverWithState from '@ui/Modals/PopoverWithState/PopoverWithState'
 import Table from '@ui/Table/Table'
 
@@ -25,4 +26,5 @@ export {
   ToastContent,
   PopoverWithState,
   Table,
+  LoadingState,
 }
