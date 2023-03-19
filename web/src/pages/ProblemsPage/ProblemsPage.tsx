@@ -1,3 +1,4 @@
+import { H4 } from '@ui/Typography'
 import { useTranslation } from 'react-i18next'
 
 import { MetaTags } from '@redwoodjs/web'
@@ -14,7 +15,7 @@ const ProblemsPage = () => {
         title={t(TranslationKeys.eco_problems)}
         description="Problems page"
       />
-
+      <H4 className="mx-6 mt-4">{t(TranslationKeys.eco_problems)}</H4>
       <Problems />
     </>
   )

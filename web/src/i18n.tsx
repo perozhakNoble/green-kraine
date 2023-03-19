@@ -85,6 +85,8 @@ export enum TranslationKeys {
   create_problem = 'create_problem',
   status = 'status',
   votes_count = 'votes_count',
+  p_votes_count = 'p_votes_count',
+  n_votes_count = 'n_votes_count',
   comments_count = 'comments_count',
   created_at = 'created_at',
   last_update_at = 'last_update_at',
@@ -109,6 +111,7 @@ export enum TranslationKeys {
   send = 'send',
   password_changed = 'password_changed',
   new_password = 'new_password',
+  profile = 'profile',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -194,7 +197,9 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.edit_problem]: 'Редагування еко-проблеми',
   [TranslationKeys.create_problem]: 'Створення еко-проблеми',
   [TranslationKeys.status]: 'Статус',
-  [TranslationKeys.votes_count]: 'Кількість використань',
+  [TranslationKeys.votes_count]: 'Кількість голосів',
+  [TranslationKeys.p_votes_count]: 'Кількість лайків',
+  [TranslationKeys.n_votes_count]: 'Кількість дизлайків',
   [TranslationKeys.comments_count]: 'Кількість коментарів',
   [TranslationKeys.created_at]: 'Створено',
   [TranslationKeys.last_update_at]: 'Остання зміна',
@@ -222,6 +227,7 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.send]: 'Надіслати',
   [TranslationKeys.password_changed]: 'Пароль змінено',
   [TranslationKeys.new_password]: 'Новий пароль',
+  [TranslationKeys.profile]: 'Профіль',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -309,6 +315,8 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.create_problem]: 'Create eco-problem',
   [TranslationKeys.status]: 'Status',
   [TranslationKeys.votes_count]: 'Votes count',
+  [TranslationKeys.p_votes_count]: 'Likes counts',
+  [TranslationKeys.n_votes_count]: 'Dislikes count',
   [TranslationKeys.comments_count]: 'Comments count',
   [TranslationKeys.created_at]: 'Created at',
   [TranslationKeys.last_update_at]: 'Last update at',
@@ -336,6 +344,7 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.send]: 'Send',
   [TranslationKeys.password_changed]: 'Password changed',
   [TranslationKeys.new_password]: 'New password',
+  [TranslationKeys.profile]: 'Profile',
 }
 
 i18n.use(initReactI18next).init({
