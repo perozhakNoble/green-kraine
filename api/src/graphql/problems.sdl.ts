@@ -42,7 +42,7 @@ export const schema = gql`
       filters: ProblemsFilters
       search: String
       pagination: PaginationInput!
-    ): GetPaginatedProblems! @requireAuth
+    ): GetPaginatedProblems! @skipAuth
     problems: [Problem!]! @requireAuth
     problem(id: String!): Problem @requireAuth
   }

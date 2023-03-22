@@ -10,6 +10,11 @@ export const PROBLEMS_QUERY = gql`
         title
         severity
         status
+        user {
+          id
+          name
+          email
+        }
         description
         keywords {
           id

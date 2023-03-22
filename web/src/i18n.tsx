@@ -116,6 +116,7 @@ export enum TranslationKeys {
   dislikes = 'dislikes',
   date_from = 'date_from',
   date_to = 'date_to',
+  news = 'news',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -236,6 +237,7 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.dislikes]: 'Дизлайки',
   [TranslationKeys.date_from]: 'Від',
   [TranslationKeys.date_to]: 'До',
+  [TranslationKeys.news]: 'Новини',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -357,6 +359,7 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.dislikes]: 'Dislikes',
   [TranslationKeys.date_from]: 'From Date',
   [TranslationKeys.date_to]: 'To Date',
+  [TranslationKeys.news]: 'News',
 }
 
 i18n.use(initReactI18next).init({

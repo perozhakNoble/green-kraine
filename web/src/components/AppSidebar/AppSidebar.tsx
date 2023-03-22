@@ -7,6 +7,7 @@ import {
   ExclamationTriangleIcon,
   FlagIcon,
   MapPinIcon,
+  NewspaperIcon,
   RectangleGroupIcon,
   TagIcon,
   UserIcon,
@@ -46,6 +47,12 @@ const AppSidebar = ({ isOpen, setIsOpen }: AppSidebarProps) => {
       isAvailable: !!currentUser,
       to: routes.profile(),
       icon: UserIcon,
+    },
+    {
+      label: t(TranslationKeys.news),
+      isAvailable: true,
+      to: routes.news(),
+      icon: NewspaperIcon,
     },
     {
       label: t(TranslationKeys.my_markers),
