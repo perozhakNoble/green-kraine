@@ -114,6 +114,8 @@ export enum TranslationKeys {
   profile = 'profile',
   likes = 'likes',
   dislikes = 'dislikes',
+  date_from = 'date_from',
+  date_to = 'date_to',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -232,6 +234,8 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.profile]: 'Профіль',
   [TranslationKeys.likes]: 'Лайки',
   [TranslationKeys.dislikes]: 'Дизлайки',
+  [TranslationKeys.date_from]: 'Від',
+  [TranslationKeys.date_to]: 'До',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -351,6 +355,8 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.profile]: 'Profile',
   [TranslationKeys.likes]: 'Likes',
   [TranslationKeys.dislikes]: 'Dislikes',
+  [TranslationKeys.date_from]: 'From Date',
+  [TranslationKeys.date_to]: 'To Date',
 }
 
 i18n.use(initReactI18next).init({

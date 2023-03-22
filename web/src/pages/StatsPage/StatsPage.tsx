@@ -1,8 +1,15 @@
-import { LoadingState } from '@ui'
+import { useState } from 'react'
+
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button, Form, LoadingState } from '@ui'
+import { FieldType } from '@ui/enums'
 import { H4 } from '@ui/Typography'
+import { DateTime } from 'luxon'
 import { useTranslation } from 'react-i18next'
 import { StatsQuery } from 'types/graphql'
 
+import { useForm } from '@redwoodjs/forms'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import { GraphBuilder } from 'src/components/Graphs/GraphBuilder.class'
@@ -10,8 +17,8 @@ import { ProblemStatus } from 'src/constants/problem'
 import { TranslationKeys } from 'src/i18n'
 
 const STATS_QUERY = gql`
-  query StatsQuery {
-    getStats {
+  query StatsQuery($filters: StatsFilters) {
+    getStats(filters: $filters) {
       votes {
         likes
         dislikes
@@ -41,10 +48,99 @@ const STATS_QUERY = gql`
   }
 `
 
+type FiltersForm = {
+  dateFrom?: string
+  dateTo?: string
+}
+
+const Filters = ({ apply }) => {
+  const formMethods = useForm<FiltersForm>({
+    defaultValues: getDefaultValues(),
+  })
+
+  const { t } = useTranslation()
+
+  return (
+    <Form.Wrapper formMethods={formMethods} onSubmit={apply} withoutButtons>
+      <div className="flex gap-2">
+        <Form.Field<FiltersForm>
+          name="dateFrom"
+          label={t(TranslationKeys.date_from)}
+          type={FieldType.date}
+          maxDate={new Date()}
+          onChange={(dt) => {
+            if (dt && formMethods.watch('dateTo')) {
+              const fromDate = DateTime.fromFormat(dt, DATE_FORMAT)
+
+              const toDate = DateTime.fromFormat(
+                formMethods.watch('dateTo'),
+                DATE_FORMAT
+              )
+              if (fromDate.diff(toDate).milliseconds > 0) {
+                formMethods.setValue('dateTo', dt)
+              }
+            }
+          }}
+        />
+        <Form.Field<FiltersForm>
+          name="dateTo"
+          label={t(TranslationKeys.date_to)}
+          type={FieldType.date}
+          minDate={formMethods.watch('dateFrom')}
+          maxDate={new Date()}
+        />
+        <div className="mt-7">
+          <Button
+            text=""
+            icon={<FontAwesomeIcon icon={faSearch} />}
+            onClick={formMethods.handleSubmit}
+          />
+        </div>
+      </div>
+    </Form.Wrapper>
+  )
+}
+
+const DATE_FORMAT = `yyyy-M-d`
+
+const getDefaultValues = (): FiltersForm => {
+  return {
+    dateFrom: DateTime.now()
+      .minus({
+        days: 7,
+      })
+      .toFormat(DATE_FORMAT),
+    dateTo: DateTime.now().toFormat(DATE_FORMAT),
+  }
+}
+
 const StatsPage = () => {
   const { t } = useTranslation()
 
-  const { data: graphsData, loading } = useQuery<StatsQuery>(STATS_QUERY)
+  const [filters, setFilters] = useState<FiltersForm>({
+    dateFrom: DateTime.fromFormat(
+      getDefaultValues().dateFrom,
+      DATE_FORMAT
+    ).toISO(),
+    dateTo: DateTime.fromFormat(getDefaultValues().dateTo, DATE_FORMAT).toISO(),
+  })
+
+  const { data: graphsData, loading } = useQuery<StatsQuery>(STATS_QUERY, {
+    variables: {
+      filters,
+    },
+  })
+
+  const applyFilters = async (values: FiltersForm) => {
+    setFilters({
+      dateFrom: values.dateFrom
+        ? DateTime.fromFormat(values.dateFrom, DATE_FORMAT).toISO()
+        : null,
+      dateTo: values.dateTo
+        ? DateTime.fromFormat(values.dateTo, DATE_FORMAT).toISO()
+        : null,
+    })
+  }
 
   const getColor = (name: string) => {
     if (name === 'likes') return '#047857'
@@ -78,7 +174,7 @@ const StatsPage = () => {
     .setData(categoriesByStatusLineData)
     .setCastedianGrid({ stroke: '#ccc', strokeDasharray: '5 5' })
     .setLegend()
-    .setMargin({ top: 5, right: 20, bottom: 25, left: 0 })
+    .setMargin({ top: 5, right: 20, bottom: 60, left: 0 })
     .setXAxis({ dataKey: 'name' })
     .setYAxis()
     .setTooltip()
@@ -119,7 +215,7 @@ const StatsPage = () => {
         name: t(TranslationKeys.count_of_usage),
       },
     ])
-    .setMargin({ top: 5, right: 20, bottom: 25, left: 0 })
+    .setMargin({ top: 5, right: 20, bottom: 60, left: 0 })
     .render()
 
   const KeyWordsBarGraphic = new GraphBuilder('BarChart')
@@ -138,7 +234,7 @@ const StatsPage = () => {
         name: t(TranslationKeys.count_of_usage),
       },
     ])
-    .setMargin({ top: 5, right: 20, bottom: 25, left: 0 })
+    .setMargin({ top: 5, right: 20, bottom: 60, left: 0 })
     .render()
 
   return (
@@ -148,7 +244,10 @@ const StatsPage = () => {
         description="Stats page"
       />
 
-      <H4 className="mx-6 my-4">{t(TranslationKeys.statistics)}</H4>
+      <div className="mt-2 flex items-center">
+        <H4 className="mx-6 my-4">{t(TranslationKeys.statistics)}</H4>
+        <Filters apply={applyFilters} />
+      </div>
 
       <LoadingState loading={loading} />
 

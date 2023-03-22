@@ -194,7 +194,7 @@ export class GraphBuilder {
           dy={8}
           textAnchor="middle"
           fill={fill}
-          className={props.isLessThan400 && 'text-[7px]'}
+          className={props.isLessThan400 ? 'text-[7px]' : ''}
         >
           {payload.name}
         </text>
@@ -228,7 +228,7 @@ export class GraphBuilder {
             y={ey}
             textAnchor={textAnchor}
             fill="#333"
-            className={props.isLessThan400 && 'text-[7px]'}
+            className={props.isLessThan400 ? 'text-[7px]' : ''}
           >{`${(percent * 100).toFixed(2)}%`}</text>
         ) : (
           <>
@@ -237,7 +237,7 @@ export class GraphBuilder {
               y={ey}
               textAnchor={textAnchor}
               fill="#333"
-              className={props.isLessThan400 && 'text-[7px]'}
+              className={props.isLessThan400 ? 'text-[7px]' : ''}
             >{`${value}`}</text>
             <text
               x={ex + (cos >= 0 ? 1 : -1) * 12}
@@ -245,7 +245,7 @@ export class GraphBuilder {
               dy={props.isLessThan400 ? 7 : 18}
               textAnchor={textAnchor}
               fill="#999"
-              className={props.isLessThan400 && 'text-[7px]'}
+              className={props.isLessThan400 ? 'text-[7px]' : ''}
             >
               {`(${(percent * 100).toFixed(2)}%)`}
             </text>

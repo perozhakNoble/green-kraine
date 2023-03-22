@@ -37,7 +37,12 @@ export const schema = gql`
     categoriesByStatus: [CategoriesByStatusStats!]
   }
 
+  input StatsFilters {
+    dateFrom: DateTime
+    dateTo: DateTime
+  }
   type Query {
-    getStats: GetStatsResult! @requireAuth(roles: ["ADMIN", "ANALYST"])
+    getStats(filters: StatsFilters): GetStatsResult!
+      @requireAuth(roles: ["ADMIN", "ANALYST"])
   }
 `
