@@ -35,13 +35,13 @@ const NewsPage = () => {
   const statusColor = (status: ProblemStatus) => {
     switch (status) {
       case ProblemStatus.RESOLVED:
-        return 'text-[#059669]'
+        return '!text-[#059669]'
       case ProblemStatus.IN_PROGRESS:
-        return 'text-[#f97316]'
+        return '!text-[#f97316]'
       case ProblemStatus.OPEN:
-        return 'text-[#38bdf8]'
+        return '!text-[#38bdf8]'
       case ProblemStatus.REJECTED:
-        return 'text-[#e11d48]'
+        return '!text-[#e11d48]'
       default:
         return ''
     }
@@ -62,7 +62,7 @@ const NewsPage = () => {
             className="relative w-full max-w-3xl rounded-xl border border-gray-100 px-4 pt-4 pb-2.5 shadow-lg"
           >
             <div
-              className={`absolute right-3 top-2.5 text-xs text-slate-500 ${statusColor(
+              className={`absolute right-3 top-2.5 text-xs ${statusColor(
                 item.status as ProblemStatus
               )}`}
             >
