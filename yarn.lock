@@ -9484,7 +9484,9 @@ __metadata:
     "@redwoodjs/api": 4.0.1
     "@redwoodjs/auth-dbauth-api": 4.0.1
     "@redwoodjs/graphql-server": 4.0.1
+    "@types/luxon": ^3.2.0
     "@types/nodemailer": ^6.4.7
+    luxon: ^3.3.0
     nodemailer: ^6.9.1
     prisma-dbml-generator: ^0.10.0
   languageName: unknown

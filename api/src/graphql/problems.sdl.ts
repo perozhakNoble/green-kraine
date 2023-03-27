@@ -43,6 +43,7 @@ export const schema = gql`
       search: String
       pagination: PaginationInput!
     ): GetPaginatedProblems! @skipAuth
+    problemsForNews: [Problem!]! @skipAuth
     problems: [Problem!]! @requireAuth
     problem(id: String!): Problem @requireAuth
   }

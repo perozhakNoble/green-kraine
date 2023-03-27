@@ -2,35 +2,59 @@ import { LoadingState } from '@ui'
 import { H4, H6 } from '@ui/Typography'
 import { DateTime } from 'luxon'
 import { useTranslation } from 'react-i18next'
-import { ProblemsQuery, ProblemsQueryVariables } from 'types/graphql'
+import { ProblemsForNewsQuery } from 'types/graphql'
 
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
-import { PROBLEMS_PAGINATION_ITEMS } from 'src/components/Problems/Problems.constants'
-import { PROBLEMS_QUERY } from 'src/components/Problems/Problems.graphql'
 import { ProblemStatus } from 'src/constants/problem'
 import { getLanguageLocaleFromLocalStorage } from 'src/hooks/useLanguageLocaleStorage'
 import { TranslationKeys } from 'src/i18n'
 
+export const PROBLEMS_NEWS_QUERY = gql`
+  query ProblemsForNewsQuery {
+    problemsForNews {
+      id
+      title
+      severity
+      status
+      user {
+        id
+        name
+        email
+      }
+      description
+      keywords {
+        id
+        title
+      }
+      createdAt
+      updatedAt
+      comments {
+        id
+      }
+      category {
+        id
+        name
+      }
+      votes {
+        id
+      }
+    }
+  }
+`
+
 const NewsPage = () => {
   const { t } = useTranslation()
 
-  const { data: problemsData, loading } = useQuery<ProblemsQuery>(
-    PROBLEMS_QUERY,
+  const { data: problemsData, loading } = useQuery<ProblemsForNewsQuery>(
+    PROBLEMS_NEWS_QUERY,
     {
-      variables: {
-        pagination: {
-          skip: 0,
-          take: PROBLEMS_PAGINATION_ITEMS,
-        },
-        search: '',
-      } as ProblemsQueryVariables,
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-and-network',
     }
   )
 
-  const items = problemsData?.problemsList?.items || []
+  const items = problemsData?.problemsForNews || []
 
   const statusColor = (status: ProblemStatus) => {
     switch (status) {

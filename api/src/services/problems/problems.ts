@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import { DateTime } from 'luxon'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -130,6 +131,26 @@ export const problemsList: QueryResolvers['problemsList'] = async ({
     items,
     total,
   }
+}
+
+export const problemsForNews: QueryResolvers['problemsForNews'] = () => {
+  return db.problem.findMany({
+    where: {
+      severity: {
+        gte: 6,
+      },
+      updatedAt: {
+        gte: DateTime.now()
+          .minus({
+            days: 7,
+          })
+          .toJSDate(),
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  })
 }
 
 export const problems: QueryResolvers['problems'] = () => {
