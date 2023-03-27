@@ -17,6 +17,7 @@ export enum TranslationKeys {
   view_marker = 'view_marker',
   view_my_markers = 'view_my_markers',
   go_view_all_my_markers = 'go_view_all_my_markers',
+  go_view_all_markers = 'go_view_all_markers',
   marker_is_required = 'marker_is_required',
   remove_added_marker = 'remove_added_marker',
   decline_marker = 'decline_marker',
@@ -117,6 +118,7 @@ export enum TranslationKeys {
   date_from = 'date_from',
   date_to = 'date_to',
   news = 'news',
+  image = 'image',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -132,6 +134,7 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.view_marker]: 'Перегляд мітки',
   [TranslationKeys.view_my_markers]: 'Перегляд моїх міток',
   [TranslationKeys.go_view_all_my_markers]: 'Переглянути всі мої мітки',
+  [TranslationKeys.go_view_all_markers]: 'Переглянути всі мітки',
   [TranslationKeys.marker_is_required]: "Мітка обов'язкова",
   [TranslationKeys.remove_added_marker]: 'Видалити додану мітку',
   [TranslationKeys.decline_marker]: 'Відмінити мітку',
@@ -238,6 +241,7 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.date_from]: 'Від',
   [TranslationKeys.date_to]: 'До',
   [TranslationKeys.news]: 'Новини',
+  [TranslationKeys.image]: 'Фото',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -254,6 +258,7 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.view_marker]: 'View marker',
   [TranslationKeys.view_my_markers]: 'View my markers',
   [TranslationKeys.go_view_all_my_markers]: 'View all my markers',
+  [TranslationKeys.go_view_all_markers]: 'View all markers',
   [TranslationKeys.marker_is_required]: 'Marker is required',
   [TranslationKeys.remove_added_marker]: 'Remove added marker',
   [TranslationKeys.decline_marker]: 'Cancel marker',
@@ -360,6 +365,7 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.date_from]: 'From Date',
   [TranslationKeys.date_to]: 'To Date',
   [TranslationKeys.news]: 'News',
+  [TranslationKeys.image]: 'Photo',
 }
 
 i18n.use(initReactI18next).init({

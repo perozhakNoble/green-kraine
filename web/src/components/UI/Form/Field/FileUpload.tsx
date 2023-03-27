@@ -20,6 +20,9 @@ export enum AcceptedFileTypes {
   PDF = '.pdf',
   DOCX = '.docx',
   DOC = '.doc',
+  JPG = '.jpg',
+  JPEG = '.jpeg',
+  PNG = '.png',
 }
 
 export interface FileUploadProps {
@@ -35,6 +38,7 @@ export interface FileUploadProps {
   buttonIcon?: JSX.Element
   isLoading?: boolean
   isDisabled?: boolean
+  onlyImage?: boolean
 }
 
 const baseStyle = {
@@ -82,6 +86,7 @@ const FileUpload = ({
   isLoading = false,
   renderAsButton = false,
   isDisabled = false,
+  onlyImage = false,
 }: FileUploadProps) => {
   const { t } = useTranslation()
 
@@ -110,9 +115,13 @@ const FileUpload = ({
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: {
-      'application/*': acceptedFileTypes,
-    },
+    accept: onlyImage
+      ? {
+          'image/*': ['.jpeg', '.png', '.jpg'],
+        }
+      : {
+          'application/*': acceptedFileTypes,
+        },
     onDropAccepted: onDropSuccess,
     onDropRejected: (err) => {
       const error = getErrorMessageFromCode(err)

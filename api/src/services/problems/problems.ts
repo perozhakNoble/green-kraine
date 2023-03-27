@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import { Prisma } from '@prisma/client'
 import { DateTime } from 'luxon'
 import type {
@@ -165,7 +167,7 @@ export const problem: QueryResolvers['problem'] = ({ id }) => {
 
 export const createProblemWithMarker: MutationResolvers['createProblemWithMarker'] =
   ({ input }, { context }) => {
-    const { marker, categoryId, keywords, ...data } = input
+    const { marker, categoryId, keywords, image, ...data } = input
     return db.problem.create({
       data: {
         ...data,
@@ -182,6 +184,14 @@ export const createProblemWithMarker: MutationResolvers['createProblemWithMarker
             id: (context.currentUser as any)?.id,
           },
         },
+        images: image
+          ? {
+              create: {
+                filename: randomUUID(),
+                path: image,
+              },
+            }
+          : undefined,
         marker: {
           create: {
             lat: marker.lat,

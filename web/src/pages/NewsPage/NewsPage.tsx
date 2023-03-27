@@ -4,6 +4,7 @@ import { DateTime } from 'luxon'
 import { useTranslation } from 'react-i18next'
 import { ProblemsForNewsQuery } from 'types/graphql'
 
+import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import { ProblemStatus } from 'src/constants/problem'
@@ -79,11 +80,18 @@ const NewsPage = () => {
 
       <LoadingState loading={loading} />
 
-      <div className="flex w-full flex-col items-center gap-y-3 p-2">
+      <div className="flex w-full flex-col items-center gap-y-3 p-2 ">
         {items.map((item) => (
           <div
             key={item.id}
-            className="relative w-full max-w-3xl rounded-xl border border-gray-100 px-4 pt-4 pb-2.5 shadow-lg"
+            className="relative w-full max-w-3xl cursor-pointer rounded-xl  border border-gray-100 px-4 pt-4 pb-2.5 shadow-lg transition-transform hover:scale-105"
+            onClick={() => {
+              navigate(
+                routes.home({
+                  id: item.id,
+                })
+              )
+            }}
           >
             <div
               className={`absolute right-3 top-2.5 text-xs ${statusColor(

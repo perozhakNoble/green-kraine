@@ -97,6 +97,7 @@ const HomePaUserReportsPagege = () => {
           </div>
         )}
       </div>
+
       <MarkerInfoDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}

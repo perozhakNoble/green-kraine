@@ -143,6 +143,16 @@ const MarkerInfoDialog = ({
             filtersForRefetch={filtersForRefetch}
           />
         </div>
+        <div className="my-2 flex flex-col items-center">
+          {marker?.problem?.images.map((img) => (
+            <img
+              src={img.path}
+              key={img.id}
+              alt="problem"
+              className="max-h-52 rounded-xl shadow-md"
+            />
+          ))}
+        </div>
         <div className="max-h-80 w-full overflow-y-scroll">
           <div className="sticky top-0 w-full bg-white">
             <H7>{t(TranslationKeys.comments)}</H7>

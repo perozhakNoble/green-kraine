@@ -129,9 +129,8 @@ export type FormFieldProps<T> = {
       icon?: IconProp
       placeholder?: string
     }
-  | {
+  | ({
       type?: FieldType.file
-      filenamePath: Path<T>
       heading?: string
       subheading?: string
       acceptedFileTypes?: AcceptedFileTypes[]
@@ -146,7 +145,10 @@ export type FormFieldProps<T> = {
         name: string
       }) => void
       value?: string
-    }
+    } & (
+      | { onlyImage?: false | null | undefined; filenamePath: Path<T> }
+      | { onlyImage?: true }
+    ))
   | {
       type: FieldType.date
       value?: any
@@ -292,7 +294,7 @@ const Field = <T,>(props: FormFieldProps<T>) => {
 
   const downloadURL = () => {
     try {
-      if (props.type !== FieldType.file) return
+      if (props.type !== FieldType.file || props.onlyImage === true) return
       downloadBase64Data(
         formMethods.watch(props.name),
         formMethods.watch(props.filenamePath)
@@ -377,35 +379,55 @@ const Field = <T,>(props: FormFieldProps<T>) => {
               <>
                 {field.value ? (
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        downloadURL()
-                      }}
-                      className={filePreviewClass}
-                    >
-                      <FontAwesomeIcon
-                        icon={faFileAlt as IconProp}
-                        className="mr-2 text-sm"
-                      />
-                      <span className="block">
-                        {formMethods.watch(props.filenamePath)}
-                      </span>
+                    {props.onlyImage === true ? (
+                      <div className="relative">
+                        <img
+                          src={formMethods.watch(props.name)}
+                          alt="problem"
+                          className="max-h-xl max-w-xl rounded-lg object-cover"
+                        />
 
-                      <span
-                        className="absolute -right-2 -top-2 h-4 w-4  cursor-pointer rounded-full bg-red-500 text-center text-white"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          field.onChange('')
-                        }}
-                      >
                         <FontAwesomeIcon
                           icon={faTimes as IconProp}
-                          className="m-auto text-xs"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            field.onChange('')
+                          }}
+                          className="absolute -right-2 -top-2 h-4 w-4  cursor-pointer  text-red-500"
                         />
-                      </span>
-                    </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          downloadURL()
+                        }}
+                        className={filePreviewClass}
+                      >
+                        <FontAwesomeIcon
+                          icon={faFileAlt as IconProp}
+                          className="mr-2 text-sm"
+                        />
+                        <span className="block">
+                          {formMethods.watch(props.filenamePath)}
+                        </span>
+
+                        <span
+                          className="absolute -right-2 -top-2 h-4 w-4  cursor-pointer rounded-full bg-red-500 text-center text-white"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            field.onChange('')
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTimes as IconProp}
+                            className="m-auto text-xs"
+                          />
+                        </span>
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <FileUpload
@@ -416,14 +438,18 @@ const Field = <T,>(props: FormFieldProps<T>) => {
                       toast.error(<ToastContent type="error" text={error} />)
                       props.onFileLoadFailure && props.onFileLoadFailure(error)
                     }}
+                    onlyImage={props.onlyImage}
                     onDropSuccess={async (files) => {
                       const { file, name } = await onFileLoadSuccess(files)
                       formMethods.setValue(props.name, file as any, {
                         shouldValidate: true,
                       })
-                      formMethods.setValue(props.filenamePath, name as any, {
-                        shouldValidate: true,
-                      })
+
+                      if (props.onlyImage !== true) {
+                        formMethods.setValue(props.filenamePath, name as any, {
+                          shouldValidate: true,
+                        })
+                      }
                       props.onFileLoadSuccess &&
                         props.onFileLoadSuccess({ file, name })
                     }}
@@ -763,7 +789,11 @@ const Field = <T,>(props: FormFieldProps<T>) => {
     const value = props.value || formMethods.watch(props.name)
     switch (props.type) {
       case FieldType.file:
-        if (formMethods.watch(props.filenamePath) && value)
+        if (
+          props.onlyImage !== true &&
+          formMethods.watch(props.filenamePath) &&
+          value
+        )
           return (
             <div className="flex items-center gap-2">
               <button
@@ -783,6 +813,15 @@ const Field = <T,>(props: FormFieldProps<T>) => {
               </button>
             </div>
           )
+        if (value) {
+          return (
+            <img
+              src={value}
+              alt="problem"
+              className="max-h-xl max-w-xl rounded-lg object-cover"
+            />
+          )
+        }
         return <div className={previewClass}>{'N/A'}</div>
       case FieldType.date:
         return (

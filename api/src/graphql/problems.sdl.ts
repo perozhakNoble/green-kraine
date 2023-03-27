@@ -77,6 +77,7 @@ export const schema = gql`
     categoryId: String
     keywords: [String!]!
     marker: MarkerInput!
+    image: String
   }
 
   type Mutation {

@@ -3,6 +3,7 @@ import { ReactElement, SyntheticEvent, useState } from 'react'
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import { Button, Form, Spinner, ToastContent } from '@ui'
 import { FieldType } from '@ui/enums'
+import { AcceptedFileTypes } from '@ui/Form/Field/FileUpload'
 import { OptionTypeValue } from '@ui/types'
 import { H4, H7 } from '@ui/Typography'
 import { useTranslation } from 'react-i18next'
@@ -47,6 +48,7 @@ export type InformNewProblemForm = {
   severity: number
   keywords: string[]
   marker: NewMarkerType
+  image: string
 }
 
 type IForm = InformNewProblemForm
@@ -84,6 +86,7 @@ const InformNewProblemPage = () => {
           severity: values.severity,
           title: values.title,
           categoryId: values.category,
+          image: values.image,
         },
       } as CreateProblemWithMarkerVariables,
     })
@@ -248,6 +251,18 @@ const InformNewProblemPage = () => {
             validation={{
               required: true,
             }}
+          />
+          <Form.Field<IForm>
+            name="image"
+            label={t(TranslationKeys.image)}
+            validation={{ required: false }}
+            acceptedFileTypes={[
+              AcceptedFileTypes.JPG,
+              AcceptedFileTypes.JPEG,
+              AcceptedFileTypes.PNG,
+            ]}
+            type={FieldType.file}
+            onlyImage
           />
           <H7 className="text-sm font-normal text-primary">
             {t(TranslationKeys.marker)}

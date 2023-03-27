@@ -1,9 +1,9 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Status, Wrapper } from '@googlemaps/react-wrapper'
-import { Spinner } from '@ui'
+import { Button, Spinner } from '@ui'
 import { FieldType } from '@ui/enums'
 import { ITableFilters, TableFilters } from '@ui/Table/Table'
 import { H4 } from '@ui/Typography'
@@ -16,6 +16,7 @@ import {
   Marker,
 } from 'types/graphql'
 
+import { navigate, routes, useParams } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import { GET_CATEGORIES_AS_OPTIONS } from 'src/components/Categories/Categories.graphql'
@@ -40,6 +41,10 @@ export const MARKERS_FRAGMENT = gql`
       id
       category {
         name
+      }
+      images {
+        id
+        path
       }
       keywords {
         id
@@ -85,6 +90,8 @@ const renderMap = (status: Status): ReactElement => {
 }
 
 const HomePage = () => {
+  const { id: problemId } = useParams()
+
   const { data: markersData, refetch } = useQuery<GetMarkers>(MARKERS_QUERY)
 
   const [zoom, setZoom] = React.useState(7) // initial zoom
@@ -108,6 +115,22 @@ const HomePage = () => {
     null
 
   const { t } = useTranslation()
+
+  const [currentMarker, setCurrentMarker] =
+    useState<GetMarkers['markers'][number]>(null)
+
+  const resetProblemIdQueryParameter = () => {
+    navigate(routes.home())
+  }
+
+  useEffect(() => {
+    if (problemId) {
+      const m = markersData?.markers?.find((m) => m?.problem?.id === problemId)
+      setCurrentMarker(m || null)
+    } else {
+      setCurrentMarker(null)
+    }
+  }, [problemId, markersData])
 
   const statusOptions = Object.values(ProblemStatus).map((ps) => ({
     value: ps,
@@ -179,13 +202,31 @@ const HomePage = () => {
     <>
       <MetaTags title={t(TranslationKeys.view_map)} description="Map page" />
 
-      <div className="flex items-end gap-x-2">
-        <H4 className="mx-6 mt-4">{t(TranslationKeys.view_all_markers)}</H4>
-        <FontAwesomeIcon
-          icon={faFilter}
-          className="mb-2 block cursor-pointer text-gray-500"
-          onClick={() => setIsOpenFilters(true)}
-        />
+      <div className="flex items-center">
+        <H4 className="mx-6 mt-4">
+          {currentMarker
+            ? `${t(TranslationKeys.view_marker)} ${
+                currentMarker.problem?.title || ''
+              } `
+            : t(TranslationKeys.view_all_markers)}{' '}
+        </H4>
+
+        {currentMarker ? (
+          <div className="mt-3">
+            <Button
+              text={t(TranslationKeys.go_view_all_markers)}
+              color="secondary"
+              type="button"
+              onClick={resetProblemIdQueryParameter}
+            />
+          </div>
+        ) : (
+          <FontAwesomeIcon
+            icon={faFilter}
+            className="mb-2 block cursor-pointer text-gray-500"
+            onClick={() => setIsOpenFilters(true)}
+          />
+        )}
       </div>
 
       <MarkerInfoDialog
@@ -222,15 +263,17 @@ const HomePage = () => {
             fullscreenControl={false}
             clustererRenderer={clustererRenderer}
             markers={
-              markersData?.markers.map((marker) => ({
-                lng: marker.lng,
-                lat: marker.lat,
-                withContent: true,
-                onClick: () => {
-                  setDialogOpen(true)
-                  setMarkerToDisplayInfo(marker.id)
-                },
-              })) || []
+              (currentMarker ? [currentMarker] : markersData?.markers)?.map(
+                (marker) => ({
+                  lng: marker.lng,
+                  lat: marker.lat,
+                  withContent: true,
+                  onClick: () => {
+                    setDialogOpen(true)
+                    setMarkerToDisplayInfo(marker.id)
+                  },
+                })
+              ) || []
             }
           />
         </Wrapper>
