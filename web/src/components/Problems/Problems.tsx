@@ -12,7 +12,6 @@ import useTable, {
   TableSearch,
 } from '@ui/Table/Table'
 import { TableColumn } from '@ui/types'
-import { capitalize } from 'lodash'
 import { DateTime } from 'luxon'
 import { useTranslation } from 'react-i18next'
 import {
@@ -301,13 +300,26 @@ const Problems = () => {
       await updateProblem({
         variables: {
           id: problemForEdit.id,
-          input: values,
+          input: {
+            description: values.description,
+            keywords: values.keywords,
+            severity: values.severity,
+            title: values.title,
+            categoryId: values.category,
+          },
         } as UpdateProblemVariables,
       })
     } else {
       await createProblem({
         variables: {
-          input: values,
+          input: {
+            description: values.description,
+            keywords: values.keywords,
+            severity: values.severity,
+            title: values.title,
+            categoryId: values.category,
+            status: 'OPEN',
+          },
         } as CreateProblemVariables,
       })
     }
@@ -395,17 +407,6 @@ const Problems = () => {
             icon={faFilter}
             className="block cursor-pointer text-gray-500"
             onClick={() => setIsOpenFilters(true)}
-          />
-        </div>
-
-        <div className="ml-auto mr-1 min-w-max">
-          <Button
-            nonBreakingWords
-            text={capitalize(t(TranslationKeys.add_new)) + ' +'}
-            onClick={() => {
-              setProblemForEdit(null)
-              setIsProblemModalOpen(true)
-            }}
           />
         </div>
       </div>

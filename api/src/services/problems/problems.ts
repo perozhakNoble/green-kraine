@@ -154,7 +154,7 @@ export const createProblemWithMarker: MutationResolvers['createProblemWithMarker
           },
         },
         keywords: {
-          connect: keywords.map((keyword) => ({ title: keyword })),
+          connect: keywords.map((keyword) => ({ id: keyword })),
         },
         user: {
           connect: {
@@ -185,12 +185,27 @@ export const createProblem: MutationResolvers['createProblem'] = ({
 }
 
 export const updateProblem: MutationResolvers['updateProblem'] = ({
-  id,
   input,
+  id,
 }) => {
+  const { categoryId, keywords, ...data } = input
+
   return db.problem.update({
-    data: input,
-    where: { id },
+    where: {
+      id,
+    },
+    data: {
+      ...data,
+      category: {
+        connect: {
+          id: categoryId,
+        },
+      },
+      keywords: {
+        set: [],
+        connect: keywords.map((keyword) => ({ id: keyword })),
+      },
+    },
   })
 }
 

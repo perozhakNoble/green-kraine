@@ -58,13 +58,11 @@ export const schema = gql`
   }
 
   input UpdateProblemInput {
-    title: String
-    description: String
-    severity: Int
+    title: String!
+    description: String!
+    severity: Int!
     categoryId: String
-    markerId: String
-    userId: String
-    status: ProblemStatus
+    keywords: [String!]!
   }
 
   input MarkerInput {
