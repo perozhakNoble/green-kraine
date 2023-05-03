@@ -138,6 +138,10 @@ const SignupPage = () => {
                         value: true,
                         message: getRequired(t(TranslationKeys.password)),
                       },
+                      minLength: {
+                        value: 8,
+                        message: t(TranslationKeys.min_length) + ' - ' + 8,
+                      },
                     }}
                   />
                   <FieldError name="password" className="rw-field-error" />
