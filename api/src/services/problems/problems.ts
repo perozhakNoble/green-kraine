@@ -234,7 +234,7 @@ export const updateProblem: MutationResolvers['updateProblem'] = ({
       },
       keywords: {
         set: [],
-        connect: keywords.map((keyword) => ({ id: keyword })),
+        connect: keywords?.map((keyword) => ({ id: keyword })),
       },
     },
   })
