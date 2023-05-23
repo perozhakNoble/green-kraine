@@ -32,6 +32,11 @@ const AppHeader = () => {
       >
         <FontAwesomeIcon icon={faBars} className="h-5 w-5 " />
       </button>
+      {currentUser && (
+        <div className="flex items-center text-gray-50">
+          {t(TranslationKeys.welcome) + ', ' + currentUser.name + '!'}
+        </div>
+      )}
       <div className="flex items-center gap-4">
         <Select />
 
