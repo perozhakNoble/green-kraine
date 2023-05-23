@@ -135,8 +135,8 @@ export const problemsList: QueryResolvers['problemsList'] = async ({
   }
 }
 
-export const problemsForNews: QueryResolvers['problemsForNews'] = () => {
-  return db.problem.findMany({
+export const problemsForNews: QueryResolvers['problemsForNews'] = async () => {
+  const problems = await db.problem.findMany({
     where: {
       severity: {
         gte: 6,
@@ -152,6 +152,21 @@ export const problemsForNews: QueryResolvers['problemsForNews'] = () => {
     orderBy: {
       updatedAt: 'desc',
     },
+    take: 100,
+  })
+
+  if (problems.length) return problems
+
+  return db.problem.findMany({
+    where: {
+      severity: {
+        gte: 6,
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+    take: 10,
   })
 }
 

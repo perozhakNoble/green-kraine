@@ -81,6 +81,7 @@ const NewsPage = () => {
       <LoadingState loading={loading} />
 
       <div className="flex w-full flex-col items-center gap-y-3 p-2 ">
+        {!items?.length && <>{t(TranslationKeys.no_news)}</>}
         {items.map((item) => (
           <div
             key={item.id}

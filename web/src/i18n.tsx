@@ -124,6 +124,7 @@ export enum TranslationKeys {
   info_about_text = 'info_about_text',
   info_about_author = 'info_about_author',
   contacts = 'contacts',
+  no_news = 'no_news',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -254,6 +255,7 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.info_about_author]:
     'Автор - студент Національного Університету "Львівська Політехніка" - Віталій Перожак, під керівництвом завідувача кафедри ПЗ Дмитра Федасюка.',
   [TranslationKeys.contacts]: 'Контакти',
+  [TranslationKeys.no_news]: 'Новин немає',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -385,6 +387,7 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.info_about_author]:
     'The author - Vitalii Perozhak, a student of Lviv Polytechnic National University, under the supervision of Dmytro Fedasiuk, Head of the Software Department.',
   [TranslationKeys.contacts]: 'Contacts',
+  [TranslationKeys.no_news]: 'No news',
 }
 
 i18n.use(initReactI18next).init({
