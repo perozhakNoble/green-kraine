@@ -40,6 +40,8 @@ export const schema = gql`
   input StatsFilters {
     dateFrom: DateTime
     dateTo: DateTime
+    categories: [String]
+    keywords: [String]
   }
   type Query {
     getStats(filters: StatsFilters): GetStatsResult!

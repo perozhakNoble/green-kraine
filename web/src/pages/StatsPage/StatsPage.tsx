@@ -7,12 +7,18 @@ import { FieldType } from '@ui/enums'
 import { H4 } from '@ui/Typography'
 import { DateTime } from 'luxon'
 import { useTranslation } from 'react-i18next'
-import { StatsQuery } from 'types/graphql'
+import {
+  GetCategoriesAsOptions,
+  GetKeywordsAsOptions,
+  StatsQuery,
+} from 'types/graphql'
 
 import { useForm } from '@redwoodjs/forms'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
+import { GET_CATEGORIES_AS_OPTIONS } from 'src/components/Categories/Categories.graphql'
 import { GraphBuilder } from 'src/components/Graphs/GraphBuilder.class'
+import { GET_KEYWORDS_AS_OPTIONS } from 'src/components/Keywords/Keywords.graphql'
 import { ProblemStatus } from 'src/constants/problem'
 import { TranslationKeys } from 'src/i18n'
 
@@ -51,6 +57,8 @@ const STATS_QUERY = gql`
 type FiltersForm = {
   dateFrom?: string
   dateTo?: string
+  categories?: string[]
+  keywords?: string[]
 }
 
 const Filters = ({ apply }) => {
@@ -59,6 +67,12 @@ const Filters = ({ apply }) => {
   })
 
   const { t } = useTranslation()
+
+  const { data: categoriesData, loading: categoriesLoading } =
+    useQuery<GetCategoriesAsOptions>(GET_CATEGORIES_AS_OPTIONS)
+
+  const { data: keywordsData, loading: keywordsLoading } =
+    useQuery<GetKeywordsAsOptions>(GET_KEYWORDS_AS_OPTIONS)
 
   return (
     <Form.Wrapper formMethods={formMethods} onSubmit={apply} withoutButtons>
@@ -89,6 +103,22 @@ const Filters = ({ apply }) => {
           minDate={formMethods.watch('dateFrom')}
           maxDate={new Date()}
         />
+        <Form.Field<FiltersForm>
+          name="categories"
+          label={t(TranslationKeys.categories)}
+          type={FieldType.select}
+          isMulti
+          options={categoriesData?.options || []}
+          loading={categoriesLoading}
+        />
+        <Form.Field<FiltersForm>
+          name="keywords"
+          label={t(TranslationKeys.key_words)}
+          type={FieldType.select}
+          isMulti
+          options={keywordsData?.options || []}
+          loading={keywordsLoading}
+        />
         <div className="mt-7">
           <Button
             text=""
@@ -111,6 +141,8 @@ const getDefaultValues = (): FiltersForm => {
       })
       .toFormat(DATE_FORMAT),
     dateTo: DateTime.now().toFormat(DATE_FORMAT),
+    categories: [],
+    keywords: [],
   }
 }
 
@@ -123,6 +155,8 @@ const StatsPage = () => {
       DATE_FORMAT
     ).toISO(),
     dateTo: DateTime.fromFormat(getDefaultValues().dateTo, DATE_FORMAT).toISO(),
+    categories: [],
+    keywords: [],
   })
 
   const { data: graphsData, loading } = useQuery<StatsQuery>(STATS_QUERY, {
@@ -139,6 +173,8 @@ const StatsPage = () => {
       dateTo: values.dateTo
         ? DateTime.fromFormat(values.dateTo, DATE_FORMAT).toISO()
         : null,
+      categories: values.categories,
+      keywords: values.keywords,
     })
   }
 

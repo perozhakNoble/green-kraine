@@ -27,6 +27,26 @@ export const getStats: QueryResolvers['getStats'] = async ({ filters }) => {
                 },
               }
             : {},
+          filters.categories?.length
+            ? {
+                category: {
+                  id: {
+                    in: filters.categories,
+                  },
+                },
+              }
+            : {},
+          filters.keywords?.length
+            ? {
+                keywords: {
+                  some: {
+                    id: {
+                      in: filters.keywords,
+                    },
+                  },
+                },
+              }
+            : {},
         ],
       },
     }
@@ -47,6 +67,26 @@ export const getStats: QueryResolvers['getStats'] = async ({ filters }) => {
                 },
               }
             : {},
+          filters.categories?.length
+            ? {
+                category: {
+                  id: {
+                    in: filters.categories,
+                  },
+                },
+              }
+            : {},
+          filters.keywords?.length
+            ? {
+                keywords: {
+                  some: {
+                    id: {
+                      in: filters.keywords,
+                    },
+                  },
+                },
+              }
+            : {},
         ],
       },
     }
@@ -62,6 +102,26 @@ export const getStats: QueryResolvers['getStats'] = async ({ filters }) => {
         ? {
             createdAt: {
               gte: filters.dateFrom,
+            },
+          }
+        : {},
+      filters.categories?.length
+        ? {
+            category: {
+              id: {
+                in: filters.categories,
+              },
+            },
+          }
+        : {},
+      filters.keywords?.length
+        ? {
+            keywords: {
+              some: {
+                id: {
+                  in: filters.keywords,
+                },
+              },
             },
           }
         : {},
