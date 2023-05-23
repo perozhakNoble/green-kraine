@@ -2,6 +2,7 @@ import { faSun } from '@fortawesome/free-regular-svg-icons'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  BookOpenIcon,
   ChartBarIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
@@ -95,6 +96,12 @@ const AppSidebar = ({ isOpen, setIsOpen }: AppSidebarProps) => {
       isAvailable: isAdmin,
       to: routes.problems(),
       icon: ExclamationCircleIcon,
+    },
+    {
+      label: t(TranslationKeys.info_about),
+      isAvailable: true,
+      to: routes.about(),
+      icon: BookOpenIcon,
     },
   ]
 

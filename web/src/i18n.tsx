@@ -120,6 +120,10 @@ export enum TranslationKeys {
   date_to = 'date_to',
   news = 'news',
   image = 'image',
+  info_about = 'info_about',
+  info_about_text = 'info_about_text',
+  info_about_author = 'info_about_author',
+  contacts = 'contacts',
 }
 const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.all_markers]: 'Всі мітки',
@@ -244,6 +248,12 @@ const UATranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.date_to]: 'До',
   [TranslationKeys.news]: 'Новини',
   [TranslationKeys.image]: 'Фото',
+  [TranslationKeys.info_about]: 'Інформація про застосунок',
+  [TranslationKeys.info_about_text]:
+    'Цей веб-застосунок створений з метою надання інформації про екологічні проблеми. Застосунок пропонує інтерактивну мапу зі збереженою інформацією про ці проблеми. Зручний та інноваційний дизайн робить його надійним та ефективним у використанні. Цей веб-застосунок надає швидкий доступ до актуальних даних онлайн, економлячи час користувачів. Він адресований користувачам, які цікавляться екологією та мають потребу у зручному інструменті для інформування та сприяння вирішенню екологічних проблем.',
+  [TranslationKeys.info_about_author]:
+    'Автор - студент Національного Університету "Львівська Політехніка" - Віталій Перожак, під керівництвом завідувача кафедри ПЗ Дмитра Федасюка.',
+  [TranslationKeys.contacts]: 'Контакти',
 }
 
 const ENTranslation: { [key in TranslationKeys]: string } = {
@@ -369,6 +379,12 @@ const ENTranslation: { [key in TranslationKeys]: string } = {
   [TranslationKeys.date_to]: 'To Date',
   [TranslationKeys.news]: 'News',
   [TranslationKeys.image]: 'Photo',
+  [TranslationKeys.info_about]: 'About app',
+  [TranslationKeys.info_about_text]:
+    'This web application was created to provide information about environmental issues. The application offers an interactive map with stored information about these issues. Its user-friendly and innovative design makes it reliable and efficient to use. This web application provides quick access to up-to-date data online, saving users time. It is aimed at users who are interested in the environment and need a convenient tool to inform and contribute to solving environmental problems.',
+  [TranslationKeys.info_about_author]:
+    'The author - Vitalii Perozhak, a student of Lviv Polytechnic National University, under the supervision of Dmytro Fedasiuk, Head of the Software Department.',
+  [TranslationKeys.contacts]: 'Contacts',
 }
 
 i18n.use(initReactI18next).init({
